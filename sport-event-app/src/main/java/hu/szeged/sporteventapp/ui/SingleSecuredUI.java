@@ -22,7 +22,6 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.vaadin.spring.events.EventBus;
@@ -38,7 +37,7 @@ import org.vaadin.spring.security.util.SuccessfulLoginEvent;
  * @author Petter Holmström (petter@vaadin.com)
  */
 @SpringUI
-@Theme(ValoTheme.THEME_NAME)
+@Theme("mytheme")
 @Push
 public class SingleSecuredUI extends UI {
 
