@@ -1,172 +1,121 @@
-/*
- * Copyright 2015 The original authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package hu.szeged.sporteventapp.ui;
 
+import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
+
+import java.util.HashMap;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.spring.annotation.PrototypeScope;
+import org.vaadin.spring.events.EventBus;
+
 import com.vaadin.event.ShortcutAction;
-import com.vaadin.server.FileResource;
-import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.vaadin.spring.annotation.PrototypeScope;
-import org.vaadin.spring.events.EventBus;
-import org.vaadin.spring.security.VaadinSecurity;
-import org.vaadin.spring.security.util.SuccessfulLoginEvent;
 
-import java.io.File;
+import hu.szeged.sporteventapp.ui.events.LoginEvent;
+import hu.szeged.sporteventapp.ui.events.RegistrationEvent;
 
-/**
- * Full-screen UI component that allows the user to login.
- *
- * @author Petter Holmström (petter@vaadin.com)
- */
 @PrototypeScope
 @SpringComponent
 public class LoginScreen extends CustomComponent {
 
-    private final VaadinSecurity vaadinSecurity;
-    private final EventBus.SessionEventBus eventBus;
+	private final EventBus.SessionEventBus eventBus;
 
-    private TextField userNameFieldForLogin;
-    private TextField userNameFieldForSingUp;
-    private TextField emailFieldForSingUp;
-    private PasswordField passwordFieldForLogin;
-    private PasswordField passwordFieldForSingUp;
-    private PasswordField passwordFieldForValidate;
-    private Button loginButton;
-    private Button singUpButton;
-    private Label loginFailedLabel;
-    private Label loggedOutLabel;
-    private Label singUpStateLabel;
-    private Image backgroundImage;
+	private TextField userNameFieldForLogin;
+	private TextField userNameFieldForRegister;
+	private TextField emailFieldForRegister;
+	private PasswordField passwordFieldForLogin;
+	private PasswordField passwordFieldForRegister;
+	private PasswordField passwordFieldForValidate;
+	private Button loginButton;
+	private Button registerButton;
+	private Label infoLabel;
 
-    @Autowired
-    public LoginScreen(VaadinSecurity vaadinSecurity, EventBus.SessionEventBus eventBus) {
-        this.vaadinSecurity = vaadinSecurity;
-        this.eventBus = eventBus;
-        initLayout();
-    }
+	@Autowired
+	public LoginScreen(EventBus.SessionEventBus eventBus) {
+		this.eventBus = eventBus;
+		initLayout();
+	}
 
-    void setLoggedOut(boolean loggedOut) {
-//        loggedOutLabel.setVisible(loggedOut);
-    }
+	public void setLoggedOut(boolean loggedOut) {
+		infoLabel.addStyleName(ValoTheme.LABEL_SUCCESS);
+		infoLabel.setVisible(loggedOut);
+	}
 
-    private void initLayout() {
-        HorizontalLayout root = new HorizontalLayout();
-        VerticalLayout rightLayout = new VerticalLayout();
-        CssLayout leftLayout = new CssLayout();
+	private void initLayout() {
+		HorizontalLayout root = new HorizontalLayout();
+		Panel panel = new Panel();
+		TabSheet tabSheet = new TabSheet();
+		tabSheet.addTab(createLoginLayout(), LOGIN);
+		tabSheet.addTab(createRegisterLayout(), REGISTER);
+		panel.setWidthUndefined();
+		panel.setContent(tabSheet);
 
-        FileResource resource = new FileResource(new File("/home/gruber/Gubi/Programming/Java/Vaadin/sport-event-app/src/main/resources/images/background.jpg"));
+		root.setSizeFull();
+		root.addComponent(panel);
+		root.setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
 
-        backgroundImage = new Image();
-        backgroundImage.setSource(resource);
-        leftLayout.addComponent(backgroundImage);
+		setCompositionRoot(root);
+		setSizeFull();
+	}
 
-        Panel loginPanel = new Panel();
-        FormLayout loginForm = new FormLayout();
-        loginForm.setMargin(true);
-        loginForm.setSpacing(true);
-        userNameFieldForLogin = new TextField("Username");
-        passwordFieldForLogin = new PasswordField("Password");
-        loginButton = new Button("Login");
-        Label loginLabel = new Label("Login");
-        loginLabel.setStyleName(ValoTheme.LABEL_H3);
-        loginForm.addComponents(loginLabel, userNameFieldForLogin, passwordFieldForLogin, loginButton);
-        loginButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        loginButton.setDisableOnClick(true);
-        loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
-        loginButton.addClickListener((Button.ClickListener) event -> login());
-        loginPanel.setContent(loginForm);
-        rightLayout.addComponent(loginPanel);
+	private FormLayout createRegisterLayout() {
+		FormLayout formLayout = new FormLayout();
+		formLayout.setMargin(true);
+		formLayout.setSpacing(true);
+		userNameFieldForRegister = new TextField(USERNAME);
+		emailFieldForRegister = new TextField(EMAIL);
+		passwordFieldForRegister = new PasswordField(PASSWORD);
+		passwordFieldForValidate = new PasswordField(PASSWORD_AGAIN);
+		registerButton = new Button(SIGN_UP);
+		registerButton.setDisableOnClick(true);
+		registerButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+		registerButton.addClickListener((Button.ClickListener) event -> register());
+		formLayout.addComponents(userNameFieldForRegister, emailFieldForRegister,
+				passwordFieldForRegister, passwordFieldForValidate, registerButton);
+		return formLayout;
+	}
 
-        Panel singUpPanel = new Panel();
-        FormLayout singUpForm = new FormLayout();
-        singUpForm.setMargin(true);
-        singUpForm.setSpacing(true);
-        userNameFieldForSingUp = new TextField("Username");
-        emailFieldForSingUp = new TextField("Email");
-        passwordFieldForSingUp = new PasswordField("Password");
-        passwordFieldForValidate = new PasswordField("Password again");
-        singUpButton = new Button("Sing up");
-        Label singUpLabel = new Label("Sing up");
-        singUpLabel.setStyleName(ValoTheme.LABEL_H3);
-        singUpForm.addComponents(singUpLabel, userNameFieldForSingUp, emailFieldForSingUp,
-                passwordFieldForSingUp, passwordFieldForValidate, singUpButton);
-        singUpPanel.setContent(singUpForm);
-        rightLayout.addComponent(singUpPanel);
+	private FormLayout createLoginLayout() {
+		FormLayout formLayout = new FormLayout();
+		formLayout.setMargin(true);
+		formLayout.setSpacing(true);
+		infoLabel = new Label();
+		infoLabel.setVisible(false);
+		userNameFieldForLogin = new TextField(USERNAME);
+		passwordFieldForLogin = new PasswordField(PASSWORD);
+		loginButton = new Button(SIGN_IN);
+		loginButton.setDisableOnClick(true);
+		loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+		loginButton.addClickListener((Button.ClickListener) event -> login());
+		formLayout.addComponents(infoLabel, userNameFieldForLogin, passwordFieldForLogin,
+				loginButton);
+		return formLayout;
+	}
 
+	private void login() {
+		HashMap<String, String> params = new HashMap();
+		params.put("username", userNameFieldForLogin.getValue());
+		params.put("password", passwordFieldForLogin.getValue());
+		eventBus.publish(this, new LoginEvent(this, params));
+	}
 
-//        VerticalLayout loginLayout = new VerticalLayout();
-//        loginLayout.setSizeUndefined();
-//
-//        loginFailedLabel = new Label();
-//        loginLayout.addComponent(loginFailedLabel);
-//        loginLayout.setComponentAlignment(loginFailedLabel, Alignment.BOTTOM_CENTER);
-//        loginFailedLabel.setSizeUndefined();
-//        loginFailedLabel.addStyleName(ValoTheme.LABEL_FAILURE);
-//        loginFailedLabel.setVisible(false);
-//
-//        loggedOutLabel = new Label("Good bye!");
-//        loginLayout.addComponent(loggedOutLabel);
-//        loginLayout.setComponentAlignment(loggedOutLabel, Alignment.BOTTOM_CENTER);
-//        loggedOutLabel.setSizeUndefined();
-//        loggedOutLabel.addStyleName(ValoTheme.LABEL_SUCCESS);
-//        loggedOutLabel.setVisible(false);
-//
-//        loginLayout.addComponent(loginForm);
-//        loginLayout.setComponentAlignment(loginForm, Alignment.TOP_CENTER);
+	private void register() {
+		HashMap<String, String> params = new HashMap();
+		params.put("username", userNameFieldForRegister.getValue());
+		params.put("email", emailFieldForRegister.getValue());
+		params.put("password", passwordFieldForRegister.getValue());
+		params.put("passwordForValidate", passwordFieldForValidate.getValue());
+		eventBus.publish(this, new RegistrationEvent(this, params));
+	}
 
-        root.setSizeFull();
-        root.addComponents(leftLayout, rightLayout);
-        setCompositionRoot(root);
-        setSizeFull();
-//        VerticalLayout rootLayout = new VerticalLayout(loginLayout);
-//        rootLayout.setSizeFull();
-//        rootLayout.setComponentAlignment(loginLayout, Alignment.MIDDLE_CENTER);
-//        setCompositionRoot(rootLayout);
-//        setSizeFull();
-    }
+	public void loginFailed(String message) {
+		userNameFieldForLogin.focus();
+		userNameFieldForLogin.selectAll();
+		infoLabel.setValue(String.format("Login failed: %s", message));
+		infoLabel.setStyleName(ValoTheme.LABEL_FAILURE);
+		infoLabel.setVisible(true);
+	}
 
-    private void login() {
-        try {
-            loggedOutLabel.setVisible(false);
-
-            String password = passwordFieldForLogin.getValue();
-            passwordFieldForLogin.setValue("");
-
-            final Authentication authentication = vaadinSecurity.login(userNameFieldForLogin.getValue(), password);
-            eventBus.publish(this, new SuccessfulLoginEvent(getUI(), authentication));
-        } catch (AuthenticationException ex) {
-            userNameFieldForLogin.focus();
-            userNameFieldForLogin.selectAll();
-            loginFailedLabel.setValue(String.format("Login failed: %s", ex.getMessage()));
-            loginFailedLabel.setVisible(true);
-        } catch (Exception ex) {
-            Notification.show("An unexpected error occurred", ex.getMessage(), Notification.Type.ERROR_MESSAGE);
-            LoggerFactory.getLogger(getClass()).error("Unexpected error while logging in", ex);
-        } finally {
-            loginButton.setEnabled(true);
-        }
-    }
-
-    private void register() {
-
-    }
 }

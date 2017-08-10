@@ -15,13 +15,6 @@
  */
 package hu.szeged.sporteventapp.ui;
 
-import com.vaadin.annotations.Push;
-import com.vaadin.annotations.Theme;
-import com.vaadin.server.DefaultErrorHandler;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.vaadin.spring.events.EventBus;
@@ -30,78 +23,94 @@ import org.vaadin.spring.security.VaadinSecurity;
 import org.vaadin.spring.security.util.SecurityExceptionUtils;
 import org.vaadin.spring.security.util.SuccessfulLoginEvent;
 
-/**
- * Main application UI that shows either the {@link org.vaadin.spring.samples.security.managed.MainScreen} or the {@link org.vaadin.spring.samples.security.managed.LoginScreen},
- * depending on whether there is an authenticated user or not. Also note that the UI is using web socket based push.
- *
- * @author Petter Holmström (petter@vaadin.com)
- */
+import com.vaadin.annotations.Push;
+import com.vaadin.annotations.Theme;
+import com.vaadin.server.DefaultErrorHandler;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.spring.annotation.SpringUI;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
+
 @SpringUI
 @Theme("mytheme")
 @Push
 public class SingleSecuredUI extends UI {
 
-    @Autowired
-    ApplicationContext applicationContext;
+	@Autowired
+	ApplicationContext applicationContext;
 
-    @Autowired
-    VaadinSecurity vaadinSecurity;
+	@Autowired
+	VaadinSecurity vaadinSecurity;
 
-    @Autowired
-    EventBus.SessionEventBus eventBus;
+	@Autowired
+	EventBus.SessionEventBus eventBus;
 
-    @Override
-    protected void init(VaadinRequest request) {
-        getPage().setTitle("Sport Event App");
-        // Let's register a custom error handler to make the 'access denied' messages a bit friendlier.
-        setErrorHandler(new DefaultErrorHandler() {
-            @Override
-            public void error(com.vaadin.server.ErrorEvent event) {
-                if (SecurityExceptionUtils.isAccessDeniedException(event.getThrowable())) {
-                    Notification.show("Sorry, you don't have access to do that.");
-                } else {
-                    super.error(event);
-                }
-            }
-        });
-        if (vaadinSecurity.isAuthenticated()) {
-            showMainScreen();
-        } else {
-            showLoginScreen(request.getParameter("logout") != null);
-        }
-    }
+	@Autowired
+	LoginController loginController;
 
-    @Override
-    public void attach() {
-        super.attach();
-        eventBus.subscribe(this);
-    }
+	@Autowired
+	MainController mainController;
 
-    @Override
-    public void detach() {
-        eventBus.unsubscribe(this);
-        super.detach();
-    }
+	@Override
+	protected void init(VaadinRequest request) {
+		getPage().setTitle("Sport Event App");
+		// Let's register a custom error handler to make the 'access denied' messages a
+		// bit friendlier.
+		setErrorHandler(new DefaultErrorHandler() {
+			@Override
+			public void error(com.vaadin.server.ErrorEvent event) {
+				if (SecurityExceptionUtils
+						.isAccessDeniedException(event.getThrowable())) {
+					Notification.show("Sorry, you don't have access to do that.");
+				}
+				else {
+					super.error(event);
+				}
+			}
+		});
+		if (vaadinSecurity.isAuthenticated()) {
+			showMainScreen();
+		}
+		else {
+			showLoginScreen(request.getParameter("logout") != null);
+		}
+	}
 
-    private void showLoginScreen(boolean loggedOut) {
-        LoginScreen loginScreen = applicationContext.getBean(LoginScreen.class);
-        loginScreen.setLoggedOut(loggedOut);
-        setContent(loginScreen);
-    }
+	@Override
+	public void attach() {
+		super.attach();
+		eventBus.subscribe(this);
+	}
 
-    private void showMainScreen() {
-        setContent(applicationContext.getBean(MainScreen.class));
-    }
+	@Override
+	public void detach() {
+		eventBus.unsubscribe(this);
+		super.detach();
+	}
 
-    @EventBusListenerMethod
-    void onLogin(SuccessfulLoginEvent loginEvent) {
-        if (loginEvent.getSource().equals(this)) {
-            access(() -> showMainScreen());
-        } else {
-            // We cannot inject the Main Screen if the event was fired from another UI, since that UI's scope would be active
-            // and the main screen for that UI would be injected. Instead, we just reload the page and let the init(...) method
-            // do the work for us.
-            getPage().reload();
-        }
-    }
+	private void showLoginScreen(boolean loggedOut) {
+		// LoginScreen loginScreen = applicationContext.getBean(LoginScreen.class);
+		// loginScreen.setLoggedOut(loggedOut);
+		setContent(loginController.getLoginScreen());
+	}
+
+	private void showMainScreen() {
+		mainController.getView().initNavigator();
+		setContent(mainController.getView());
+	}
+
+	@EventBusListenerMethod
+	void onLogin(SuccessfulLoginEvent loginEvent) {
+		if (loginEvent.getSource().equals(this)) {
+			access(() -> showMainScreen());
+		}
+		else {
+			// We cannot inject the Main Screen if the event was fired from another UI,
+			// since that UI's scope would be active
+			// and the main screen for that UI would be injected. Instead, we just reload
+			// the page and let the init(...) method
+			// do the work for us.
+			getPage().reload();
+		}
+	}
 }

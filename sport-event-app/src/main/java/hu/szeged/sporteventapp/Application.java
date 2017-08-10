@@ -15,16 +15,13 @@
  */
 package hu.szeged.sporteventapp;
 
-import com.vaadin.server.CustomizedSystemMessages;
-import com.vaadin.server.SystemMessagesProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.vaadin.spring.security.annotation.EnableVaadinManagedSecurity;
-import org.vaadin.spring.security.config.AuthenticationManagerConfigurer;
+
+import com.vaadin.server.CustomizedSystemMessages;
+import com.vaadin.server.SystemMessagesProvider;
 
 /**
  * Main entry point into the demo application.
@@ -35,19 +32,20 @@ import org.vaadin.spring.security.config.AuthenticationManagerConfigurer;
 @EnableVaadinManagedSecurity
 public class Application {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
-    /**
-     * Provide custom system messages to make sure the application is reloaded when the session expires.
-     */
-    @Bean
-    SystemMessagesProvider systemMessagesProvider() {
-        return (SystemMessagesProvider) systemMessagesInfo -> {
-            CustomizedSystemMessages systemMessages = new CustomizedSystemMessages();
-            systemMessages.setSessionExpiredNotificationEnabled(false);
-            return systemMessages;
-        };
-    }
+	/**
+	 * Provide custom system messages to make sure the application is reloaded when the
+	 * session expires.
+	 */
+	@Bean
+	SystemMessagesProvider systemMessagesProvider() {
+		return (SystemMessagesProvider) systemMessagesInfo -> {
+			CustomizedSystemMessages systemMessages = new CustomizedSystemMessages();
+			systemMessages.setSessionExpiredNotificationEnabled(false);
+			return systemMessages;
+		};
+	}
 }
