@@ -43,7 +43,7 @@ public class SingleSecuredUI extends UI {
 	VaadinSecurity vaadinSecurity;
 
 	@Autowired
-	EventBus.SessionEventBus eventBus;
+	EventBus.UIEventBus eventBus;
 
 	@Autowired
 	LoginController loginController;
@@ -89,9 +89,9 @@ public class SingleSecuredUI extends UI {
 	}
 
 	private void showLoginScreen(boolean loggedOut) {
-		// LoginScreen loginScreen = applicationContext.getBean(LoginScreen.class);
-		// loginScreen.setLoggedOut(loggedOut);
-		setContent(loginController.getLoginScreen());
+		LoginScreen loginScreen = loginController.getLoginScreen();
+		loginScreen.setLoggedOut(loggedOut);
+		setContent(loginScreen);
 	}
 
 	private void showMainScreen() {

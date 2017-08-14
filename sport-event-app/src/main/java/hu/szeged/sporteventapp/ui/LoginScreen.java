@@ -2,25 +2,29 @@ package hu.szeged.sporteventapp.ui;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 
-import java.util.HashMap;
+import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.spring.annotation.PrototypeScope;
 import org.vaadin.spring.events.EventBus;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
+import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.ui.events.LoginEvent;
 import hu.szeged.sporteventapp.ui.events.RegistrationEvent;
+import hu.szeged.sporteventapp.ui.validator.PasswordValidator;
 
-@PrototypeScope
+@UIScope
 @SpringComponent
 public class LoginScreen extends CustomComponent {
 
-	private final EventBus.SessionEventBus eventBus;
+	private final EventBus.UIEventBus eventBus;
 
 	private TextField userNameFieldForLogin;
 	private TextField userNameFieldForRegister;
@@ -30,17 +34,16 @@ public class LoginScreen extends CustomComponent {
 	private PasswordField passwordFieldForValidate;
 	private Button loginButton;
 	private Button registerButton;
-	private Label infoLabel;
+	private Label infoLabelForLogin;
+	private Label infoLabelForRegister;
+
+	Binder<User> userBinder;
+	private User user;
 
 	@Autowired
-	public LoginScreen(EventBus.SessionEventBus eventBus) {
+	public LoginScreen(EventBus.UIEventBus eventBus) {
 		this.eventBus = eventBus;
 		initLayout();
-	}
-
-	public void setLoggedOut(boolean loggedOut) {
-		infoLabel.addStyleName(ValoTheme.LABEL_SUCCESS);
-		infoLabel.setVisible(loggedOut);
 	}
 
 	private void initLayout() {
@@ -49,6 +52,8 @@ public class LoginScreen extends CustomComponent {
 		TabSheet tabSheet = new TabSheet();
 		tabSheet.addTab(createLoginLayout(), LOGIN);
 		tabSheet.addTab(createRegisterLayout(), REGISTER);
+		tabSheet.addSelectedTabChangeListener(
+				selectedTabChangeEvent -> settingInfoLabelAsDefault());
 		panel.setWidthUndefined();
 		panel.setContent(tabSheet);
 
@@ -58,22 +63,28 @@ public class LoginScreen extends CustomComponent {
 
 		setCompositionRoot(root);
 		setSizeFull();
+
+		bindUserAndFields();
 	}
 
 	private FormLayout createRegisterLayout() {
 		FormLayout formLayout = new FormLayout();
 		formLayout.setMargin(true);
 		formLayout.setSpacing(true);
+		infoLabelForRegister = new Label();
+		infoLabelForRegister.setVisible(false);
 		userNameFieldForRegister = new TextField(USERNAME);
 		emailFieldForRegister = new TextField(EMAIL);
 		passwordFieldForRegister = new PasswordField(PASSWORD);
 		passwordFieldForValidate = new PasswordField(PASSWORD_AGAIN);
 		registerButton = new Button(SIGN_UP);
-		registerButton.setDisableOnClick(true);
 		registerButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		registerButton.addClickListener((Button.ClickListener) event -> register());
-		formLayout.addComponents(userNameFieldForRegister, emailFieldForRegister,
-				passwordFieldForRegister, passwordFieldForValidate, registerButton);
+		formLayout.addComponents(infoLabelForRegister, userNameFieldForRegister,
+				emailFieldForRegister, passwordFieldForRegister, passwordFieldForValidate,
+				registerButton);
+		setFieldsAsRequired(userNameFieldForRegister, emailFieldForRegister,
+				passwordFieldForRegister, passwordFieldForValidate);
 		return formLayout;
 	}
 
@@ -81,41 +92,95 @@ public class LoginScreen extends CustomComponent {
 		FormLayout formLayout = new FormLayout();
 		formLayout.setMargin(true);
 		formLayout.setSpacing(true);
-		infoLabel = new Label();
-		infoLabel.setVisible(false);
+		infoLabelForLogin = new Label();
+		infoLabelForLogin.setVisible(false);
 		userNameFieldForLogin = new TextField(USERNAME);
 		passwordFieldForLogin = new PasswordField(PASSWORD);
 		loginButton = new Button(SIGN_IN);
-		loginButton.setDisableOnClick(true);
 		loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		loginButton.addClickListener((Button.ClickListener) event -> login());
-		formLayout.addComponents(infoLabel, userNameFieldForLogin, passwordFieldForLogin,
-				loginButton);
+		formLayout.addComponents(infoLabelForLogin, userNameFieldForLogin,
+				passwordFieldForLogin, loginButton);
 		return formLayout;
 	}
 
 	private void login() {
-		HashMap<String, String> params = new HashMap();
-		params.put("username", userNameFieldForLogin.getValue());
-		params.put("password", passwordFieldForLogin.getValue());
-		eventBus.publish(this, new LoginEvent(this, params));
+		user.setUsername(userNameFieldForLogin.getValue());
+		user.setPassword(passwordFieldForLogin.getValue());
+		eventBus.publish(this, new LoginEvent(this, user));
 	}
 
 	private void register() {
-		HashMap<String, String> params = new HashMap();
-		params.put("username", userNameFieldForRegister.getValue());
-		params.put("email", emailFieldForRegister.getValue());
-		params.put("password", passwordFieldForRegister.getValue());
-		params.put("passwordForValidate", passwordFieldForValidate.getValue());
-		eventBus.publish(this, new RegistrationEvent(this, params));
+		settingInfoLabelAsDefault();
+		user.setUsername(userNameFieldForRegister.getValue());
+		user.setEmail(emailFieldForRegister.getValue());
+		user.setPassword(passwordFieldForRegister.getValue());
+		if (user.getPassword().equals(passwordFieldForValidate.getValue())
+				&& userBinder.isValid()) {
+			eventBus.publish(this, new RegistrationEvent(this, user));
+		}
+		else {
+			adjustRegisterLabel("The passwords are not same", ValoTheme.LABEL_FAILURE,
+					true);
+		}
+	}
+
+	private void setFieldsAsRequired(TextField... fields) {
+		Arrays.stream(fields)
+				.forEach(textField -> textField.setRequiredIndicatorVisible(true));
+	}
+
+	private void bindUserAndFields() {
+		userBinder = new Binder<>();
+		user = new User();
+		userBinder.setBean(user);
+		userBinder.forField(userNameFieldForRegister)
+				.asRequired("Every User must have username")
+				.bind(User::getUsername, User::setUsername);
+		userBinder.forField(passwordFieldForRegister)
+				.withValidator(new PasswordValidator())
+				.bind(User::getPassword, User::setPassword);
+		userBinder.forField(emailFieldForRegister)
+				.withValidator(new EmailValidator(
+						"This doesn't look like a valid email address"))
+				.bind(User::getEmail, User::setEmail);
+	}
+
+	public void clearAllRegisterRelatedFieldValue() {
+		userNameFieldForRegister.clear();
+		emailFieldForRegister.clear();
+		passwordFieldForRegister.clear();
+		passwordFieldForValidate.clear();
+
+	}
+
+	public void setLoggedOut(boolean loggedOut) {
+		infoLabelForLogin.addStyleName(ValoTheme.LABEL_SUCCESS);
+		infoLabelForLogin.setValue("Logout was successful. See you later :)");
+		infoLabelForLogin.setVisible(loggedOut);
 	}
 
 	public void loginFailed(String message) {
 		userNameFieldForLogin.focus();
 		userNameFieldForLogin.selectAll();
-		infoLabel.setValue(String.format("Login failed: %s", message));
-		infoLabel.setStyleName(ValoTheme.LABEL_FAILURE);
-		infoLabel.setVisible(true);
+		infoLabelForLogin.setValue(String.format("Login failed: %s", message));
+		infoLabelForLogin.setStyleName(ValoTheme.LABEL_FAILURE);
+		infoLabelForLogin.setVisible(true);
+	}
+
+	public void adjustRegisterLabel(String message, String style, boolean visible) {
+		userNameFieldForRegister.focus();
+		userNameFieldForRegister.selectAll();
+		infoLabelForRegister.setValue(message);
+		infoLabelForRegister.setStyleName(style);
+		infoLabelForRegister.setVisible(visible);
+	}
+
+	public void settingInfoLabelAsDefault() {
+		infoLabelForLogin.setValue("");
+		infoLabelForLogin.setVisible(false);
+		infoLabelForRegister.setValue("");
+		infoLabelForRegister.setVisible(false);
 	}
 
 }

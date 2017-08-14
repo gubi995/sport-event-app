@@ -5,5 +5,5 @@ import java.io.Serializable;
 import hu.szeged.sporteventapp.ui.events.LoginEvent;
 
 public interface LoginListener extends Serializable {
-	void onLogin(LoginEvent params);
+	void onLogin(LoginEvent event);
 }

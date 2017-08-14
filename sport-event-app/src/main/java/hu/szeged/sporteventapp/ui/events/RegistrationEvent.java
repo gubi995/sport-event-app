@@ -1,24 +1,23 @@
 package hu.szeged.sporteventapp.ui.events;
 
-import java.util.Map;
-
 import org.springframework.context.ApplicationEvent;
 
+import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.ui.LoginScreen;
 
 public class RegistrationEvent extends ApplicationEvent {
-	private final Map<String, String> params;
+	private final User user;
 
-	public RegistrationEvent(LoginScreen source, Map<String, String> params) {
+	public RegistrationEvent(LoginScreen source, User user) {
 		super(source);
-		this.params = params;
+		this.user = user;
 	}
 
 	public LoginScreen getSource() {
 		return (LoginScreen) super.getSource();
 	}
 
-	public String getLoginParameter(String name) {
-		return (String) this.params.get(name);
+	public User getUser() {
+		return user;
 	}
 }

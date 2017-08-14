@@ -1,42 +1,59 @@
 package hu.szeged.sporteventapp.backend.service;
 
-import hu.szeged.sporteventapp.backend.data.entity.User;
-import hu.szeged.sporteventapp.backend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import hu.szeged.sporteventapp.backend.data.entity.User;
+import hu.szeged.sporteventapp.backend.repositories.UserRepository;
+import hu.szeged.sporteventapp.exception.AlreadyExistsException;
 
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+	@Autowired
+	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+	}
 
-//    public User getCurrentUser() {
-//        return userRepository.findByName(SecurityUtils.getUsername());
-//    }
+	// public User getCurrentUser() {
+	// return userRepository.findByName(SecurityUtils.getUsername());
+	// }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
+	boolean usernameIsExist(String username) {
+		return userRepository.countByUsername(username) > 0 ? true : false;
+	}
 
-    @Transactional
-    public User save(User entity) {
-        return userRepository.save(entity);
-    }
+	boolean emailIsExist(String email) {
+		return userRepository.countByEmail(email) > 0 ? true : false;
+	}
 
-    @Transactional
-    public void delete(long userId) {
-        userRepository.deleteById(userId);
-    }
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+
+	@Transactional
+	public User save(User user) throws AlreadyExistsException {
+		if (usernameIsExist(user.getUsername())) {
+			throw new AlreadyExistsException("Username already exists");
+		}
+		else if (emailIsExist(user.getEmail())) {
+			throw new AlreadyExistsException("Email already exists");
+		}
+		else {
+			String hashedPassword = passwordEncoder.encode(user.getPassword());
+			user.setPassword(hashedPassword);
+			return userRepository.save(user);
+		}
+	}
+
+	@Transactional
+	public void delete(long userId) {
+		userRepository.deleteById(userId);
+	}
 }

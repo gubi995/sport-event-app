@@ -5,5 +5,5 @@ import java.io.Serializable;
 import hu.szeged.sporteventapp.ui.events.RegistrationEvent;
 
 public interface RegistrationListener extends Serializable {
-	void onRegistration(RegistrationEvent params);
+	void onRegistration(RegistrationEvent event);
 }
