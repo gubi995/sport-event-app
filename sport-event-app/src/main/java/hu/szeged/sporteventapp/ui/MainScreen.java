@@ -32,8 +32,6 @@ import com.vaadin.ui.UI;
 import hu.szeged.sporteventapp.ui.views.AccessDeniedView;
 import hu.szeged.sporteventapp.ui.views.ErrorView;
 
-import javax.annotation.PostConstruct;
-
 /**
  * Full-screen UI component that allows the user to navigate between views, and log out.
  *

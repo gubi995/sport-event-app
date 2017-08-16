@@ -37,6 +37,12 @@ public class User extends AbstractEntity {
 	@Size(max = 255)
 	private String state;
 
+	private int age;
+
+	private String realName;
+
+	private String mobileNumber;
+
 	public User() {
 		// An empty constructor is needed for all beans
 	}
@@ -97,5 +103,29 @@ public class User extends AbstractEntity {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getRealName() {
+		return realName;
+	}
+
+	public void setRealName(String realName) {
+		this.realName = realName;
+	}
+
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}
 }

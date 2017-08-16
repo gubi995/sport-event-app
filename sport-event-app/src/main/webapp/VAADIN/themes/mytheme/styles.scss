@@ -1,5 +1,6 @@
 @import "mytheme";
 @import "addons";
+@import "shame";
 
 // This file prefixes all rules with the theme name to avoid causing conflicts with other themes.
 // The actual styles should be defined in mytheme.scss
@@ -7,7 +8,7 @@
 .mytheme {
   @include addons;
   @include mytheme;
-
+  @include shame;
 }
 
 

@@ -1,10 +1,12 @@
-package hu.szeged.sporteventapp.ui;
+package hu.szeged.sporteventapp.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.annotation.PrototypeScope;
 
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.navigator.SpringViewProvider;
+
+import hu.szeged.sporteventapp.ui.MainScreen;
 
 @PrototypeScope
 @SpringComponent

@@ -1,5 +1,6 @@
 package hu.szeged.sporteventapp.backend.service;
 
+import hu.szeged.sporteventapp.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,9 +22,9 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	// public User getCurrentUser() {
-	// return userRepository.findByName(SecurityUtils.getUsername());
-	// }
+	 public User getCurrentUser() {
+	 return userRepository.findByUsername(SecurityUtils.getUsername());
+	 }
 
 	boolean usernameIsExist(String username) {
 		return userRepository.countByUsername(username) > 0 ? true : false;

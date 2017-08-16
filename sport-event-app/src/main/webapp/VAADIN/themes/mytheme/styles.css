@@ -12167,3 +12167,13 @@ div.v-layout.v-horizontal.v-widget {
 	width: 16px;
 	overflow: hidden;
 }
+
+.mytheme .user-image-group {
+	padding-bottom: 0px;
+	padding-right: 0px;
+}
+
+.mytheme .user-image-group .user-image {
+	border: 2px solid #b2b2b2;
+	margin-bottom: 5px;
+}

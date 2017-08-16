@@ -15,6 +15,8 @@
  */
 package hu.szeged.sporteventapp.ui;
 
+import hu.szeged.sporteventapp.controllers.LoginController;
+import hu.szeged.sporteventapp.controllers.MainController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.vaadin.spring.events.EventBus;
