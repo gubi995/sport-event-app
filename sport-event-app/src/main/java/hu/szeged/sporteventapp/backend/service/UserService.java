@@ -1,6 +1,5 @@
 package hu.szeged.sporteventapp.backend.service;
 
-import hu.szeged.sporteventapp.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,7 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.backend.repositories.UserRepository;
-import hu.szeged.sporteventapp.exception.AlreadyExistsException;
+import hu.szeged.sporteventapp.common.exception.AlreadyExistsException;
+import hu.szeged.sporteventapp.security.SecurityUtils;
 
 @Service
 public class UserService {
@@ -22,9 +22,9 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
 
-	 public User getCurrentUser() {
-	 return userRepository.findByUsername(SecurityUtils.getUsername());
-	 }
+	public User getCurrentUser() {
+		return userRepository.findByUsername(SecurityUtils.getUsername());
+	}
 
 	boolean usernameIsExist(String username) {
 		return userRepository.countByUsername(username) > 0 ? true : false;
@@ -51,6 +51,22 @@ public class UserService {
 			user.setPassword(hashedPassword);
 			return userRepository.save(user);
 		}
+	}
+
+	@Transactional
+	public int updateUserPassword(long id, String password) {
+		return userRepository.updateUserPassword(id, password);
+	}
+
+	@Transactional
+	public int updateUserAdditionalData(long id, int age, String realName,
+			String mobileNumber) {
+		return userRepository.updateUserAdditionalData(id, age, realName, mobileNumber);
+	}
+
+	@Transactional
+	public int updateUserImageData(long id, String pictureName) {
+		return userRepository.updateUserImageData(id, pictureName);
 	}
 
 	@Transactional

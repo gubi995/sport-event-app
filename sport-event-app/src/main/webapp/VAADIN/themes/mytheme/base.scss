@@ -1,0 +1,14 @@
+@mixin base {
+  .v-Notification {
+    box-shadow: none;
+    border: 2px solid #b2b2b2;
+  }
+
+  .view-container {
+    overflow: auto;
+    > .v-verticallayout {
+      padding-top: 15px;
+    }
+  }
+}
+

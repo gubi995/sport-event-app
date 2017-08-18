@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package hu.szeged.sporteventapp.ui;
+package hu.szeged.sporteventapp.ui.mainscreen;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.annotation.PrototypeScope;
@@ -55,6 +55,16 @@ public class MainScreen extends CustomComponent {
 		initLayout();
 	}
 
+	public void initNavigator() {
+		Navigator navigator = new Navigator(UI.getCurrent(), viewContainer);
+		// Without an AccessDeniedView, the view provider would act like the restricted
+		// views did not exist at all.
+		springViewProvider.setAccessDeniedViewClass(AccessDeniedView.class);
+		navigator.addProvider(springViewProvider);
+		navigator.setErrorView(ErrorView.class);
+		navigator.navigateTo(navigator.getState());
+	}
+
 	private void initLayout() {
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setSizeFull();
@@ -68,18 +78,8 @@ public class MainScreen extends CustomComponent {
 
 		viewContainer = new CssLayout();
 		viewContainer.setSizeFull();
+		viewContainer.addStyleName("view-container");
 		layout.addComponent(viewContainer);
 		layout.setExpandRatio(viewContainer, 1f);
 	}
-
-	public void initNavigator() {
-		Navigator navigator = new Navigator(UI.getCurrent(), viewContainer);
-		// Without an AccessDeniedView, the view provider would act like the restricted
-		// views did not exist at all.
-		springViewProvider.setAccessDeniedViewClass(AccessDeniedView.class);
-		navigator.addProvider(springViewProvider);
-		navigator.setErrorView(ErrorView.class);
-		navigator.navigateTo(navigator.getState());
-	}
-
 }

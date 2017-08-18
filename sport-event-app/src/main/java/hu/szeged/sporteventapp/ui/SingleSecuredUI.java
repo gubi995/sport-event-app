@@ -15,8 +15,9 @@
  */
 package hu.szeged.sporteventapp.ui;
 
-import hu.szeged.sporteventapp.controllers.LoginController;
-import hu.szeged.sporteventapp.controllers.MainController;
+import hu.szeged.sporteventapp.ui.loginscreen.LoginScreen;
+import hu.szeged.sporteventapp.ui.loginscreen.LoginScreenPresenter;
+import hu.szeged.sporteventapp.ui.mainscreen.MainScreenPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.vaadin.spring.events.EventBus;
@@ -48,10 +49,10 @@ public class SingleSecuredUI extends UI {
 	EventBus.UIEventBus eventBus;
 
 	@Autowired
-	LoginController loginController;
+	LoginScreenPresenter loginScreenPresenter;
 
 	@Autowired
-	MainController mainController;
+	MainScreenPresenter mainScreenPresenter;
 
 	@Override
 	protected void init(VaadinRequest request) {
@@ -91,14 +92,14 @@ public class SingleSecuredUI extends UI {
 	}
 
 	private void showLoginScreen(boolean loggedOut) {
-		LoginScreen loginScreen = loginController.getLoginScreen();
+		LoginScreen loginScreen = loginScreenPresenter.getLoginScreen();
 		loginScreen.setLoggedOut(loggedOut);
 		setContent(loginScreen);
 	}
 
 	private void showMainScreen() {
-		mainController.getView().initNavigator();
-		setContent(mainController.getView());
+		mainScreenPresenter.getView().initNavigator();
+		setContent(mainScreenPresenter.getView());
 	}
 
 	@EventBusListenerMethod

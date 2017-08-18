@@ -1,4 +1,4 @@
-package hu.szeged.sporteventapp.exception;
+package hu.szeged.sporteventapp.common.exception;
 
 public class AlreadyExistsException extends Exception {
 

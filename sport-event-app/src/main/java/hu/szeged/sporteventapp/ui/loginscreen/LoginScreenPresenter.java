@@ -1,4 +1,4 @@
-package hu.szeged.sporteventapp.controllers;
+package hu.szeged.sporteventapp.ui.loginscreen;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -15,8 +15,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.backend.service.UserService;
-import hu.szeged.sporteventapp.exception.AlreadyExistsException;
-import hu.szeged.sporteventapp.ui.LoginScreen;
+import hu.szeged.sporteventapp.common.exception.AlreadyExistsException;
 import hu.szeged.sporteventapp.ui.events.LoginEvent;
 import hu.szeged.sporteventapp.ui.events.RegistrationEvent;
 import hu.szeged.sporteventapp.ui.listeners.LoginEventListener;
@@ -24,7 +23,7 @@ import hu.szeged.sporteventapp.ui.listeners.RegistrationEventListener;
 
 @UIScope
 @SpringComponent
-public class LoginController implements LoginEventListener, RegistrationEventListener {
+public class LoginScreenPresenter implements LoginEventListener, RegistrationEventListener {
 
 	private final VaadinSecurity vaadinSecurity;
 	private final EventBus.UIEventBus eventBus;
@@ -32,8 +31,8 @@ public class LoginController implements LoginEventListener, RegistrationEventLis
 	private final UserService userService;
 
 	@Autowired
-	public LoginController(LoginScreen loginScreen, UserService userService,
-	                       EventBus.UIEventBus eventBus, VaadinSecurity vaadinSecurity) {
+	public LoginScreenPresenter(LoginScreen loginScreen, UserService userService,
+								EventBus.UIEventBus eventBus, VaadinSecurity vaadinSecurity) {
 		this.loginScreen = loginScreen;
 		this.userService = userService;
 		this.eventBus = eventBus;

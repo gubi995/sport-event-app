@@ -27,7 +27,7 @@ public class User extends AbstractEntity {
 	private String password;
 
 	@Size(max = 255)
-	private String picturePath;
+	private String pictureName;
 
 	@NotNull
 	@Size(max = 255)
@@ -47,12 +47,12 @@ public class User extends AbstractEntity {
 		// An empty constructor is needed for all beans
 	}
 
-	public User(String username, String email, String password, String picturePath,
+	public User(String username, String email, String password, String pictureName,
 			String role, String state) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.picturePath = picturePath;
+		this.pictureName = pictureName;
 		this.role = role;
 		this.state = state;
 	}
@@ -81,12 +81,12 @@ public class User extends AbstractEntity {
 		this.username = username;
 	}
 
-	public String getPicturePath() {
-		return picturePath;
+	public String getPictureName() {
+		return pictureName;
 	}
 
-	public void setPicturePath(String picturePath) {
-		this.picturePath = picturePath;
+	public void setPictureName(String pictureName) {
+		this.pictureName = pictureName;
 	}
 
 	public String getRole() {

@@ -1,4 +1,4 @@
-package hu.szeged.sporteventapp.controllers;
+package hu.szeged.sporteventapp.ui.mainscreen;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.annotation.PrototypeScope;
@@ -6,17 +6,15 @@ import org.vaadin.spring.annotation.PrototypeScope;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.navigator.SpringViewProvider;
 
-import hu.szeged.sporteventapp.ui.MainScreen;
-
 @PrototypeScope
 @SpringComponent
-public class MainController {
+public class MainScreenPresenter {
 
 	private final SpringViewProvider viewProvider;
 	private final MainScreen mainScreen;
 
 	@Autowired
-	public MainController(SpringViewProvider viewProvider, MainScreen mainScreen) {
+	public MainScreenPresenter(SpringViewProvider viewProvider, MainScreen mainScreen) {
 		this.viewProvider = viewProvider;
 		this.mainScreen = mainScreen;
 	}

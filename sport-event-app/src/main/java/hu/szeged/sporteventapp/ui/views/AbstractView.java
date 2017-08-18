@@ -7,7 +7,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-public abstract class AbstractView extends VerticalLayout implements View {
+import java.io.Serializable;
+
+public abstract class AbstractView extends VerticalLayout implements View, Serializable {
 
 	private final Label captionLabel;
 

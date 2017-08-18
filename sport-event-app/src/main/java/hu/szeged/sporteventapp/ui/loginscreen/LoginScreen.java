@@ -1,4 +1,4 @@
-package hu.szeged.sporteventapp.ui;
+package hu.szeged.sporteventapp.ui.loginscreen;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 
@@ -44,6 +44,43 @@ public class LoginScreen extends CustomComponent {
 	public LoginScreen(EventBus.UIEventBus eventBus) {
 		this.eventBus = eventBus;
 		initLayout();
+	}
+
+	public void clearAllRegisterRelatedFieldValue() {
+		userNameFieldForRegister.clear();
+		emailFieldForRegister.clear();
+		passwordFieldForRegister.clear();
+		passwordFieldForValidate.clear();
+
+	}
+
+	public void loginFailed(String message) {
+		userNameFieldForLogin.focus();
+		userNameFieldForLogin.selectAll();
+		infoLabelForLogin.setValue(String.format("Login failed: %s", message));
+		infoLabelForLogin.setStyleName(ValoTheme.LABEL_FAILURE);
+		infoLabelForLogin.setVisible(true);
+	}
+
+	public void setLoggedOut(boolean loggedOut) {
+		infoLabelForLogin.addStyleName(ValoTheme.LABEL_SUCCESS);
+		infoLabelForLogin.setValue("Logout was successful. See you later :)");
+		infoLabelForLogin.setVisible(loggedOut);
+	}
+
+	public void adjustRegisterLabel(String message, String style, boolean visible) {
+		userNameFieldForRegister.focus();
+		userNameFieldForRegister.selectAll();
+		infoLabelForRegister.setValue(message);
+		infoLabelForRegister.setStyleName(style);
+		infoLabelForRegister.setVisible(visible);
+	}
+
+	public void settingInfoLabelAsDefault() {
+		infoLabelForLogin.setValue("");
+		infoLabelForLogin.setVisible(false);
+		infoLabelForRegister.setValue("");
+		infoLabelForRegister.setVisible(false);
 	}
 
 	private void initLayout() {
@@ -145,42 +182,4 @@ public class LoginScreen extends CustomComponent {
 						"This doesn't look like a valid email address"))
 				.bind(User::getEmail, User::setEmail);
 	}
-
-	public void clearAllRegisterRelatedFieldValue() {
-		userNameFieldForRegister.clear();
-		emailFieldForRegister.clear();
-		passwordFieldForRegister.clear();
-		passwordFieldForValidate.clear();
-
-	}
-
-	public void setLoggedOut(boolean loggedOut) {
-		infoLabelForLogin.addStyleName(ValoTheme.LABEL_SUCCESS);
-		infoLabelForLogin.setValue("Logout was successful. See you later :)");
-		infoLabelForLogin.setVisible(loggedOut);
-	}
-
-	public void loginFailed(String message) {
-		userNameFieldForLogin.focus();
-		userNameFieldForLogin.selectAll();
-		infoLabelForLogin.setValue(String.format("Login failed: %s", message));
-		infoLabelForLogin.setStyleName(ValoTheme.LABEL_FAILURE);
-		infoLabelForLogin.setVisible(true);
-	}
-
-	public void adjustRegisterLabel(String message, String style, boolean visible) {
-		userNameFieldForRegister.focus();
-		userNameFieldForRegister.selectAll();
-		infoLabelForRegister.setValue(message);
-		infoLabelForRegister.setStyleName(style);
-		infoLabelForRegister.setVisible(visible);
-	}
-
-	public void settingInfoLabelAsDefault() {
-		infoLabelForLogin.setValue("");
-		infoLabelForLogin.setVisible(false);
-		infoLabelForRegister.setValue("");
-		infoLabelForRegister.setVisible(false);
-	}
-
 }

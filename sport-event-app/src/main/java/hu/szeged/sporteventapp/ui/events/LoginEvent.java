@@ -3,7 +3,7 @@ package hu.szeged.sporteventapp.ui.events;
 import org.springframework.context.ApplicationEvent;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
-import hu.szeged.sporteventapp.ui.LoginScreen;
+import hu.szeged.sporteventapp.ui.loginscreen.LoginScreen;
 
 public class LoginEvent extends ApplicationEvent {
 	private final User user;
