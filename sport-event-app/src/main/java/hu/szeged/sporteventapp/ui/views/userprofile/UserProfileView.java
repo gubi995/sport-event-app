@@ -4,6 +4,7 @@ import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 import static hu.szeged.sporteventapp.ui.views.userprofile.UserProfileView.VIEW_NAME;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
