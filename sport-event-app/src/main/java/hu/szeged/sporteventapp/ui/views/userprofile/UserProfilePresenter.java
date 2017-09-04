@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
 
+import hu.szeged.sporteventapp.common.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -69,14 +70,6 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView>
 		sessionUser = userService.getCurrentUser();
 		getView().initBinder(sessionUser);
 		getView().getUserImage()
-				.setSource(setImageResource(sessionUser.getPictureName()));
-	}
-
-	private FileResource setImageResource(String pictureName) {
-		String webappPath = VaadinService.getCurrent().getBaseDirectory()
-				.getAbsolutePath();
-		FileResource resource = new FileResource(
-				new File(webappPath + "/images/" + pictureName));
-		return resource;
+				.setSource(ImageUtil.setImageResource(sessionUser.getPictureName()));
 	}
 }

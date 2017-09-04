@@ -2,6 +2,7 @@ package hu.szeged.sporteventapp.ui.loginscreen;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.DEFAULT_USER_IMAGE;
 
+import hu.szeged.sporteventapp.backend.data.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -69,7 +70,7 @@ public class LoginScreenPresenter implements LoginEventListener, RegistrationEve
 			User user = new User(event.getUser().getUsername(),
 					event.getUser().getEmail(), event.getUser().getPassword(),
 					DEFAULT_USER_IMAGE,
-					"ROLE_USER", "state");
+					Role.USER,0,"","");
 			userService.save(user);
 			loginScreen.adjustRegisterLabel("Registration successful",
 					ValoTheme.LABEL_SUCCESS, true);

@@ -1,56 +1,49 @@
 package hu.szeged.sporteventapp.backend.data.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+import javax.persistence.*;
+
+import hu.szeged.sporteventapp.common.util.IdGenerator;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @MappedSuperclass
+@Getter
+@Setter
+@EqualsAndHashCode(of = "id")
 public class AbstractEntity implements Serializable {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+	@Id
+	@Column(name = "id", nullable = false, unique = true, updatable = false, length = 32)
+	protected String id = IdGenerator.generateId();
 
-    @Version
-    private int version;
+	@Version
+	protected Long version;
 
-    public boolean isNew() {
-        return id == null;
-    }
+	@Column(name = "created_at", nullable = false)
+	protected LocalDateTime createdAt;
 
-    public Long getId() {
-        return id;
-    }
+	@Column(name = "updated_at", nullable = false)
+	protected LocalDateTime updatedAt;
 
-    public int getVersion() {
-        return version;
-    }
+	@PreUpdate
+	protected void preUpdate() {
+		setUpdatedAt(LocalDateTime.now());
+	}
 
-    @Override
-    public int hashCode() {
-        if (id == null) {
-            return super.hashCode();
-        }
+	@PrePersist
+	protected void prePersist() {
+		setCreatedAt(LocalDateTime.now());
+		preUpdate();
+	}
 
-        return 31 + id.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (id == null) {
-            // New entities are only equal if the instance if the same
-            return super.equals(other);
-        }
-
-        if (this == other) {
-            return true;
-        }
-        if (!(other instanceof AbstractEntity)) {
-            return false;
-        }
-        return id.equals(((AbstractEntity) other).id);
-    }
+	@Transient
+	public boolean isNew() {
+		return Objects.isNull(version);
+	}
 
 }

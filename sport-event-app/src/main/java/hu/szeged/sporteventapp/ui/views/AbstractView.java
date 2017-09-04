@@ -1,13 +1,15 @@
 package hu.szeged.sporteventapp.ui.views;
 
+import java.io.Serializable;
+
+import org.vaadin.viritin.layouts.MVerticalLayout;
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.io.Serializable;
 
 public abstract class AbstractView extends VerticalLayout implements View, Serializable {
 
@@ -28,13 +30,9 @@ public abstract class AbstractView extends VerticalLayout implements View, Seria
 	}
 
 	private void initHeader() {
-		VerticalLayout header = new VerticalLayout();
-		header.setMargin(false);
-		header.setSpacing(false);
-		header.addComponent(captionLabel);
-		header.setComponentAlignment(captionLabel, Alignment.MIDDLE_CENTER);
-		header.setWidth(100, Unit.PERCENTAGE);
-		addComponent(header);
+		addComponent(new MVerticalLayout().withMargin(false).withSpacing(false)
+				.withWidth(100, Unit.PERCENTAGE)
+				.add(captionLabel, Alignment.MIDDLE_CENTER));
 	};
 
 	public abstract void initBody();

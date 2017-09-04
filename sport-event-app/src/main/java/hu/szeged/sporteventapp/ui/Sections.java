@@ -19,11 +19,6 @@ import org.springframework.stereotype.Component;
 import org.vaadin.spring.sidebar.annotation.SideBarSection;
 import org.vaadin.spring.sidebar.annotation.SideBarSections;
 
-/**
- * Component that is only used to declare the sections of the side bar.
- *
- * @author Petter Holmström (petter@vaadin.com)
- */
 @Component
 @SideBarSections({
         @SideBarSection(id = Sections.VIEWS, caption = "Views"),

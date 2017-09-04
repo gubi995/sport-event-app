@@ -24,9 +24,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface MyBackend {
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     String adminOnlyEcho(String s);
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     String echo(String s);
 }

@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Modifying
 	@Query("UPDATE User user SET user.age = :age, user.realName = :realName, user.mobileNumber = :mobileNumber WHERE user.id = :id")
 	int updateUserAdditionalData(
-			@Param("id") long id,
+			@Param("id") String id,
 			@Param("age") int age,
 			@Param("realName") String realName,
 			@Param("mobileNumber") String mobileNumber);
@@ -28,12 +28,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Modifying
 	@Query("UPDATE User user SET user.password = :password WHERE user.id = :id")
 	int updateUserPassword(
-			@Param("id") long id,
+			@Param("id") String id,
 			@Param("password") String password);
 
 	@Modifying
 	@Query("UPDATE User user SET user.pictureName = :pictureName WHERE user.id = :id")
 	int updateUserImageData(
-			@Param("id") long id,
+			@Param("id") String id,
 			@Param("pictureName") String pictureName);
 }

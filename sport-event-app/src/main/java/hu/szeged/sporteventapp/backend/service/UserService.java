@@ -54,18 +54,18 @@ public class UserService {
 	}
 
 	@Transactional
-	public int updateUserPassword(long id, String password) {
+	public int updateUserPassword(String id, String password) {
 		return userRepository.updateUserPassword(id, password);
 	}
 
 	@Transactional
-	public int updateUserAdditionalData(long id, int age, String realName,
+	public int updateUserAdditionalData(String id, int age, String realName,
 			String mobileNumber) {
 		return userRepository.updateUserAdditionalData(id, age, realName, mobileNumber);
 	}
 
 	@Transactional
-	public int updateUserImageData(long id, String pictureName) {
+	public int updateUserImageData(String id, String pictureName) {
 		return userRepository.updateUserImageData(id, pictureName);
 	}
 

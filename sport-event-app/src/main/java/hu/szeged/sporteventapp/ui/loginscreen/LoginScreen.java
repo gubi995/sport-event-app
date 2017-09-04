@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.events.EventBus;
+import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import com.vaadin.data.Binder;
 import com.vaadin.data.validator.EmailValidator;
@@ -16,6 +17,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
+import hu.szeged.sporteventapp.common.util.ImageUtil;
 import hu.szeged.sporteventapp.ui.events.LoginEvent;
 import hu.szeged.sporteventapp.ui.events.RegistrationEvent;
 import hu.szeged.sporteventapp.ui.validator.PasswordValidator;
@@ -84,24 +86,41 @@ public class LoginScreen extends CustomComponent {
 	}
 
 	private void initLayout() {
-		HorizontalLayout root = new HorizontalLayout();
+		setCompositionRoot(
+				new MVerticalLayout().withFullSize().add(
+						new MVerticalLayout().withUndefinedSize()
+								.add(initAppIcon(), initAppTitle(),
+										initPanelForLogInAndRegistration())
+								.alignAll(Alignment.MIDDLE_CENTER),
+						Alignment.MIDDLE_CENTER));
+		setSizeFull();
+		bindUserAndFields();
+	}
+
+	private Image initAppIcon() {
+		Image appIcon = new Image();
+		appIcon.setWidth(50, Unit.PIXELS);
+		appIcon.setHeight(50, Unit.PIXELS);
+		appIcon.setSource(ImageUtil.setImageResource(APP_ICON));
+		return appIcon;
+	}
+
+	private Label initAppTitle() {
+		Label title = new Label("Go sport together!");
+		title.addStyleName(ValoTheme.LABEL_H2);
+		return title;
+	}
+
+	private Panel initPanelForLogInAndRegistration() {
 		Panel panel = new Panel();
 		TabSheet tabSheet = new TabSheet();
 		tabSheet.addTab(createLoginLayout(), LOGIN);
 		tabSheet.addTab(createRegisterLayout(), REGISTER);
 		tabSheet.addSelectedTabChangeListener(
 				selectedTabChangeEvent -> settingInfoLabelAsDefault());
-		panel.setWidthUndefined();
+		panel.setWidth(400, Unit.PIXELS);
 		panel.setContent(tabSheet);
-
-		root.setSizeFull();
-		root.addComponent(panel);
-		root.setComponentAlignment(panel, Alignment.MIDDLE_CENTER);
-
-		setCompositionRoot(root);
-		setSizeFull();
-
-		bindUserAndFields();
+		return panel;
 	}
 
 	private FormLayout createRegisterLayout() {
@@ -109,12 +128,14 @@ public class LoginScreen extends CustomComponent {
 		formLayout.setMargin(true);
 		formLayout.setSpacing(true);
 		infoLabelForRegister = new Label();
+		infoLabelForRegister.removeStyleName("v-label-undef-w");
 		infoLabelForRegister.setVisible(false);
 		userNameFieldForRegister = new TextField(USERNAME);
 		emailFieldForRegister = new TextField(EMAIL);
 		passwordFieldForRegister = new PasswordField(PASSWORD);
 		passwordFieldForValidate = new PasswordField(PASSWORD_AGAIN);
 		registerButton = new Button(SIGN_UP);
+		registerButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		registerButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		registerButton.addClickListener((Button.ClickListener) event -> register());
 		formLayout.addComponents(infoLabelForRegister, userNameFieldForRegister,
@@ -122,6 +143,9 @@ public class LoginScreen extends CustomComponent {
 				registerButton);
 		setFieldsAsRequired(userNameFieldForRegister, emailFieldForRegister,
 				passwordFieldForRegister, passwordFieldForValidate);
+		setComponentsWidthOnFullSize(infoLabelForRegister, registerButton,
+				userNameFieldForRegister, emailFieldForRegister, passwordFieldForRegister,
+				passwordFieldForValidate);
 		return formLayout;
 	}
 
@@ -131,12 +155,16 @@ public class LoginScreen extends CustomComponent {
 		formLayout.setSpacing(true);
 		infoLabelForLogin = new Label();
 		infoLabelForLogin.setVisible(false);
+		infoLabelForLogin.removeStyleName("v-label-undef-w");
 		userNameFieldForLogin = new TextField(USERNAME);
 		passwordFieldForLogin = new PasswordField(PASSWORD);
 		loginButton = new Button(SIGN_IN);
+		loginButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		loginButton.addClickListener((Button.ClickListener) event -> login());
 		formLayout.addComponents(infoLabelForLogin, userNameFieldForLogin,
+				passwordFieldForLogin, loginButton);
+		setComponentsWidthOnFullSize(infoLabelForLogin, userNameFieldForLogin,
 				passwordFieldForLogin, loginButton);
 		return formLayout;
 	}
@@ -152,12 +180,17 @@ public class LoginScreen extends CustomComponent {
 		user.setUsername(userNameFieldForRegister.getValue());
 		user.setEmail(emailFieldForRegister.getValue());
 		user.setPassword(passwordFieldForRegister.getValue());
-		if (user.getPassword().equals(passwordFieldForValidate.getValue())
-				&& userBinder.isValid()) {
-			eventBus.publish(this, new RegistrationEvent(this, user));
+		if (userBinder.isValid()) {
+			if (user.getPassword().equals(passwordFieldForValidate.getValue())) {
+				eventBus.publish(this, new RegistrationEvent(this, user));
+			}
+			else {
+				adjustRegisterLabel("The passwords are not samea",
+						ValoTheme.LABEL_FAILURE, true);
+			}
 		}
 		else {
-			adjustRegisterLabel("The passwords are not same", ValoTheme.LABEL_FAILURE,
+			adjustRegisterLabel("Please fill out all fields", ValoTheme.LABEL_FAILURE,
 					true);
 		}
 	}
@@ -165,6 +198,10 @@ public class LoginScreen extends CustomComponent {
 	private void setFieldsAsRequired(TextField... fields) {
 		Arrays.stream(fields)
 				.forEach(textField -> textField.setRequiredIndicatorVisible(true));
+	}
+
+	private void setComponentsWidthOnFullSize(AbstractComponent... components) {
+		Arrays.stream(components).forEach(component -> component.setSizeFull());
 	}
 
 	private void bindUserAndFields() {

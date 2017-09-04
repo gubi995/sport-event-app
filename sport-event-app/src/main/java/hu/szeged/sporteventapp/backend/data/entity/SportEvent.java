@@ -1,100 +1,48 @@
 package hu.szeged.sporteventapp.backend.data.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.Table;
 
-import org.hibernate.validator.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "sport_event")
 public class SportEvent extends AbstractEntity {
 
-	@NotNull
-	@NotEmpty
-	@Size(max = 30)
+	@Column(nullable = false, length = 40)
 	private String name;
 
-	@NotNull
-	@NotEmpty
+	@Column(nullable = false)
 	private String location;
 
-	@NotNull
-	@NotEmpty
-	@Temporal(TemporalType.TIMESTAMP)
-	private java.util.Date startDate;
+	@Column(name = "start_date", nullable = false)
+	private LocalDateTime startDate;
 
-	@NotNull
-	@NotEmpty
-	@Temporal(TemporalType.TIMESTAMP)
-	private java.util.Date endDate;
+	@Column(name = "end_date", nullable = false)
+	private LocalDateTime endDate;
 
-	@NotNull
-	@NotEmpty
+	@Column(name = "max_participant")
+	private Integer maxParticipant;
+
+	@Basic
 	private String details;
 
-	@NotNull
-	@NotEmpty
-	private String organizerName;
+	@Column(name = "organizer", nullable = false)
+	private User organizer;
 
-	public SportEvent(String name, String location, Date startDate, Date endDate,
-			String details, String organizerName) {
-		this.name = name;
-		this.location = location;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.details = details;
-		this.organizerName = organizerName;
-	}
+	@Column(name = "participants")
+	private List<User> participants;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getDetails() {
-		return details;
-	}
-
-	public void setDetails(String details) {
-		this.details = details;
-	}
-
-	public String getOrganizerName() {
-		return organizerName;
-	}
-
-	public void setOrganizerName(String organizerName) {
-		this.organizerName = organizerName;
-	}
 }

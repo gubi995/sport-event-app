@@ -15,6 +15,7 @@
  */
 package hu.szeged.sporteventapp.ui;
 
+import com.vaadin.annotations.Widgetset;
 import hu.szeged.sporteventapp.ui.loginscreen.LoginScreen;
 import hu.szeged.sporteventapp.ui.loginscreen.LoginScreenPresenter;
 import hu.szeged.sporteventapp.ui.mainscreen.MainScreenPresenter;
@@ -35,8 +36,8 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
 @SpringUI
-@Theme("mytheme")
 @Push
+@Theme("mytheme")
 public class SingleSecuredUI extends UI {
 
 	@Autowired

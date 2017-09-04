@@ -34,7 +34,7 @@ import org.vaadin.spring.sidebar.annotation.SideBarItem;
  *
  * @author Petter Holmström (petter@vaadin.com)
  */
-@Secured({"ROLE_USER", "ROLE_ADMIN"})
+@Secured({"USER", "ADMIN"})
 @SpringView(name = "user")
 @SideBarItem(sectionId = Sections.VIEWS, caption = "User View")
 @FontAwesomeIcon(FontAwesome.ARCHIVE)
