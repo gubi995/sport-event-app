@@ -3,10 +3,7 @@ package hu.szeged.sporteventapp.backend.data.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,10 +36,14 @@ public class SportEvent extends AbstractEntity {
 	@Basic
 	private String details;
 
-	@Column(name = "organizer", nullable = false)
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "user_id")
 	private User organizer;
 
-	@Column(name = "participants")
+	@ManyToMany
+	@JoinTable(name = "participants_on_event",
+			joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
 	private List<User> participants;
 
 }

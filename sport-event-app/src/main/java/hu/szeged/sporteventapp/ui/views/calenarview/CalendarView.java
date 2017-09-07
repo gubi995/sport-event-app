@@ -37,6 +37,7 @@ public class CalendarView extends AbstractView implements View, Serializable {
 	@Override
 	public void initBody() {
 		calendar = new Calendar();
+		calendar.setSizeFull();
 		addComponentsAndExpand(calendar);
 	}
 }

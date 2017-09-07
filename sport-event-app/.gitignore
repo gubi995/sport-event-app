@@ -2,3 +2,4 @@ target
 .mvn
 .idea
 *.iml
+src/main/resources/VAADIN

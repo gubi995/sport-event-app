@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -43,4 +45,7 @@ public class User extends AbstractEntity {
 
 	@Column(name = "mobil_number", length = 20)
 	private String mobileNumber;
+
+	@OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
+	private List<SportEvent> organizedEvents;
 }
