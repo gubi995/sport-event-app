@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.vaadin.ui.themes.ValoTheme;
+import hu.szeged.sporteventapp.backend.data.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
@@ -45,6 +47,9 @@ public class ExploreEventView extends AbstractView implements View, Serializable
 	private DateTimeField fromDateField;
 	private DateTimeField toDateField;
 	private CheckBox freeSpaceComboBox;
+	private Button joinButton;
+	private Button leaveButton;
+	private ParticipantWindow participantWindow;
 
 	@Autowired
 	public ExploreEventView(ExploreEventPresenter presenter,
@@ -52,17 +57,20 @@ public class ExploreEventView extends AbstractView implements View, Serializable
 		super(VIEW_NAME);
 		this.presenter = presenter;
 		this.timeConverter = timeConverter;
+		addStyleName("explore_event");
 	}
 
 	@Override
 	public void initBody() {
 		grid = buildGrid();
 		initFilters();
+		initButton();
 		addComponent(new MHorizontalLayout()
 				.add(nameFilter, locationFilter, fromDateField, toDateField,
-						freeSpaceComboBox)
-				.withAlign(freeSpaceComboBox, Alignment.MIDDLE_CENTER));
+						freeSpaceComboBox, joinButton, leaveButton)
+				.alignAll(Alignment.BOTTOM_CENTER));
 		addComponentsAndExpand(grid);
+		participantWindow = new ParticipantWindow();
 	}
 
 	@Override
@@ -98,7 +106,8 @@ public class ExploreEventView extends AbstractView implements View, Serializable
 		});
 		duration.setCaption("Duration(hour:min)");
 		grid.addColumn(sportEvent -> "Participants", new ButtonRenderer<>(e -> {
-			Notification.show("List participants");
+			participantWindow.setUsers(e.getItem().getParticipants());
+			getUI().addWindow(participantWindow);
 		})).setCaption("Participants");
 		grid.addColumn(sportEvent -> "Location", new ButtonRenderer<>(e -> {
 			Notification.show("Show location");
@@ -115,6 +124,15 @@ public class ExploreEventView extends AbstractView implements View, Serializable
 		freeSpaceComboBox = new CheckBox(IS_THERE_FREE_SPACE);
 		bindFiltersAndGrid(dataProvider, nameFilter, locationFilter, fromDateField,
 				toDateField, freeSpaceComboBox);
+	}
+
+	private void initButton(){
+		joinButton = new Button(JOIN);
+		joinButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+		joinButton.setIcon(VaadinIcons.FLAG_CHECKERED);
+		leaveButton = new Button(LEAVE);
+		leaveButton.setStyleName(ValoTheme.BUTTON_DANGER);
+		leaveButton.setIcon(VaadinIcons.EXIT_O);
 	}
 
 	private void updateFilters(final ListDataProvider<SportEvent> dataProvider) {
@@ -175,6 +193,59 @@ public class ExploreEventView extends AbstractView implements View, Serializable
 				20, "a1", new User(), null));
 		tests.add(new SportEvent("18", "a", LocalDateTime.now(), LocalDateTime.now(), 20,
 				"a1", new User(), null));
+		List<User> users = new ArrayList<>();
+		users.add(new User("adi", "a@a.com","a","a", Role.USER,5,"a","d",null));
+		users.add(new User("adi2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("adi2sdf", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("adisdf2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("asddi2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("adfi2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("adsdfsadfi2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("adasdfi2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("adasdfasdfi2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("adasdfsadi2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("adasdfsdfi2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		users.add(new User("adasdfasdfi2", "a@a.com","afd","ss", Role.USER,55,"a","dd",null));
+		tests.add(new SportEvent("88", "a", LocalDateTime.now(), LocalDateTime.now(), 20,
+				"a1", new User(), users));
 		return tests;
+	}
+
+	private class ParticipantWindow extends Window{
+
+		Grid<User> grid;
+
+		public ParticipantWindow() {
+			super();
+			initContent();
+		}
+
+		private void initContent(){
+			setWidth(500,Unit.PIXELS);
+			setHeight(400, Unit.PIXELS);
+			setIcon(VaadinIcons.GROUP);
+			setCaption(PARTICIPANTS);
+			setResizable(false);
+			setDraggable(false);
+			center();
+			grid = buildGrid();
+			setContent(grid);
+		}
+
+		private Grid<User> buildGrid(){
+			final Grid<User> grid = new Grid<>(User.class);
+			grid.setSizeFull();
+			grid.setColumns("username","realName");
+			grid.setSelectionMode(Grid.SelectionMode.NONE);
+			return grid;
+		}
+
+		public void setUsers(List<User> users){
+			if(users == null) {
+				grid.setItems(new ArrayList<>());
+			}else {
+				grid.setItems(users);
+			}
+		}
 	}
 }

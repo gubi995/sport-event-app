@@ -33,4 +33,8 @@ public class ViewConstants {
 	public static final String PARTICIPANTS = "Participants";
 	public static final String DELETE = "Delete";
 	public static final String SAVE = "Save";
+	public static final String REQUIRED_MSG = "Required field, please fill out";
+	public static final String WRONG_INPUT = "Wrong input";
+	public static final String JOIN = "Join";
+	public static final String LEAVE = "Leave";
 }

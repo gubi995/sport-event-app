@@ -5,8 +5,8 @@ import static hu.szeged.sporteventapp.ui.views.eventview.ExploreEventView.genera
 import static hu.szeged.sporteventapp.ui.views.myeventview.MyEventView.VIEW_NAME;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
@@ -14,6 +14,7 @@ import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.data.Binder;
+import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
@@ -69,14 +70,8 @@ public class MyEventView extends AbstractView implements View, Serializable {
 
 		grid.setItems(generateDataForTest());
 		adjustGridCoumns(grid);
-		grid.asSingleSelect().addValueChangeListener(e -> {
-			if (e.getValue() == null) {
-				eventDetailForm.setVisible(false);
-			}
-			else {
-				eventDetailForm.setVisible(true);
-			}
-		});
+		grid.asSingleSelect()
+				.addValueChangeListener(e -> showEventDetailForm(e.getValue()));
 
 		return grid;
 	}
@@ -92,6 +87,10 @@ public class MyEventView extends AbstractView implements View, Serializable {
 		createButton = new Button();
 		createButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		createButton.setIcon(VaadinIcons.PLUS);
+		createButton.addClickListener(clickEvent -> eventDetailForm
+				.setSportEvent(new SportEvent("", "", LocalDateTime.now(),
+						LocalDateTime.now(), 20, "", new User(), null)));
+		grid.asSingleSelect().clear();
 	}
 
 	private void adjustGridCoumns(final Grid<SportEvent> grid) {
@@ -123,6 +122,18 @@ public class MyEventView extends AbstractView implements View, Serializable {
 		return where.toLowerCase().contains(what.toLowerCase());
 	}
 
+	private void showEventDetailForm(SportEvent sportEvent) {
+		if (sportEvent == null) {
+			eventDetailForm.setVisible(false);
+			eventDetailForm.setSportEvent(new SportEvent("", "", LocalDateTime.now(),
+					LocalDateTime.now(), 20, "", new User(), null));
+		}
+		else {
+			eventDetailForm.setVisible(true);
+			eventDetailForm.setSportEvent(sportEvent);
+		}
+	}
+
 	private class EventDetailForm extends FormLayout {
 
 		TextField nameField;
@@ -131,24 +142,24 @@ public class MyEventView extends AbstractView implements View, Serializable {
 		DateTimeField startDateTimeField;
 		TextArea detailsArea;
 		DateTimeField endDateTimeField;
-		NativeSelect<User> comboBox;
+		ComboBox<User> participantsComboBox;
 		Button deleteParticipantButton;
 		Button saveButton;
 		Button deleteButton;
 
 		Binder<SportEvent> binder;
 
-		SportEvent sportEvent;
-
 		public EventDetailForm() {
 			super();
-			setSizeUndefined();
-			addStyleName("event_form");
 			setMargin(false);
+			addStyleName("event_form");
+			setSizeUndefined();
 			initComponent();
+			initBinder();
 			addComponents(nameField, locationField, maxParticipantField,
 					startDateTimeField, endDateTimeField,
-					new MHorizontalLayout(comboBox, deleteParticipantButton).withFullSize()
+					new MHorizontalLayout(participantsComboBox,
+							deleteParticipantButton).withFullSize()
 							.withAlign(deleteParticipantButton, Alignment.BOTTOM_CENTER),
 					detailsArea, new MHorizontalLayout(saveButton, deleteButton));
 		}
@@ -160,27 +171,70 @@ public class MyEventView extends AbstractView implements View, Serializable {
 			startDateTimeField = new DateTimeField(START_DATE);
 			endDateTimeField = new DateTimeField(END_DATE);
 			detailsArea = new TextArea(DETAILS);
-			comboBox = new NativeSelect<>(PARTICIPANTS);
+			participantsComboBox = new ComboBox<>(PARTICIPANTS);
+			participantsComboBox.setTextInputAllowed(false);
+			participantsComboBox.setEmptySelectionAllowed(false);
+			participantsComboBox.setItemCaptionGenerator(
+					user -> user.getUsername() + " / " + user.getRealName());
 			deleteParticipantButton = new Button();
 			deleteParticipantButton.setIcon(VaadinIcons.ERASER);
 			deleteParticipantButton.addStyleName(ValoTheme.BUTTON_DANGER);
 			saveButton = new Button(SAVE);
 			saveButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
+			saveButton.addClickListener(clickEvent -> save());
 			deleteButton = new Button(DELETE);
 			deleteButton.addStyleName(ValoTheme.BUTTON_DANGER);
-
-			binder = new Binder<>(SportEvent.class);
+			deleteButton.addClickListener(clickEvent -> delete());
 		}
 
-		private void setSportEvent() {
+		private void initBinder() {
+			binder = new Binder<>(SportEvent.class);
+			binder.forField(nameField).asRequired(REQUIRED_MSG).bind(SportEvent::getName,
+					SportEvent::setName);
+			binder.forField(locationField).asRequired(REQUIRED_MSG)
+					.bind(SportEvent::getLocation, SportEvent::setLocation);
+			binder.forField(startDateTimeField).asRequired(REQUIRED_MSG)
+					.bind(SportEvent::getStartDate, SportEvent::setStartDate);
+			binder.forField(endDateTimeField).asRequired(REQUIRED_MSG)
+					.bind(SportEvent::getEndDate, SportEvent::setEndDate);
+			binder.forField(maxParticipantField)
+					.withConverter(new StringToIntegerConverter(WRONG_INPUT))
+					.bind(SportEvent::getMaxParticipant, SportEvent::setMaxParticipant);
+			binder.forField(detailsArea).bind(SportEvent::getDetails,
+					SportEvent::setDetails);
+		}
+
+		private void setSportEvent(SportEvent sportEvent) {
+			binder.setBean(sportEvent);
+			adjustComboBox(sportEvent);
+			deleteButton.setVisible(sportEvent.isNew());
 			setVisible(true);
 		}
 
+		private void adjustComboBox(SportEvent sportEvent) {
+			if (sportEvent.getParticipants() != null) {
+				participantsComboBox.setEnabled(true);
+				deleteParticipantButton.setEnabled(true);
+				participantsComboBox.setItems(sportEvent.getParticipants());
+			}
+			else {
+				participantsComboBox.setEnabled(false);
+				deleteParticipantButton.setEnabled(false);
+				participantsComboBox.clear();
+			}
+		}
+
 		private void save() {
+			// presenter.delete
+			// update list/
+			// validate
 			setVisible(false);
 		}
 
 		private void delete() {
+			// presenter.delete
+			// update list
+			// validate
 			setVisible(false);
 		}
 	}
