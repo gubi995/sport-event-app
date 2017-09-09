@@ -26,4 +26,11 @@ public class ViewConstants {
 	public static final String START_DATE_FROM = "From(star date)";
 	public static final String START_DATE_TO = "To(star date)";
 	public static final String IS_THERE_FREE_SPACE = "Is there free space";
+	public static final String MAX_PARTICIPANT = "Max participant";
+	public static final String START_DATE = "Start date";
+	public static final String END_DATE = "End date";
+	public static final String DETAILS = "Details";
+	public static final String PARTICIPANTS = "Participants";
+	public static final String DELETE = "Delete";
+	public static final String SAVE = "Save";
 }

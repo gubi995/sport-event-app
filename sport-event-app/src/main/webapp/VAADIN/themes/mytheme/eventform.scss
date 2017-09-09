@@ -1,0 +1,20 @@
+@mixin eventform {
+  .event_form {
+    .v-horizontallayout {
+      width: 100% !important;
+    }
+    .v-textfield {
+      width: 100%;
+    }
+    .v-textarea {
+      width: 100%;
+    }
+    .v-select {
+      width: 100% !important;
+    }
+    .v-select-select {
+      width: 100% !important;
+    }
+  }
+}
+

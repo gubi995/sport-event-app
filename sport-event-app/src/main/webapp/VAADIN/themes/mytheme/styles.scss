@@ -2,6 +2,7 @@
 @import "addons";
 @import "shame";
 @import "base";
+@import "eventform";
 
 // This file prefixes all rules with the theme name to avoid causing conflicts with other themes.
 // The actual styles should be defined in mytheme.scss
@@ -11,6 +12,7 @@
   @include mytheme;
   @include shame;
   @include base;
+  @include eventform;
 }
 
 

@@ -147,7 +147,7 @@ public class ExploreEventView extends AbstractView implements View, Serializable
 		return time.isAfter(from) && time.isBefore(to);
 	}
 
-	private List<SportEvent> generateDataForTest() {
+	public static List<SportEvent> generateDataForTest() {
 		ArrayList<SportEvent> tests = new ArrayList();
 		tests.add(new SportEvent("1", "a", LocalDateTime.now(),
 				LocalDateTime.of(2017, 9, 7, 23, 50, 50), 20, "a1", new User(), null));
