@@ -1,6 +1,5 @@
 package hu.szeged.sporteventapp.backend.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,22 +31,15 @@ public class SportEventService {
         return eventRepository.findSportEventByOrganizer(user);
     }
 
-    SportEvent findSportEventByName(String name){
-        return eventRepository.findSportEventByName(name);
-    }
-
-	List<User> findParticipantsOfSportEvent(String name) {
-        SportEvent sportEvent = eventRepository.findSportEventByName(name);
-        if (sportEvent == null){
-			return new ArrayList<>();
-        }else {
-            return sportEvent.getParticipants();
-        }
-    }
+	@Transactional
+	public void delete(SportEvent sportEvent) {
+		eventRepository.delete(sportEvent);
+	}
 
 	@Transactional
-	public void delete(String sportEventId) {
-		eventRepository.deleteById(sportEventId);
+	public void deleteParticipantFromEvent(SportEvent sportEvent, User user) {
+		sportEvent.getParticipants().remove(user);
+		eventRepository.delete(sportEvent);
 	}
 
 	@Transactional
@@ -58,7 +50,7 @@ public class SportEventService {
 	@Transactional
 	public void joinToSportEvent(SportEvent sportEvent, User user)
 			throws AlreadyJoinedException, NoEmptyPlaceException {
-		if (sportEvent.getParticipants().size() <= sportEvent.getMaxParticipant()) {
+		if (sportEvent.getParticipants().size() < sportEvent.getMaxParticipant()) {
 			if (!sportEvent.getParticipants().contains(user)) {
 				sportEvent.getParticipants().add(user);
 				eventRepository.save(sportEvent);

@@ -198,6 +198,8 @@ public class MyEventView extends AbstractView {
 			deleteParticipantButton = new Button();
 			deleteParticipantButton.setIcon(VaadinIcons.ERASER);
 			deleteParticipantButton.addStyleName(ValoTheme.BUTTON_DANGER);
+			deleteParticipantButton
+					.addClickListener(clickEvent -> deleteParticipantFromEvent());
 			saveButton = new Button(SAVE);
 			saveButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
 			saveButton.addClickListener(clickEvent -> save());
@@ -264,6 +266,21 @@ public class MyEventView extends AbstractView {
 			}
 			else {
 				showWarningNotification(VALIDATION_WARNING_MSG);
+			}
+		}
+
+		private void deleteParticipantFromEvent() {
+			SportEvent sportEvent = binder.getBean();
+			User user = participantsComboBox.getValue();
+			if (sportEvent != null && user != null) {
+				presenter.deleteParticipantFromEvent(sportEvent,
+						user);
+				participantsComboBox.clear();
+				presenter.updateGridDate();
+				grid.select(sportEvent);
+			}
+			else {
+				showErrorNotification("Please choose a user before delete");
 			}
 		}
 	}

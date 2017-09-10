@@ -10,8 +10,4 @@ public interface SportEventRepository extends JpaRepository<SportEvent, String> 
     List<SportEvent> findAll();
 
     List<SportEvent> findSportEventByOrganizer(User user);
-
-    SportEvent findSportEventByName(String name);
-
-//  List<SportEvent> findAllBy free space
 }

@@ -36,7 +36,11 @@ public class MyEventPresenter extends AbstractPresenter<MyEventView>
 	}
 
 	public void delete(SportEvent sportEvent) {
-		sportEventService.delete(sportEvent.getId());
+		sportEventService.delete(sportEvent);
+	}
+
+	public void deleteParticipantFromEvent(SportEvent event, User user) {
+		sportEventService.deleteParticipantFromEvent(event, user);
 	}
 
 	public void updateGridDate() {
