@@ -18,7 +18,6 @@ import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -26,8 +25,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
-import hu.szeged.sporteventapp.common.factory.client.NotificationFactory;
-import hu.szeged.sporteventapp.common.factory.server.MyBeanFactory;
+import hu.szeged.sporteventapp.common.factory.MyBeanFactory;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
 
@@ -136,7 +134,6 @@ public class MyEventView extends AbstractView {
 	private void showEventDetailForm(SportEvent sportEvent) {
 		if (sportEvent == null) {
 			eventDetailForm.setVisible(false);
-			eventDetailForm.setSportEvent(MyBeanFactory.createNewSportEvent());
 		}
 		else {
 			eventDetailForm.setVisible(true);
@@ -255,8 +252,7 @@ public class MyEventView extends AbstractView {
 				setVisible(false);
 			}
 			else {
-				NotificationFactory.createWarningNotification(VALIDATION_WARNING_MSG)
-						.show(Page.getCurrent());
+				showWarningNotification(VALIDATION_WARNING_MSG);
 			}
 		}
 
@@ -267,8 +263,7 @@ public class MyEventView extends AbstractView {
 				setVisible(false);
 			}
 			else {
-				Notification.show(WARNING, VALIDATION_WARNING_MSG,
-						Notification.Type.WARNING_MESSAGE);
+				showWarningNotification(VALIDATION_WARNING_MSG);
 			}
 		}
 	}

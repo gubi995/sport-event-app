@@ -1,22 +1,19 @@
 package hu.szeged.sporteventapp.ui.views.userprofile;
 
-import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
 
-import hu.szeged.sporteventapp.common.util.ImageUtil;
-import hu.szeged.sporteventapp.ui.views.IPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.vaadin.server.FileResource;
-import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.backend.service.UserService;
+import hu.szeged.sporteventapp.common.util.ImageUtil;
 import hu.szeged.sporteventapp.ui.AbstractPresenter;
+import hu.szeged.sporteventapp.ui.views.IPresenter;
 
 @UIScope
 @SpringComponent
@@ -44,10 +41,10 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView>
 			userService.updateUserPassword(sessionUser.getId(),
 					sessionUser.getPassword());
 			getView().updateBinder(sessionUser);
-			getView().showInfoMessage("Password change was successful");
+			getView().showInfoNotification("Password change was successful");
 		}
 		else {
-			getView().showErrorMessage("One of the password is incorrect");
+			getView().showErrorNotification("One of the password is incorrect");
 		}
 	}
 
@@ -58,7 +55,7 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView>
 		userService.updateUserAdditionalData(sessionUser.getId(), sessionUser.getAge(),
 				sessionUser.getRealName(), sessionUser.getMobileNumber());
 		getView().updateBinder(sessionUser);
-		getView().showInfoMessage("Data update was successful");
+		getView().showInfoNotification("Data update was successful");
 	}
 
 	public void updateUserImageData(String pictureName) {

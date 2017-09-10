@@ -1,17 +1,18 @@
 package hu.szeged.sporteventapp.backend.service;
 
-import hu.szeged.sporteventapp.backend.data.entity.User;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
+import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.backend.repositories.SportEventRepository;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import hu.szeged.sporteventapp.common.exception.AlreadyJoinedException;
+import hu.szeged.sporteventapp.common.exception.NoEmptyPlaceException;
+import hu.szeged.sporteventapp.common.exception.NotParticipantException;
 
 @Service
 public class SportEventService {
@@ -35,10 +36,10 @@ public class SportEventService {
         return eventRepository.findSportEventByName(name);
     }
 
-    Set<User> findParticipantsOfSportEvent(String name){
+	List<User> findParticipantsOfSportEvent(String name) {
         SportEvent sportEvent = eventRepository.findSportEventByName(name);
         if (sportEvent == null){
-            return new HashSet<>();
+			return new ArrayList<>();
         }else {
             return sportEvent.getParticipants();
         }
@@ -52,5 +53,34 @@ public class SportEventService {
 	@Transactional
 	public SportEvent save(SportEvent sportEvent) {
 		return eventRepository.save(sportEvent);
+	}
+
+	@Transactional
+	public void joinToSportEvent(SportEvent sportEvent, User user)
+			throws AlreadyJoinedException, NoEmptyPlaceException {
+		if (sportEvent.getParticipants().size() <= sportEvent.getMaxParticipant()) {
+			if (!sportEvent.getParticipants().contains(user)) {
+				sportEvent.getParticipants().add(user);
+				eventRepository.save(sportEvent);
+			}
+			else {
+				throw new AlreadyJoinedException("It seems you are already joined");
+			}
+		}
+		else {
+			throw new NoEmptyPlaceException("Sorry, there is no empty place :(");
+		}
+	}
+
+	@Transactional
+	public void leaveFromSportEvent(SportEvent sportEvent, User user)
+			throws NotParticipantException {
+		if (sportEvent.getParticipants().contains(user)) {
+			sportEvent.getParticipants().remove(user);
+			eventRepository.save(sportEvent);
+		}
+		else {
+			throw new NotParticipantException("You are not participate on this event");
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package hu.szeged.sporteventapp.backend.data.entity;
 
+import java.util.List;
+
 import javax.persistence.*;
 
 import org.hibernate.validator.constraints.Email;
@@ -9,8 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Set;
 
 @Getter
 @Setter
@@ -47,8 +47,8 @@ public class User extends AbstractEntity {
 	private String mobileNumber;
 
 	@OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
-	private Set<SportEvent> organizedEvents;
+	private List<SportEvent> organizedEvents;
 
 	@ManyToMany(mappedBy = "participants")
-	private Set<SportEvent> participateOnEvents;
+	private List<SportEvent> participateOnEvents;
 }

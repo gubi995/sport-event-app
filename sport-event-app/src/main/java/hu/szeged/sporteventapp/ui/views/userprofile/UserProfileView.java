@@ -3,13 +3,15 @@ package hu.szeged.sporteventapp.ui.views.userprofile;
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 import static hu.szeged.sporteventapp.ui.views.userprofile.UserProfileView.VIEW_NAME;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import com.vaadin.navigator.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
@@ -18,15 +20,14 @@ import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import com.vaadin.data.BeanValidationBinder;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FileResource;
-import com.vaadin.server.Page;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
-import hu.szeged.sporteventapp.common.factory.client.NotificationFactory;
 import hu.szeged.sporteventapp.common.util.ValidatorUtil;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.validator.PasswordValidator;
@@ -132,14 +133,6 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 		return data;
 	}
 
-	public void showErrorMessage(String message) {
-		NotificationFactory.createErrorNotification(message).show(Page.getCurrent());
-	}
-
-	public void showInfoMessage(String message) {
-		NotificationFactory.createInfoNotification(message).show(Page.getCurrent());
-	}
-
 	public Image getUserImage() {
 		return userImage;
 	}
@@ -159,9 +152,7 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 		pictureUpload.addStartedListener(e -> {
 			if (!e.getMIMEType().equals("image/png")
 					&& !e.getMIMEType().equals("image/jpeg")) {
-				NotificationFactory
-						.createErrorNotification("Upload interrupted! It is not an image")
-						.show(Page.getCurrent());
+				showErrorNotification("Upload interrupted! It is not an image");
 				pictureUpload.interruptUpload();
 			}
 		});
@@ -220,7 +211,7 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 				return fos;
 			}
 			catch (final java.io.FileNotFoundException e) {
-				NotificationFactory.createErrorNotification(e.getMessage());
+				showErrorNotification(e.getMessage());
 				return null;
 			}
 		}
