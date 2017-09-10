@@ -3,15 +3,13 @@ package hu.szeged.sporteventapp.ui.views.userprofile;
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 import static hu.szeged.sporteventapp.ui.views.userprofile.UserProfileView.VIEW_NAME;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.vaadin.navigator.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
@@ -28,7 +26,7 @@ import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
-import hu.szeged.sporteventapp.common.factory.NotificationFactory;
+import hu.szeged.sporteventapp.common.factory.client.NotificationFactory;
 import hu.szeged.sporteventapp.common.util.ValidatorUtil;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.validator.PasswordValidator;
@@ -37,7 +35,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 @SpringView(name = "profile")
 @SideBarItem(sectionId = Sections.PROFILE, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.USER_CARD)
-public class UserProfileView extends AbstractView {
+public class UserProfileView extends AbstractView implements View, Serializable {
 
 	public static final String VIEW_NAME = "My profile";
 
@@ -64,16 +62,23 @@ public class UserProfileView extends AbstractView {
 		this.presenter = presenter;
 	}
 
-	@PostConstruct
-	public void init() {
-		presenter.init(this);
-		initPicutreUploader();
+	@Override
+	public void initComponent() {
+		imageUploader = new ImageUploader();
+		usernameField = new TextField(USERNAME);
+		emailField = new TextField(EMAIL);
+		ageField = new TextField(AGE);
+		realNameField = new TextField(REAL_NAME);
+		mobileField = new TextField(MOBILE);
+		updateButton = new Button(UPDATE);
+		oldPasswordField = new PasswordField(OLD + PASSWORD);
+		newPasswordField = new PasswordField(NEW + PASSWORD);
+		validateField = new PasswordField(NEW + PASSWORD_AGAIN);
+		changePasswordButton = new Button(CHANGE);
+		userImage = new Image();
+		pictureUpload = new Upload();
 
-		changePasswordButton.addClickListener(
-				clickEvent -> presenter.changePassword(getPasswordRelevantData()));
-		updateButton.addClickListener(clickEvent -> {
-			presenter.updateUserData(getUpdateRelevantData());
-		});
+		binder = new BeanValidationBinder<>(User.class);
 	}
 
 	@Override
@@ -86,8 +91,19 @@ public class UserProfileView extends AbstractView {
 								Unit.PERCENTAGE));
 	}
 
+	@PostConstruct
+	public void init() {
+		presenter.init(this);
+		initPicutreUploader();
+
+		changePasswordButton.addClickListener(
+				clickEvent -> presenter.changePassword(getPasswordRelevantData()));
+		updateButton.addClickListener(clickEvent -> {
+			presenter.updateUserData(getUpdateRelevantData());
+		});
+	}
+
 	public void initBinder(User user) {
-		binder = new BeanValidationBinder<>(User.class);
 		binder.setBean(user);
 		binder.setRequiredConfigurator(null);
 		binder.forField(usernameField).bind(User::getUsername, User::setUsername);
@@ -138,7 +154,6 @@ public class UserProfileView extends AbstractView {
 	}
 
 	private void initPicutreUploader() {
-		imageUploader = new ImageUploader();
 		pictureUpload.setReceiver(imageUploader);
 		pictureUpload.addSucceededListener(imageUploader);
 		pictureUpload.addStartedListener(e -> {
@@ -155,9 +170,7 @@ public class UserProfileView extends AbstractView {
 	private FormLayout createReadOnlyGroup() {
 		FormLayout layout = new FormLayout();
 		layout.setSizeUndefined();
-		usernameField = new TextField(USERNAME);
 		usernameField.setReadOnly(true);
-		emailField = new TextField(EMAIL);
 		emailField.setReadOnly(true);
 		layout.addComponents(usernameField, emailField);
 		return layout;
@@ -166,10 +179,6 @@ public class UserProfileView extends AbstractView {
 	private FormLayout createOptionFieldsGroup() {
 		FormLayout layout = new FormLayout();
 		layout.setSizeUndefined();
-		ageField = new TextField(AGE);
-		realNameField = new TextField(REAL_NAME);
-		mobileField = new TextField(MOBILE);
-		updateButton = new Button(UPDATE);
 		layout.addComponents(ageField, realNameField, mobileField, updateButton);
 		return layout;
 	}
@@ -177,10 +186,6 @@ public class UserProfileView extends AbstractView {
 	private FormLayout createPasswordChangeGroup() {
 		FormLayout layout = new FormLayout();
 		layout.setSizeUndefined();
-		oldPasswordField = new PasswordField(OLD + PASSWORD);
-		newPasswordField = new PasswordField(NEW + PASSWORD);
-		validateField = new PasswordField(NEW + PASSWORD_AGAIN);
-		changePasswordButton = new Button(CHANGE);
 		layout.addComponents(oldPasswordField, newPasswordField, validateField,
 				changePasswordButton);
 		return layout;
@@ -191,11 +196,9 @@ public class UserProfileView extends AbstractView {
 		layout.setSizeUndefined();
 		layout.addStyleName("user-image-group");
 		layout.setSpacing(false);
-		userImage = new Image();
 		userImage.addStyleName("user-image");
 		userImage.setHeight(200, Unit.PIXELS);
 		userImage.setWidth(200, Unit.PIXELS);
-		pictureUpload = new Upload();
 		layout.addComponents(userImage, pictureUpload);
 		layout.setComponentAlignment(userImage, Alignment.MIDDLE_CENTER);
 		layout.setComponentAlignment(pictureUpload, Alignment.MIDDLE_CENTER);

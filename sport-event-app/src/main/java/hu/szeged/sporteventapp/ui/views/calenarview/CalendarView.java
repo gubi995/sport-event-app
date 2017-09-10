@@ -20,7 +20,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 @SpringView(name = "calendar")
 @SideBarItem(sectionId = Sections.EVENT, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.CALENDAR)
-public class CalendarView extends AbstractView implements View, Serializable {
+public class CalendarView extends AbstractView {
 
 	public static final String VIEW_NAME = "Calendar";
 
@@ -35,8 +35,12 @@ public class CalendarView extends AbstractView implements View, Serializable {
 	}
 
 	@Override
-	public void initBody() {
+	public void initComponent() {
 		calendar = new Calendar();
+	}
+
+	@Override
+	public void initBody() {
 		calendar.setSizeFull();
 		addComponentsAndExpand(calendar);
 	}

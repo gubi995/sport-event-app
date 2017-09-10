@@ -1,7 +1,7 @@
 package hu.szeged.sporteventapp.backend.data.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 @Getter
 @Setter
@@ -36,14 +37,21 @@ public class SportEvent extends AbstractEntity {
 	@Basic
 	private String details;
 
+	@Column(name = "sport_type", nullable = false)
+	private String sportType;
+
+	@Column(name = "is_full")
+	@Type(type = "yes_no")
+	private Boolean isFull;
+
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "user_id")
 	private User organizer;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "participants_on_event",
 			joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-	private List<User> participants;
+	private Set<User> participants;
 
 }

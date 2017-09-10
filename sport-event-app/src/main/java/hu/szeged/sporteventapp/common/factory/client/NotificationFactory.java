@@ -1,4 +1,4 @@
-package hu.szeged.sporteventapp.common.factory;
+package hu.szeged.sporteventapp.common.factory.client;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 

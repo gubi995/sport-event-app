@@ -1,12 +1,12 @@
 package hu.szeged.sporteventapp.ui.views.myeventview;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
-import static hu.szeged.sporteventapp.ui.views.eventview.ExploreEventView.generateDataForTest;
 import static hu.szeged.sporteventapp.ui.views.myeventview.MyEventView.VIEW_NAME;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
@@ -17,7 +17,8 @@ import com.vaadin.data.Binder;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -25,13 +26,15 @@ import com.vaadin.ui.themes.ValoTheme;
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
+import hu.szeged.sporteventapp.common.factory.client.NotificationFactory;
+import hu.szeged.sporteventapp.common.factory.server.MyBeanFactory;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
 
 @SpringView(name = "manage-my-events")
 @SideBarItem(sectionId = Sections.EVENT, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.FILE_PROCESS)
-public class MyEventView extends AbstractView implements View, Serializable {
+public class MyEventView extends AbstractView {
 
 	public static final String VIEW_NAME = "Manage my events";
 
@@ -51,10 +54,15 @@ public class MyEventView extends AbstractView implements View, Serializable {
 	}
 
 	@Override
+	public void initComponent() {
+		eventDetailForm = new EventDetailForm();
+		nameFilter = new TextField(NAME);
+		createButton = new Button();
+	}
+
+	@Override
 	public void initBody() {
 		grid = buildGrid();
-		eventDetailForm = new EventDetailForm();
-		initFilters();
 		initButtons();
 		addComponents(
 				new MHorizontalLayout().add(nameFilter, createButton)
@@ -64,12 +72,16 @@ public class MyEventView extends AbstractView implements View, Serializable {
 		eventDetailForm.setVisible(false);
 	}
 
+	@PostConstruct
+	public void init() {
+		presenter.init(this);
+	}
+
 	private Grid<SportEvent> buildGrid() {
 		final Grid<SportEvent> grid = new Grid<>(SportEvent.class);
 		grid.setSizeFull();
 
-		grid.setItems(generateDataForTest());
-		adjustGridCoumns(grid);
+		adjustGridCoumn(grid);
 		grid.asSingleSelect()
 				.addValueChangeListener(e -> showEventDetailForm(e.getValue()));
 
@@ -79,24 +91,23 @@ public class MyEventView extends AbstractView implements View, Serializable {
 	private void initFilters() {
 		ListDataProvider<SportEvent> dataProvider = (ListDataProvider<SportEvent>) grid
 				.getDataProvider();
-		nameFilter = new TextField(NAME);
 		nameFilter.addValueChangeListener(e -> updateFilters(dataProvider));
 	}
 
 	private void initButtons() {
-		createButton = new Button();
 		createButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		createButton.setIcon(VaadinIcons.PLUS);
-		createButton.addClickListener(clickEvent -> eventDetailForm
-				.setSportEvent(new SportEvent("", "", LocalDateTime.now(),
-						LocalDateTime.now(), 20, "", new User(), null)));
-		grid.asSingleSelect().clear();
+		createButton.addClickListener(clickEvent -> {
+			eventDetailForm.setSportEvent(MyBeanFactory.createNewSportEvent());
+			grid.asSingleSelect().clear();
+		});
 	}
 
-	private void adjustGridCoumns(final Grid<SportEvent> grid) {
+	private void adjustGridCoumn(final Grid<SportEvent> grid) {
 		grid.addColumn(SportEvent::getName).setCaption("Event name");
 		grid.addColumn(SportEvent::getLocation).setCaption("Location");
-		grid.setColumns("name", "location");
+		grid.addColumn(SportEvent::getSportType).setCaption("Sport type");
+		grid.setColumns("name", "location", "sportType");
 		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
 				sportEvent.getStartDate(), "yyyy.MM.dd  hh:mm")).setCaption("Start")
 				.setWidth(160);
@@ -125,8 +136,7 @@ public class MyEventView extends AbstractView implements View, Serializable {
 	private void showEventDetailForm(SportEvent sportEvent) {
 		if (sportEvent == null) {
 			eventDetailForm.setVisible(false);
-			eventDetailForm.setSportEvent(new SportEvent("", "", LocalDateTime.now(),
-					LocalDateTime.now(), 20, "", new User(), null));
+			eventDetailForm.setSportEvent(MyBeanFactory.createNewSportEvent());
 		}
 		else {
 			eventDetailForm.setVisible(true);
@@ -134,11 +144,22 @@ public class MyEventView extends AbstractView implements View, Serializable {
 		}
 	}
 
+	public void setGridItems(List<SportEvent> sportEventByOrganizer) {
+		grid.setItems(sportEventByOrganizer);
+		initFilters();
+	}
+
+	@Override
+	public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
+		presenter.enter();
+	}
+
 	private class EventDetailForm extends FormLayout {
 
 		TextField nameField;
 		TextField locationField;
 		TextField maxParticipantField;
+		TextField sportType;
 		DateTimeField startDateTimeField;
 		TextArea detailsArea;
 		DateTimeField endDateTimeField;
@@ -156,7 +177,7 @@ public class MyEventView extends AbstractView implements View, Serializable {
 			setSizeUndefined();
 			initComponent();
 			initBinder();
-			addComponents(nameField, locationField, maxParticipantField,
+			addComponents(nameField, locationField, sportType, maxParticipantField,
 					startDateTimeField, endDateTimeField,
 					new MHorizontalLayout(participantsComboBox,
 							deleteParticipantButton).withFullSize()
@@ -168,6 +189,7 @@ public class MyEventView extends AbstractView implements View, Serializable {
 			nameField = new TextField(NAME);
 			locationField = new TextField(LOCATION);
 			maxParticipantField = new TextField(MAX_PARTICIPANT);
+			sportType = new TextField(SPORT_TYPE);
 			startDateTimeField = new DateTimeField(START_DATE);
 			endDateTimeField = new DateTimeField(END_DATE);
 			detailsArea = new TextArea(DETAILS);
@@ -200,6 +222,8 @@ public class MyEventView extends AbstractView implements View, Serializable {
 			binder.forField(maxParticipantField)
 					.withConverter(new StringToIntegerConverter(WRONG_INPUT))
 					.bind(SportEvent::getMaxParticipant, SportEvent::setMaxParticipant);
+			binder.forField(sportType).asRequired(REQUIRED_MSG)
+					.bind(SportEvent::getSportType, SportEvent::setSportType);
 			binder.forField(detailsArea).bind(SportEvent::getDetails,
 					SportEvent::setDetails);
 		}
@@ -207,12 +231,12 @@ public class MyEventView extends AbstractView implements View, Serializable {
 		private void setSportEvent(SportEvent sportEvent) {
 			binder.setBean(sportEvent);
 			adjustComboBox(sportEvent);
-			deleteButton.setVisible(sportEvent.isNew());
+			deleteButton.setVisible(!sportEvent.isNew());
 			setVisible(true);
 		}
 
 		private void adjustComboBox(SportEvent sportEvent) {
-			if (sportEvent.getParticipants() != null) {
+			if (sportEvent.getParticipants().size() != 0) {
 				participantsComboBox.setEnabled(true);
 				deleteParticipantButton.setEnabled(true);
 				participantsComboBox.setItems(sportEvent.getParticipants());
@@ -225,17 +249,27 @@ public class MyEventView extends AbstractView implements View, Serializable {
 		}
 
 		private void save() {
-			// presenter.delete
-			// update list/
-			// validate
-			setVisible(false);
+			if (binder.isValid()) {
+				presenter.save(binder.getBean());
+				presenter.updateGridDate();
+				setVisible(false);
+			}
+			else {
+				NotificationFactory.createWarningNotification(VALIDATION_WARNING_MSG)
+						.show(Page.getCurrent());
+			}
 		}
 
 		private void delete() {
-			// presenter.delete
-			// update list
-			// validate
-			setVisible(false);
+			if (binder.isValid()) {
+				presenter.delete(binder.getBean());
+				presenter.updateGridDate();
+				setVisible(false);
+			}
+			else {
+				Notification.show(WARNING, VALIDATION_WARNING_MSG,
+						Notification.Type.WARNING_MESSAGE);
+			}
 		}
 	}
 }

@@ -70,7 +70,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void delete(long userId) {
+	public void delete(String userId) {
 		userRepository.deleteById(userId);
 	}
 }

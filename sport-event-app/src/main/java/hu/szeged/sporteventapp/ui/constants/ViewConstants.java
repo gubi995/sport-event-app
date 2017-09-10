@@ -26,7 +26,9 @@ public class ViewConstants {
 	public static final String START_DATE_FROM = "From(star date)";
 	public static final String START_DATE_TO = "To(star date)";
 	public static final String IS_THERE_FREE_SPACE = "Is there free space";
+	public static final String DID_I_JOIN_FOR_IT = "Did I join for it?";
 	public static final String MAX_PARTICIPANT = "Max participant";
+	public static final String SPORT_TYPE = "Sport type";
 	public static final String START_DATE = "Start date";
 	public static final String END_DATE = "End date";
 	public static final String DETAILS = "Details";
@@ -34,6 +36,7 @@ public class ViewConstants {
 	public static final String DELETE = "Delete";
 	public static final String SAVE = "Save";
 	public static final String REQUIRED_MSG = "Required field, please fill out";
+	public static final String VALIDATION_WARNING_MSG = "Something wrong with your data. Please review them";
 	public static final String WRONG_INPUT = "Wrong input";
 	public static final String JOIN = "Join";
 	public static final String LEAVE = "Leave";

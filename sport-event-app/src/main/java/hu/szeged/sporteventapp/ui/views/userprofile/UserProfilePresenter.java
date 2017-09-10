@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import hu.szeged.sporteventapp.common.util.ImageUtil;
+import hu.szeged.sporteventapp.ui.views.IPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -20,7 +21,7 @@ import hu.szeged.sporteventapp.ui.AbstractPresenter;
 @UIScope
 @SpringComponent
 public class UserProfilePresenter extends AbstractPresenter<UserProfileView>
-		implements Serializable {
+		implements IPresenter, Serializable {
 
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;

@@ -7,11 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
 
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends JpaRepository<User, String> {
 
 	User findByUsername(String username);
-
-	User save(User user);
 
 	int countByUsername(String username);
 

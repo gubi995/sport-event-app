@@ -70,7 +70,7 @@ public class LoginScreenPresenter implements LoginEventListener, RegistrationEve
 			User user = new User(event.getUser().getUsername(),
 					event.getUser().getEmail(), event.getUser().getPassword(),
 					DEFAULT_USER_IMAGE,
-					Role.USER,0,"","", null);
+					Role.USER,0,"","", null, null);
 			userService.save(user);
 			loginScreen.adjustRegisterLabel("Registration successful",
 					ValoTheme.LABEL_SUCCESS, true);

@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -47,5 +47,8 @@ public class User extends AbstractEntity {
 	private String mobileNumber;
 
 	@OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
-	private List<SportEvent> organizedEvents;
+	private Set<SportEvent> organizedEvents;
+
+	@ManyToMany(mappedBy = "participants")
+	private Set<SportEvent> participateOnEvents;
 }
