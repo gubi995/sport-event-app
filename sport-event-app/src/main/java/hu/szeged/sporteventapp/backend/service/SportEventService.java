@@ -3,6 +3,7 @@ package hu.szeged.sporteventapp.backend.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,7 +50,7 @@ public class SportEventService {
 
 	@Transactional
 	public void joinToSportEvent(SportEvent sportEvent, User user)
-			throws AlreadyJoinedException, NoEmptyPlaceException {
+			throws AlreadyJoinedException, NoEmptyPlaceException, ObjectOptimisticLockingFailureException {
 		if (sportEvent.getParticipants().size() < sportEvent.getMaxParticipant()) {
 			if (!sportEvent.getParticipants().contains(user)) {
 				sportEvent.getParticipants().add(user);
@@ -66,7 +67,7 @@ public class SportEventService {
 
 	@Transactional
 	public void leaveFromSportEvent(SportEvent sportEvent, User user)
-			throws NotParticipantException {
+			throws NotParticipantException, ObjectOptimisticLockingFailureException {
 		if (sportEvent.getParticipants().contains(user)) {
 			sportEvent.getParticipants().remove(user);
 			eventRepository.save(sportEvent);

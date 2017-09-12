@@ -13,6 +13,7 @@ import hu.szeged.sporteventapp.common.exception.AlreadyJoinedException;
 import hu.szeged.sporteventapp.common.exception.NoEmptyPlaceException;
 import hu.szeged.sporteventapp.common.exception.NotParticipantException;
 import hu.szeged.sporteventapp.ui.AbstractPresenter;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @UIScope
 @SpringComponent
@@ -35,10 +36,13 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 			getView().showInfoNotification("Join was successful");
 		}
 		catch (AlreadyJoinedException e) {
-			getView().showErrorNotification(e.getMessage());
+			getView().showWarningNotification(e.getMessage());
 		}
 		catch (NoEmptyPlaceException e) {
 			getView().showErrorNotification(e.getMessage());
+		}
+		catch (ObjectOptimisticLockingFailureException e2){
+			getView().showErrorNotification("Please wait a minute before leave");
 		}
 	}
 
@@ -49,6 +53,9 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 		}
 		catch (NotParticipantException e) {
 			getView().showErrorNotification(e.getMessage());
+		}
+		catch (ObjectOptimisticLockingFailureException e2){
+			getView().showErrorNotification("Please wait a minute before leave");
 		}
 	}
 
