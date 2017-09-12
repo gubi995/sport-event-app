@@ -72,7 +72,7 @@ public class MyEventView extends AbstractView {
 
 	@PostConstruct
 	public void init() {
-		presenter.init(this);
+		presenter.setView(this);
 	}
 
 	private Grid<SportEvent> buildGrid() {

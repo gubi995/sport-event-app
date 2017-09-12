@@ -17,7 +17,7 @@ import hu.szeged.sporteventapp.ui.views.IPresenter;
 @UIScope
 @SpringComponent
 public class MyEventPresenter extends AbstractPresenter<MyEventView>
-		implements IPresenter, Serializable {
+		implements IPresenter {
 
 	private SportEventService sportEventService;
 	private UserService userService;
@@ -47,6 +47,7 @@ public class MyEventPresenter extends AbstractPresenter<MyEventView>
 		getView().setGridItems(sportEventService.findSportEventByOrganizer(sessionUser));
 	}
 
+	@Override
 	public void enter() {
 		sessionUser = userService.getCurrentUser();
 		updateGridDate();

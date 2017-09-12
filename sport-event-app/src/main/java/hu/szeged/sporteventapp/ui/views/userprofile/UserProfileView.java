@@ -94,7 +94,7 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 
 	@PostConstruct
 	public void init() {
-		presenter.init(this);
+		presenter.setView(this);
 		initPicutreUploader();
 
 		changePasswordButton.addClickListener(

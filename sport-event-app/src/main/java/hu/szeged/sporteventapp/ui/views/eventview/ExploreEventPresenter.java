@@ -1,5 +1,6 @@
 package hu.szeged.sporteventapp.ui.views.eventview;
 
+import hu.szeged.sporteventapp.ui.views.IPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vaadin.spring.annotation.SpringComponent;
@@ -17,7 +18,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @UIScope
 @SpringComponent
-public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
+public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> implements IPresenter{
 
 	private SportEventService sportEventService;
 	private UserService userService;
@@ -67,9 +68,9 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 		getView().setGridItems(sportEventService.findAll());
 	}
 
+	@Override
 	public void enter() {
 		sessionUser = userService.getCurrentUser();
 		updateGridDate();
 	}
-
 }
