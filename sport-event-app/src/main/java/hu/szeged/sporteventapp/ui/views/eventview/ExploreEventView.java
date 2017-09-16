@@ -21,7 +21,6 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
-import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
@@ -114,20 +113,27 @@ public class ExploreEventView extends AbstractView {
 		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
 				sportEvent.getEndDate(), "yyyy.MM.dd hh:mm")).setCaption("End")
 				.setWidth(160);
-		Grid.Column<SportEvent, String> duration = grid.addColumn(sportEvent -> {
+		grid.addColumn(sportEvent -> {
 			long minutes = sportEvent.getStartDate().until(sportEvent.getEndDate(),
 					ChronoUnit.MINUTES);
 
 			return minutes / 60 + ":" + minutes % 60;
-		});
-		duration.setCaption("Duration(hour:min)");
-		grid.addColumn(sportEvent -> "Participants", new ButtonRenderer<>(e -> {
-			participantWindow.setUsers(e.getItem().getParticipants());
-			getUI().addWindow(participantWindow);
-		})).setCaption("Participants");
-		grid.addColumn(sportEvent -> "Location", new ButtonRenderer<>(e -> {
-			Notification.show("Show location");
-		})).setCaption("Location");
+		}).setCaption("Duration(hour:min)");
+		grid.addComponentColumn(sportEvent -> {
+			Button button = new Button(VaadinIcons.GROUP);
+			button.addClickListener(c -> {
+				participantWindow.setUsers(sportEvent.getParticipants());
+				getUI().addWindow(participantWindow);
+			});
+			return button;
+		}).setCaption("Participants");
+		grid.addComponentColumn(sportEvent -> {
+			Button button = new Button(VaadinIcons.GLOBE);
+			button.addClickListener(c -> {
+				Notification.show("Show location");
+			});
+			return button;
+		}).setCaption("Location");
 	}
 
 	private void initFilters() {
