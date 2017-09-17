@@ -68,7 +68,6 @@ public class CalendarView extends AbstractView {
 		presenter.setView(this);
 	}
 
-	// TODO create a service which get the proper events from backend. Get those events in whereat the user participates
 	public void setCalendarItems(List<SportEvent> sportEventByOrganizer) {
 		dataProvider.setItems(eventConverter
 				.convertSportEventsToSportEventItems(sportEventByOrganizer));

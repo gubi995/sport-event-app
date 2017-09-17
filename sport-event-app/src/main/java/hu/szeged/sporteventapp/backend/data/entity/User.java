@@ -49,6 +49,9 @@ public class User extends AbstractEntity {
 	@OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
 	private List<SportEvent> organizedEvents;
 
-	@ManyToMany(mappedBy = "participants")
-	private List<SportEvent> participateOnEvents;
+	@ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
+	private List<SportEvent> eventsImAttending;
+
+	@OneToMany(mappedBy = "user")
+	private List<Message> messages;
 }
