@@ -126,14 +126,14 @@ public class ExploreEventView extends AbstractView {
 				getUI().addWindow(participantWindow);
 			});
 			return button;
-		}).setCaption("Participants");
+		}).setStyleGenerator(e -> "v-align-center").setCaption("Participants");
 		grid.addComponentColumn(sportEvent -> {
 			Button button = new Button(VaadinIcons.GLOBE);
 			button.addClickListener(c -> {
 				Notification.show("Show location");
 			});
 			return button;
-		}).setCaption("Location");
+		}).setStyleGenerator(e -> "v-align-center").setCaption("Location");
 	}
 
 	private void initFilters() {
