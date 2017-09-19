@@ -5,6 +5,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Point;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +41,12 @@ public class SportEvent extends AbstractEntity {
 
 	@Column(name = "sport_type", nullable = false)
 	private String sportType;
+
+	@Column(columnDefinition = "POINT")
+	private Point point;
+
+	@Column(columnDefinition = "POLYGON")
+	private LineString route;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "user_id")
