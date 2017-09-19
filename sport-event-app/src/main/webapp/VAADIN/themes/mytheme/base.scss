@@ -1,7 +1,7 @@
 @mixin base {
   .v-Notification {
     box-shadow: none;
-    border: 2px solid #b2b2b2;
+    border: 1px solid #c5c5c5;
   }
 
   .view-container {
@@ -9,6 +9,10 @@
     > .v-verticallayout {
       padding-top: 15px;
     }
+  }
+
+  .caption-underline{
+    border-bottom: 1px solid #c5c5c5;;
   }
 }
 

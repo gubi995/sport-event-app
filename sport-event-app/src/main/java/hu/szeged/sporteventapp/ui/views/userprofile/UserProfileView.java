@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
@@ -72,10 +73,12 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 		realNameField = new TextField(REAL_NAME);
 		mobileField = new TextField(MOBILE);
 		updateButton = new Button(UPDATE);
+		updateButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
 		oldPasswordField = new PasswordField(OLD + PASSWORD);
 		newPasswordField = new PasswordField(NEW + PASSWORD);
 		validateField = new PasswordField(NEW + PASSWORD_AGAIN);
 		changePasswordButton = new Button(CHANGE);
+		changePasswordButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
 		userImage = new Image();
 		pictureUpload = new Upload();
 

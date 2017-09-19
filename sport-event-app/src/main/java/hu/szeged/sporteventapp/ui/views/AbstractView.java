@@ -24,6 +24,7 @@ public abstract class AbstractView extends VerticalLayout implements View, Seria
 	public AbstractView(String headerCaption) {
 		captionLabel = new Label();
 		captionLabel.setStyleName(ValoTheme.LABEL_H2);
+		captionLabel.addStyleName("caption-underline");
 		setSpacing(true);
 		setMargin(true);
 		initHeader();
