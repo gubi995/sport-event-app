@@ -23,6 +23,7 @@ public class ViewConstants {
 	public static final String APP_ICON = "app_icon.png";
 	public static final String NAME = "Name";
 	public static final String LOCATION = "Location";
+	public static final String ROUTE = "Route";
 	public static final String START_DATE_FROM = "From(star date)";
 	public static final String START_DATE_TO = "To(star date)";
 	public static final String IS_THERE_FREE_SPACE = "Is there free space";
