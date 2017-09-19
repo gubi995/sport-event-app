@@ -11,6 +11,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import hu.szeged.sporteventapp.ui.custom_components.MapForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
@@ -50,6 +51,7 @@ public class ExploreEventView extends AbstractView {
 	private Button joinButton;
 	private Button leaveButton;
 	private ParticipantWindow participantWindow;
+	private MapForm mapFrom;
 
 	@Autowired
 	public ExploreEventView(ExploreEventPresenter presenter,
@@ -62,6 +64,7 @@ public class ExploreEventView extends AbstractView {
 	@Override
 	public void initComponent() {
 		participantWindow = new ParticipantWindow();
+		mapFrom = new MapForm();
 		nameFilter = new TextField(NAME);
 		locationFilter = new TextField(LOCATION);
 		sportTypeFilter = new TextField(SPORT_TYPE);
@@ -130,7 +133,9 @@ public class ExploreEventView extends AbstractView {
 		grid.addComponentColumn(sportEvent -> {
 			Button button = new Button(VaadinIcons.GLOBE);
 			button.addClickListener(c -> {
-				Notification.show("Show location");
+				mapFrom.setSportEvent(sportEvent);
+//				mapFrom.setReadOnly(true);
+				mapFrom.showInWindow(getUI());
 			});
 			return button;
 		}).setStyleGenerator(e -> "v-align-center").setCaption("Location");
