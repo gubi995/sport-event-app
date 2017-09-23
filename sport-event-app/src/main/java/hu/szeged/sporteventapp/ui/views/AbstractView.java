@@ -17,7 +17,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-public abstract class AbstractView extends VerticalLayout implements View, Serializable {
+public abstract class AbstractView extends VerticalLayout implements View, INotifier, Serializable {
 
 	private final Label captionLabel;
 
@@ -46,30 +46,6 @@ public abstract class AbstractView extends VerticalLayout implements View, Seria
 	public abstract void initComponent();
 
 	public abstract void initBody();
-
-	public void showWarningNotification(String message) {
-		Notification notification = new Notification(WARNING, message,
-				Notification.Type.WARNING_MESSAGE);
-		notification.setIcon(VaadinIcons.EXCLAMATION_CIRCLE_O);
-		notification.setPosition(Position.BOTTOM_RIGHT);
-		notification.show(Page.getCurrent());
-	}
-
-	public void showErrorNotification(String message) {
-		Notification notification = new Notification(ERROR, message,
-				Notification.Type.ERROR_MESSAGE);
-		notification.setIcon(VaadinIcons.CLOSE_CIRCLE_O);
-		notification.setPosition(Position.BOTTOM_RIGHT);
-		notification.show(Page.getCurrent());
-	}
-
-	public void showInfoNotification(String message) {
-		Notification notification = new Notification(INFO, message,
-				Notification.Type.HUMANIZED_MESSAGE);
-		notification.setIcon(VaadinIcons.SMILEY_O);
-		notification.setPosition(Position.BOTTOM_RIGHT);
-		notification.show(Page.getCurrent());
-	}
 
 	@Override
 	public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
