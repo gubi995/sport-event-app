@@ -40,7 +40,7 @@ public class SportEventService {
 	@Transactional
 	public void deleteParticipantFromEvent(SportEvent sportEvent, User user) {
 		sportEvent.getParticipants().remove(user);
-		eventRepository.delete(sportEvent);
+		eventRepository.save(sportEvent);
 	}
 
 	@Transactional
