@@ -15,7 +15,7 @@ public class MyBeanFactory {
 
 	public static SportEvent createNewSportEvent() {
 		return new SportEvent("", "", LocalDateTime.now(), LocalDateTime.now(), 20, "",
-				"", null, null, new User(), new ArrayList<>(), new Album(),
+				"", null, new User(), new ArrayList<>(), new Album(),
 				new MessageBoard());
 	}
 }

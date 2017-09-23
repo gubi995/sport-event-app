@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 
 import lombok.AllArgsConstructor;
@@ -45,17 +44,12 @@ public class SportEvent extends AbstractEntity {
 	@Column(columnDefinition = "POINT")
 	private Point point;
 
-	@Column(columnDefinition = "POLYGON")
-	private LineString route;
-
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "user_id")
 	private User organizer;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "participate_in_event",
-			joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	@JoinTable(name = "participate_in_event", joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
 	private List<User> participants;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
