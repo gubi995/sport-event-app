@@ -114,6 +114,7 @@ public class LoginScreen extends CustomComponent {
 	private Panel initPanelForLogInAndRegistration() {
 		Panel panel = new Panel();
 		TabSheet tabSheet = new TabSheet();
+		tabSheet.addStyleName(ValoTheme.TABSHEET_EQUAL_WIDTH_TABS);
 		tabSheet.addTab(createLoginLayout(), LOGIN);
 		tabSheet.addTab(createRegisterLayout(), REGISTER);
 		tabSheet.addSelectedTabChangeListener(
