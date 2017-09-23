@@ -8,10 +8,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
-import hu.szeged.sporteventapp.ui.custom_components.MapForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
@@ -28,6 +28,7 @@ import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
 import hu.szeged.sporteventapp.ui.Sections;
+import hu.szeged.sporteventapp.ui.custom_components.MapForm;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
 
 @SpringView(name = "explore-events")
@@ -51,7 +52,6 @@ public class ExploreEventView extends AbstractView {
 	private Button joinButton;
 	private Button leaveButton;
 	private ParticipantWindow participantWindow;
-	private MapForm mapFrom;
 
 	@Autowired
 	public ExploreEventView(ExploreEventPresenter presenter,
@@ -64,7 +64,6 @@ public class ExploreEventView extends AbstractView {
 	@Override
 	public void initComponent() {
 		participantWindow = new ParticipantWindow();
-		mapFrom = new MapForm();
 		nameFilter = new TextField(NAME);
 		locationFilter = new TextField(LOCATION);
 		sportTypeFilter = new TextField(SPORT_TYPE);
@@ -133,9 +132,8 @@ public class ExploreEventView extends AbstractView {
 		grid.addComponentColumn(sportEvent -> {
 			Button button = new Button(VaadinIcons.GLOBE);
 			button.addClickListener(c -> {
-				mapFrom.setSportEvent(sportEvent);
-//				mapFrom.setReadOnly(true);
-				mapFrom.showInWindow(getUI());
+				MapForm mapForm = new MapForm(Optional.ofNullable(sportEvent), true);
+				mapForm.showInWindow(getUI());
 			});
 			return button;
 		}).setStyleGenerator(e -> "v-align-center").setCaption("Location");

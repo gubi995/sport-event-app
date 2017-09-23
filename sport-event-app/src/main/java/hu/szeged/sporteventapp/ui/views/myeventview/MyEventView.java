@@ -5,14 +5,17 @@ import static hu.szeged.sporteventapp.ui.views.myeventview.MyEventView.VIEW_NAME
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
+import com.vaadin.data.BeanValidationBinder;
 import com.vaadin.data.Binder;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.provider.ListDataProvider;
@@ -27,6 +30,7 @@ import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
 import hu.szeged.sporteventapp.common.factory.MyBeanFactory;
 import hu.szeged.sporteventapp.ui.Sections;
+import hu.szeged.sporteventapp.ui.custom_components.MapForm;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
 
 @SpringView(name = "manage-my-events")
@@ -40,7 +44,7 @@ public class MyEventView extends AbstractView {
 	private LocalDateTimeConverter timeConverter;
 
 	private Grid<SportEvent> grid;
-	private EventDetailForm eventDetailForm;
+	private EventDataForm eventDataForm;
 	private TextField nameFilter;
 	private Button createButton;
 
@@ -53,7 +57,7 @@ public class MyEventView extends AbstractView {
 
 	@Override
 	public void initComponent() {
-		eventDetailForm = new EventDetailForm();
+		eventDataForm = new EventDataForm();
 		nameFilter = new TextField(NAME);
 		createButton = new Button();
 	}
@@ -65,9 +69,9 @@ public class MyEventView extends AbstractView {
 		addComponents(
 				new MHorizontalLayout().add(nameFilter, createButton)
 						.withAlign(createButton, Alignment.BOTTOM_CENTER),
-				new MHorizontalLayout().add(grid, eventDetailForm).withFullSize()
+				new MHorizontalLayout().add(grid, eventDataForm).withFullSize()
 						.withExpand(grid, 1));
-		eventDetailForm.setVisible(false);
+		eventDataForm.setVisible(false);
 	}
 
 	@PostConstruct
@@ -96,7 +100,7 @@ public class MyEventView extends AbstractView {
 		createButton.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		createButton.setIcon(VaadinIcons.PLUS);
 		createButton.addClickListener(clickEvent -> {
-			eventDetailForm.setSportEvent(MyBeanFactory.createNewSportEvent());
+			eventDataForm.setSportEvent(MyBeanFactory.createNewSportEvent());
 			grid.asSingleSelect().clear();
 		});
 	}
@@ -133,11 +137,11 @@ public class MyEventView extends AbstractView {
 
 	private void showEventDetailForm(SportEvent sportEvent) {
 		if (sportEvent == null) {
-			eventDetailForm.setVisible(false);
+			eventDataForm.setVisible(false);
 		}
 		else {
-			eventDetailForm.setVisible(true);
-			eventDetailForm.setSportEvent(sportEvent);
+			eventDataForm.setVisible(true);
+			eventDataForm.setSportEvent(sportEvent);
 		}
 	}
 
@@ -151,7 +155,7 @@ public class MyEventView extends AbstractView {
 		presenter.enter();
 	}
 
-	private class EventDetailForm extends FormLayout {
+	private class EventDataForm extends FormLayout {
 
 		TextField nameField;
 		TextField locationField;
@@ -164,18 +168,21 @@ public class MyEventView extends AbstractView {
 		Button deleteParticipantButton;
 		Button saveButton;
 		Button deleteButton;
+		Button locationButton;
 
 		Binder<SportEvent> binder;
 
-		public EventDetailForm() {
+		public EventDataForm() {
 			super();
 			setMargin(false);
 			addStyleName("event_form");
 			setSizeUndefined();
 			initComponent();
 			initBinder();
-			addComponents(nameField, locationField, sportType, maxParticipantField,
+			addComponents(nameField, sportType, maxParticipantField,
 					startDateTimeField, endDateTimeField,
+					new MHorizontalLayout(locationField, locationButton).withFullSize()
+							.withAlign(locationButton, Alignment.BOTTOM_CENTER),
 					new MHorizontalLayout(participantsComboBox,
 							deleteParticipantButton).withFullSize()
 							.withAlign(deleteParticipantButton, Alignment.BOTTOM_CENTER),
@@ -183,13 +190,20 @@ public class MyEventView extends AbstractView {
 		}
 
 		private void initComponent() {
-			nameField = new TextField(NAME);
-			locationField = new TextField(LOCATION);
-			maxParticipantField = new TextField(MAX_PARTICIPANT);
-			sportType = new TextField(SPORT_TYPE);
-			startDateTimeField = new DateTimeField(START_DATE);
-			endDateTimeField = new DateTimeField(END_DATE);
-			detailsArea = new TextArea(DETAILS);
+			nameField = new TextField();
+			nameField.setPlaceholder(NAME);
+			locationField = new TextField();
+			locationField.setPlaceholder(LOCATION);
+			maxParticipantField = new TextField();
+			maxParticipantField.setPlaceholder(MAX_PARTICIPANT);
+			sportType = new TextField();
+			sportType.setPlaceholder(SPORT_TYPE);
+			startDateTimeField = new DateTimeField();
+			startDateTimeField.setPlaceholder(START_DATE);
+			endDateTimeField = new DateTimeField();
+			endDateTimeField.setPlaceholder(END_DATE);
+			detailsArea = new TextArea();
+			detailsArea.setPlaceholder(DETAILS);
 			participantsComboBox = new ComboBox<>(PARTICIPANTS);
 			participantsComboBox.setTextInputAllowed(false);
 			participantsComboBox.setEmptySelectionAllowed(false);
@@ -206,23 +220,28 @@ public class MyEventView extends AbstractView {
 			deleteButton = new Button(DELETE);
 			deleteButton.addStyleName(ValoTheme.BUTTON_DANGER);
 			deleteButton.addClickListener(clickEvent -> delete());
+			locationButton = new Button();
+			locationButton.setIcon(VaadinIcons.MAP_MARKER);
+			locationButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+			locationButton.addClickListener(clickEvent -> {
+				adjustLocationPoint();
+			});
 		}
 
 		private void initBinder() {
-			binder = new Binder<>(SportEvent.class);
-			binder.forField(nameField).asRequired(REQUIRED_MSG).bind(SportEvent::getName,
-					SportEvent::setName);
-			binder.forField(locationField).asRequired(REQUIRED_MSG)
+			binder = new BeanValidationBinder<>(SportEvent.class);
+			binder.forField(nameField).bind(SportEvent::getName, SportEvent::setName);
+			binder.forField(locationField)
 					.bind(SportEvent::getLocation, SportEvent::setLocation);
-			binder.forField(startDateTimeField).asRequired(REQUIRED_MSG)
+			binder.forField(startDateTimeField)
 					.bind(SportEvent::getStartDate, SportEvent::setStartDate);
-			binder.forField(endDateTimeField).asRequired(REQUIRED_MSG)
+			binder.forField(endDateTimeField)
 					.bind(SportEvent::getEndDate, SportEvent::setEndDate);
 			binder.forField(maxParticipantField)
 					.withConverter(new StringToIntegerConverter(WRONG_INPUT))
 					.bind(SportEvent::getMaxParticipant, SportEvent::setMaxParticipant);
-			binder.forField(sportType).asRequired(REQUIRED_MSG)
-					.bind(SportEvent::getSportType, SportEvent::setSportType);
+			binder.forField(sportType).bind(SportEvent::getSportType,
+					SportEvent::setSportType);
 			binder.forField(detailsArea).bind(SportEvent::getDetails,
 					SportEvent::setDetails);
 		}
@@ -267,6 +286,11 @@ public class MyEventView extends AbstractView {
 			else {
 				showWarningNotification(VALIDATION_WARNING_MSG);
 			}
+		}
+
+		private void adjustLocationPoint() {
+			MapForm mapForm = new MapForm(Optional.ofNullable(binder.getBean()), false);
+			mapForm.showInWindow(getUI());
 		}
 
 		private void deleteParticipantFromEvent() {

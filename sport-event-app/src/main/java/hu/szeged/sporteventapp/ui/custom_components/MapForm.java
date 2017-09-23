@@ -2,7 +2,10 @@ package hu.szeged.sporteventapp.ui.custom_components;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 
+import java.util.Optional;
+
 import org.vaadin.addon.leaflet.util.PointField;
+import org.vaadin.viritin.label.MLabel;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.data.Binder;
@@ -14,32 +17,48 @@ import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 
 public class MapForm extends VerticalLayout {
 
-	private SportEvent sportEvent;
 	private Button saveButton;
-	private PointField location;
-	private Binder binder;
+	private Boolean readOnly;
+	private PointField pointField;
+	private NoLocationBanner banner;
+	private Binder<SportEvent> binder;
 
-	public MapForm() {
+	public MapForm(Optional<SportEvent> sportEvent, Boolean readOnly) {
+		this.readOnly = readOnly;
 		setSizeFull();
 		initComponent();
-		buildContent();
+		buildContent(sportEvent);
+		initBinder(sportEvent);
 	}
 
 	private void initComponent() {
 		saveButton = new Button(SAVE);
 		saveButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		location = new PointField(LOCATION);
+		pointField = new PointField(LOCATION);
+		banner = new NoLocationBanner();
 		binder = new Binder(SportEvent.class);
 	}
 
-	private void buildContent() {
+	private void buildContent(Optional<SportEvent> sportEvent) {
 		addComponents(new MHorizontalLayout().withFullWidth().add(saveButton));
-		addComponentsAndExpand(location);
+		if (readOnly) {
+			saveButton.setVisible(false);
+			if (sportEvent.isPresent() && sportEvent.get().getPoint() != null) {
+				addComponentsAndExpand(pointField);
+			}
+			else {
+				addComponentsAndExpand(banner);
+			}
+		}
+		else {
+			addComponentsAndExpand(pointField);
+		}
 	}
 
-
-	public void setReadOnly(boolean readOnly) {
-		saveButton.setVisible(!readOnly);
+	private void initBinder(Optional<SportEvent> sportEvent) {
+		binder = new Binder(SportEvent.class);
+		binder.forField(pointField).bind(SportEvent::getPoint, SportEvent::setPoint);
+		sportEvent.ifPresent(s -> binder.setBean(s));
 	}
 
 	public void showInWindow(UI ui) {
@@ -54,7 +73,17 @@ public class MapForm extends VerticalLayout {
 		ui.addWindow(window);
 	}
 
-	public void setSportEvent(SportEvent sportEvent) {
-		this.sportEvent = sportEvent;
+	private class NoLocationBanner extends VerticalLayout {
+
+		public NoLocationBanner() {
+			buildBanner();
+		}
+
+		private void buildBanner() {
+			MLabel label = new MLabel("There is not given the location of event")
+					.withStyleName(ValoTheme.LABEL_H2, ValoTheme.LABEL_COLORED);
+			addComponent(label);
+			setComponentAlignment(label, Alignment.MIDDLE_CENTER);
+		}
 	}
 }
