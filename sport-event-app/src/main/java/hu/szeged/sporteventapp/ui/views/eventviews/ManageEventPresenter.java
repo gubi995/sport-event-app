@@ -14,7 +14,7 @@ import hu.szeged.sporteventapp.ui.views.IPresenter;
 
 @UIScope
 @SpringComponent
-public class MyEventPresenter extends AbstractPresenter<MyEventView>
+public class ManageEventPresenter extends AbstractPresenter<ManageEventView>
 		implements IPresenter {
 
 	private SportEventService sportEventService;
@@ -22,8 +22,8 @@ public class MyEventPresenter extends AbstractPresenter<MyEventView>
 	private User sessionUser;
 
 	@Autowired
-	public MyEventPresenter(SportEventService sportEventService,
-			UserService userService) {
+	public ManageEventPresenter(SportEventService sportEventService,
+								UserService userService) {
 		this.sportEventService = sportEventService;
 		this.userService = userService;
 	}
