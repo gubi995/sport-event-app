@@ -12,7 +12,6 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
@@ -27,6 +26,7 @@ import com.vaadin.server.FileResource;
 import com.vaadin.server.VaadinService;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.util.ValidatorUtil;
@@ -109,7 +109,6 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 
 	public void initBinder(User user) {
 		binder.setBean(user);
-		binder.setRequiredConfigurator(null);
 		binder.forField(usernameField).bind(User::getUsername, User::setUsername);
 		binder.forField(emailField).bind(User::getEmail, User::setEmail);
 		binder.forField(ageField).withConverter(Integer::parseInt, String::valueOf)

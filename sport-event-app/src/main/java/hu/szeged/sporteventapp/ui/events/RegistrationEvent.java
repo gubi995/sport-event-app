@@ -6,6 +6,7 @@ import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.ui.loginscreen.LoginScreen;
 
 public class RegistrationEvent extends ApplicationEvent {
+
 	private final User user;
 
 	public RegistrationEvent(LoginScreen source, User user) {

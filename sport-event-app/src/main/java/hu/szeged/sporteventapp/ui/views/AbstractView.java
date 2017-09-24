@@ -1,19 +1,14 @@
 package hu.szeged.sporteventapp.ui.views;
 
-import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 
 import java.io.Serializable;
 
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
-import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.Page;
-import com.vaadin.shared.Position;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
