@@ -1,4 +1,4 @@
-package hu.szeged.sporteventapp.ui.views.eventview;
+package hu.szeged.sporteventapp.ui.views.eventviews;
 
 import hu.szeged.sporteventapp.ui.views.IPresenter;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,4 @@
-package hu.szeged.sporteventapp.ui.views.myeventview;
-
-import java.io.Serializable;
+package hu.szeged.sporteventapp.ui.views.eventviews;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

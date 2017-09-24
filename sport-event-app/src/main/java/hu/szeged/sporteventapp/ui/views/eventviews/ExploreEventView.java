@@ -1,7 +1,7 @@
-package hu.szeged.sporteventapp.ui.views.eventview;
+package hu.szeged.sporteventapp.ui.views.eventviews;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
-import static hu.szeged.sporteventapp.ui.views.eventview.ExploreEventView.VIEW_NAME;
+import static hu.szeged.sporteventapp.ui.views.eventviews.ExploreEventView.VIEW_NAME;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
