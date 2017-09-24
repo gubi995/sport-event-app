@@ -1,7 +1,7 @@
 package hu.szeged.sporteventapp.ui.views.eventviews;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
-import static hu.szeged.sporteventapp.ui.views.eventviews.MyEventView.VIEW_NAME;
+import static hu.szeged.sporteventapp.ui.views.eventviews.ManageEventView.VIEW_NAME;
 
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -34,11 +34,11 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 @SpringView(name = "manage-my-events")
 @SideBarItem(sectionId = Sections.EVENT, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.FILE_PROCESS)
-public class MyEventView extends AbstractView {
+public class ManageEventView extends AbstractView {
 
 	public static final String VIEW_NAME = "Manage my events";
 
-	private final MyEventPresenter presenter;
+	private final ManageEventPresenter presenter;
 	private LocalDateTimeConverter timeConverter;
 	private final MapForm mapForm;
 
@@ -48,8 +48,8 @@ public class MyEventView extends AbstractView {
 	private Button createButton;
 
 	@Autowired
-	public MyEventView(MyEventPresenter presenter, LocalDateTimeConverter timeConverter,
-			MapForm mapForm) {
+	public ManageEventView(ManageEventPresenter presenter, LocalDateTimeConverter timeConverter,
+						   MapForm mapForm) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
 		this.timeConverter = timeConverter;
