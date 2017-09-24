@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
+import org.vaadin.viritin.layouts.MCssLayout;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.data.BeanValidationBinder;
@@ -67,11 +68,12 @@ public class ManageEventView extends AbstractView {
 	public void initBody() {
 		grid = buildGrid();
 		initButtons();
-		addComponents(
-				new MHorizontalLayout().add(nameFilter, createButton)
+		addComponentsAndExpand(new MCssLayout().withFullWidth().add(
+				new MHorizontalLayout().withSpacing(true).add(nameFilter, createButton)
 						.withAlign(createButton, Alignment.BOTTOM_CENTER),
-				new MHorizontalLayout().add(grid, eventDataForm).withFullSize()
-						.withExpand(grid, 1));
+						new MHorizontalLayout().withStyleName("manage-event-h-layout")
+								.withSpacing(true).add(grid, eventDataForm).withFullSize()
+								.withExpand(grid, 1)));
 		eventDataForm.setVisible(false);
 	}
 

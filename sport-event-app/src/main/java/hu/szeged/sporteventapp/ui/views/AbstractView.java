@@ -14,7 +14,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public abstract class AbstractView extends VerticalLayout implements View, INotifier, Serializable {
 
-	private final Label captionLabel;
+	protected final Label captionLabel;
 
 	public AbstractView(String headerCaption) {
 		captionLabel = new Label();
