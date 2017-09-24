@@ -40,6 +40,7 @@ public class ExploreEventView extends AbstractView {
 
 	private final ExploreEventPresenter presenter;
 	private final LocalDateTimeConverter timeConverter;
+	private final MapForm mapForm;
 
 	private Grid<SportEvent> grid;
 	private TextField nameFilter;
@@ -55,10 +56,11 @@ public class ExploreEventView extends AbstractView {
 
 	@Autowired
 	public ExploreEventView(ExploreEventPresenter presenter,
-			LocalDateTimeConverter timeConverter) {
+			LocalDateTimeConverter timeConverter, MapForm mapForm) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
 		this.timeConverter = timeConverter;
+		this.mapForm = mapForm;
 	}
 
 	@Override
@@ -132,7 +134,7 @@ public class ExploreEventView extends AbstractView {
 		grid.addComponentColumn(sportEvent -> {
 			Button button = new Button(VaadinIcons.GLOBE);
 			button.addClickListener(c -> {
-				MapForm mapForm = new MapForm(Optional.ofNullable(sportEvent), true);
+				mapForm.constructMapForm(Optional.ofNullable(sportEvent), true);
 				mapForm.showInWindow(getUI());
 			});
 			return button;

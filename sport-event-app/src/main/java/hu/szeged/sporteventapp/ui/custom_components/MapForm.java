@@ -4,46 +4,55 @@ import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.addon.leaflet.util.PointField;
 import org.vaadin.viritin.label.MLabel;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.data.Binder;
 import com.vaadin.icons.VaadinIcons;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
+import hu.szeged.sporteventapp.ui.views.INotifier;
 
-public class MapForm extends VerticalLayout {
+@ViewScope
+@SpringComponent
+public class MapForm extends VerticalLayout implements INotifier {
 
-	private Button saveButton;
 	private Boolean readOnly;
+	private Button clearButton;
 	private PointField pointField;
+	private MHorizontalLayout buttonHolder;
 	private NoLocationBanner banner;
+
 	private Binder<SportEvent> binder;
 
-	public MapForm(Optional<SportEvent> sportEvent, Boolean readOnly) {
-		this.readOnly = readOnly;
+	@Autowired
+	public MapForm() {
 		setSizeFull();
 		initComponent();
-		buildContent(sportEvent);
-		initBinder(sportEvent);
+		initBinder();
 	}
 
 	private void initComponent() {
-		saveButton = new Button(SAVE);
-		saveButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		clearButton = new Button(CLEAR);
+		clearButton.setStyleName(ValoTheme.BUTTON_DANGER);
+		clearButton.addClickListener(c -> clearMapMarker());
+		buttonHolder = new MHorizontalLayout().add(clearButton);
 		pointField = new PointField(LOCATION);
 		banner = new NoLocationBanner();
 		binder = new Binder(SportEvent.class);
 	}
 
-	private void buildContent(Optional<SportEvent> sportEvent) {
-		addComponents(new MHorizontalLayout().withFullWidth().add(saveButton));
+	private void buildContent(SportEvent sportEvent) {
+		removeAllComponents();
+		addComponents(buttonHolder);
 		if (readOnly) {
-			saveButton.setVisible(false);
-			if (sportEvent.isPresent() && sportEvent.get().getPoint() != null) {
+			if (sportEvent.getPoint() != null) {
 				addComponentsAndExpand(pointField);
 			}
 			else {
@@ -55,10 +64,32 @@ public class MapForm extends VerticalLayout {
 		}
 	}
 
-	private void initBinder(Optional<SportEvent> sportEvent) {
+	private void initBinder() {
 		binder = new Binder(SportEvent.class);
 		binder.forField(pointField).bind(SportEvent::getPoint, SportEvent::setPoint);
-		sportEvent.ifPresent(s -> binder.setBean(s));
+	}
+
+	private void clearMapMarker() {
+		pointField.clear();
+	}
+
+	private void setSportEvent(Optional<SportEvent> sportEvent) {
+		sportEvent.ifPresent(s -> {
+			binder.setBean(s);
+			buildContent(s);
+		});
+	}
+
+	private void setReadOnlyMode(boolean readOnly) {
+		this.readOnly = readOnly;
+		clearButton.setVisible(!readOnly);
+		pointField.setEnabled(!readOnly);
+		pointField.setReadOnly(readOnly);
+	}
+
+	public void constructMapForm(Optional<SportEvent> sportEvent, boolean readOnly) {
+		setReadOnlyMode(readOnly);
+		setSportEvent(sportEvent);
 	}
 
 	public void showInWindow(UI ui) {

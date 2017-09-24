@@ -10,13 +10,11 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.data.BeanValidationBinder;
-import com.vaadin.data.Binder;
 import com.vaadin.data.converter.StringToIntegerConverter;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
@@ -42,6 +40,7 @@ public class MyEventView extends AbstractView {
 
 	private final MyEventPresenter presenter;
 	private LocalDateTimeConverter timeConverter;
+	private final MapForm mapForm;
 
 	private Grid<SportEvent> grid;
 	private EventDataForm eventDataForm;
@@ -49,10 +48,12 @@ public class MyEventView extends AbstractView {
 	private Button createButton;
 
 	@Autowired
-	public MyEventView(MyEventPresenter presenter, LocalDateTimeConverter timeConverter) {
+	public MyEventView(MyEventPresenter presenter, LocalDateTimeConverter timeConverter,
+			MapForm mapForm) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
 		this.timeConverter = timeConverter;
+		this.mapForm = mapForm;
 	}
 
 	@Override
@@ -170,7 +171,7 @@ public class MyEventView extends AbstractView {
 		Button deleteButton;
 		Button locationButton;
 
-		Binder<SportEvent> binder;
+		BeanValidationBinder<SportEvent> binder;
 
 		public EventDataForm() {
 			super();
@@ -190,20 +191,13 @@ public class MyEventView extends AbstractView {
 		}
 
 		private void initComponent() {
-			nameField = new TextField();
-			nameField.setPlaceholder(NAME);
-			locationField = new TextField();
-			locationField.setPlaceholder(LOCATION);
-			maxParticipantField = new TextField();
-			maxParticipantField.setPlaceholder(MAX_PARTICIPANT);
-			sportType = new TextField();
-			sportType.setPlaceholder(SPORT_TYPE);
-			startDateTimeField = new DateTimeField();
-			startDateTimeField.setPlaceholder(START_DATE);
-			endDateTimeField = new DateTimeField();
-			endDateTimeField.setPlaceholder(END_DATE);
-			detailsArea = new TextArea();
-			detailsArea.setPlaceholder(DETAILS);
+			nameField = new TextField(NAME);
+			locationField = new TextField(LOCATION);
+			maxParticipantField = new TextField(MAX_PARTICIPANT);
+			sportType = new TextField(SPORT_TYPE);
+			startDateTimeField = new DateTimeField(START_DATE);
+			endDateTimeField = new DateTimeField(END_DATE);
+			detailsArea = new TextArea(DETAILS);
 			participantsComboBox = new ComboBox<>(PARTICIPANTS);
 			participantsComboBox.setTextInputAllowed(false);
 			participantsComboBox.setEmptySelectionAllowed(false);
@@ -230,17 +224,19 @@ public class MyEventView extends AbstractView {
 
 		private void initBinder() {
 			binder = new BeanValidationBinder<>(SportEvent.class);
-			binder.forField(nameField).bind(SportEvent::getName, SportEvent::setName);
-			binder.forField(locationField)
+			binder.forField(nameField).asRequired(REQUIRED_MSG).bind(SportEvent::getName,
+					SportEvent::setName);
+			binder.forField(locationField).asRequired(REQUIRED_MSG)
 					.bind(SportEvent::getLocation, SportEvent::setLocation);
-			binder.forField(startDateTimeField)
+			binder.forField(startDateTimeField).asRequired(REQUIRED_MSG)
 					.bind(SportEvent::getStartDate, SportEvent::setStartDate);
-			binder.forField(endDateTimeField)
+			binder.forField(endDateTimeField).asRequired(REQUIRED_MSG)
 					.bind(SportEvent::getEndDate, SportEvent::setEndDate);
 			binder.forField(maxParticipantField)
 					.withConverter(new StringToIntegerConverter(WRONG_INPUT))
 					.bind(SportEvent::getMaxParticipant, SportEvent::setMaxParticipant);
-			binder.forField(sportType).bind(SportEvent::getSportType,
+			binder.forField(sportType).asRequired(REQUIRED_MSG)
+					.bind(SportEvent::getSportType,
 					SportEvent::setSportType);
 			binder.forField(detailsArea).bind(SportEvent::getDetails,
 					SportEvent::setDetails);
@@ -289,7 +285,7 @@ public class MyEventView extends AbstractView {
 		}
 
 		private void adjustLocationPoint() {
-			MapForm mapForm = new MapForm(Optional.ofNullable(binder.getBean()), false);
+			mapForm.constructMapForm(Optional.ofNullable(binder.getBean()), false);
 			mapForm.showInWindow(getUI());
 		}
 

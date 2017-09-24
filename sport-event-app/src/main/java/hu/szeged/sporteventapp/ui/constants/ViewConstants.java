@@ -36,6 +36,8 @@ public class ViewConstants {
 	public static final String PARTICIPANTS = "Participants";
 	public static final String DELETE = "Delete";
 	public static final String SAVE = "Save";
+	public static final String SAVE_SUCCESSFUL = "Save was successful";
+	public static final String CLEAR = "Clear";
 	public static final String REQUIRED_MSG = "Required field, please fill out";
 	public static final String VALIDATION_WARNING_MSG = "Something wrong with your data. Please review them";
 	public static final String WRONG_INPUT = "Wrong input";
