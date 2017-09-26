@@ -1,6 +1,5 @@
 package hu.szeged.sporteventapp.ui.views.userprofile;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,25 +8,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 
-import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.backend.service.UserService;
 import hu.szeged.sporteventapp.common.util.ImageUtil;
 import hu.szeged.sporteventapp.ui.AbstractPresenter;
-import hu.szeged.sporteventapp.ui.views.IPresenter;
 
 @UIScope
 @SpringComponent
-public class UserProfilePresenter extends AbstractPresenter<UserProfileView>
-		implements IPresenter, Serializable {
+public class UserProfilePresenter extends AbstractPresenter<UserProfileView> {
 
-	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
-	private User sessionUser;
 
 	@Autowired
 	public UserProfilePresenter(UserService userService,
 			PasswordEncoder passwordEncoder) {
-		this.userService = userService;
+		super(userService);
 		this.passwordEncoder = passwordEncoder;
 	}
 
@@ -64,8 +58,9 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView>
 		getView().updateBinder(sessionUser);
 	}
 
+	@Override
 	public void enter() {
-		sessionUser = userService.getCurrentUser();
+		super.enter();
 		getView().initBinder(sessionUser);
 		getView().getUserImage()
 				.setSource(ImageUtil.setImageResource(sessionUser.getPictureName()));

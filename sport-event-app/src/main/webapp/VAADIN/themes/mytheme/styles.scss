@@ -3,7 +3,7 @@
 @import "shame";
 @import "base";
 @import "eventform";
-@import "explore_event";
+@import "simple_event";
 
 // This file prefixes all rules with the theme name to avoid causing conflicts with other themes.
 // The actual styles should be defined in mytheme.scss
@@ -14,7 +14,7 @@
   @include shame;
   @include base;
   @include eventform;
-  @include explore_event;
+  @include simple_event;
 }
 
 

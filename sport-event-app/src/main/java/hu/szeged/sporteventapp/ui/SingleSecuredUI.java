@@ -1,6 +1,5 @@
 package hu.szeged.sporteventapp.ui;
 
-import com.vaadin.annotations.Widgetset;
 import hu.szeged.sporteventapp.ui.loginscreen.LoginScreen;
 import hu.szeged.sporteventapp.ui.loginscreen.LoginScreenPresenter;
 import hu.szeged.sporteventapp.ui.mainscreen.MainScreenPresenter;
@@ -94,11 +93,6 @@ public class SingleSecuredUI extends UI {
 			access(() -> showMainScreen());
 		}
 		else {
-			// We cannot inject the Main Screen if the event was fired from another UI,
-			// since that UI's scope would be active
-			// and the main screen for that UI would be injected. Instead, we just reload
-			// the page and let the init(...) method
-			// do the work for us.
 			getPage().reload();
 		}
 	}

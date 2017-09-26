@@ -25,7 +25,9 @@ public class ViewConstants {
 	public static final String LOCATION = "Location";
 	public static final String ROUTE = "Route";
 	public static final String START_DATE_FROM = "From(star date)";
+	public static final String DATE_FROM = "From";
 	public static final String START_DATE_TO = "To(star date)";
+	public static final String DATE_TO = "To";
 	public static final String IS_THERE_FREE_SPACE = "Is there free space";
 	public static final String DID_I_JOIN_FOR_IT = "Did I join for it?";
 	public static final String MAX_PARTICIPANT = "Max participant";
@@ -43,4 +45,7 @@ public class ViewConstants {
 	public static final String WRONG_INPUT = "Wrong input";
 	public static final String JOIN = "Join";
 	public static final String LEAVE = "Leave";
+	public static final String ORGANIZER = "Organizer";
+	public static final String MEDIA = "Media";
+	public static final String MESSAGE_BOARD= "Message boar";
 }

@@ -44,6 +44,7 @@ public class MapForm extends VerticalLayout implements INotifier {
 		clearButton.addClickListener(c -> clearMapMarker());
 		buttonHolder = new MHorizontalLayout().add(clearButton);
 		pointField = new PointField(LOCATION);
+		pointField.addStyleName("point-field-border");
 		banner = new NoLocationBanner();
 		binder = new Binder(SportEvent.class);
 	}

@@ -10,22 +10,18 @@ import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.backend.service.SportEventService;
 import hu.szeged.sporteventapp.backend.service.UserService;
 import hu.szeged.sporteventapp.ui.AbstractPresenter;
-import hu.szeged.sporteventapp.ui.views.IPresenter;
 
 @UIScope
 @SpringComponent
-public class ManageEventPresenter extends AbstractPresenter<ManageEventView>
-		implements IPresenter {
+public class ManageEventPresenter extends AbstractPresenter<ManageEventView> {
 
-	private SportEventService sportEventService;
-	private UserService userService;
-	private User sessionUser;
+	private final SportEventService sportEventService;
 
 	@Autowired
 	public ManageEventPresenter(SportEventService sportEventService,
 								UserService userService) {
+		super(userService);
 		this.sportEventService = sportEventService;
-		this.userService = userService;
 	}
 
 	public void save(SportEvent sportEvent) {
@@ -47,7 +43,7 @@ public class ManageEventPresenter extends AbstractPresenter<ManageEventView>
 
 	@Override
 	public void enter() {
-		sessionUser = userService.getCurrentUser();
+		super.enter();
 		updateGridDate();
 	}
 }

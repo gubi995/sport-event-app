@@ -1,7 +1,7 @@
 package hu.szeged.sporteventapp.ui.views.eventviews;
 
-import hu.szeged.sporteventapp.ui.views.IPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
@@ -14,21 +14,18 @@ import hu.szeged.sporteventapp.common.exception.AlreadyJoinedException;
 import hu.szeged.sporteventapp.common.exception.NoEmptyPlaceException;
 import hu.szeged.sporteventapp.common.exception.NotParticipantException;
 import hu.szeged.sporteventapp.ui.AbstractPresenter;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 
 @UIScope
 @SpringComponent
-public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> implements IPresenter{
+public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 
-	private SportEventService sportEventService;
-	private UserService userService;
-	private User sessionUser;
+	private final SportEventService sportEventService;
 
 	@Autowired
 	public ExploreEventPresenter(SportEventService sportEventService,
 			UserService userService) {
+		super(userService);
 		this.sportEventService = sportEventService;
-		this.userService = userService;
 	}
 
 	public void join(SportEvent sportEvent) {
@@ -70,7 +67,7 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> i
 
 	@Override
 	public void enter() {
-		sessionUser = userService.getCurrentUser();
+		super.enter();
 		updateGridDate();
 	}
 }
