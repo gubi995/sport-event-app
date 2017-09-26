@@ -3,15 +3,20 @@ package hu.szeged.sporteventapp.ui.views.eventviews;
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 import static hu.szeged.sporteventapp.ui.views.eventviews.SingleEventView.VIEW_NAME;
 
+import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.spring.events.EventBus;
+import org.vaadin.spring.events.annotation.EventBusListenerMethod;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
 import org.vaadin.viritin.label.MLabel;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
+import com.vaadin.data.Binder;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
@@ -22,36 +27,44 @@ import com.vaadin.ui.themes.ValoTheme;
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
-import hu.szeged.sporteventapp.common.factory.MyBeanFactory;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.custom_components.MapForm;
+import hu.szeged.sporteventapp.ui.custom_components.ParticipantForm;
+import hu.szeged.sporteventapp.ui.events.JumpToSelectedSportEvent;
+import hu.szeged.sporteventapp.ui.listeners.JumpToSelectedEventListener;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
 
 @SpringView(name = "event")
-@SideBarItem(sectionId = Sections.EVENT, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.STAR_O)
-public class SingleEventView extends AbstractView {
+public class SingleEventView extends AbstractView implements JumpToSelectedEventListener {
 
 	public static final String VIEW_NAME = "Event";
 
 	private final SingleEventPresenter presenter;
+	private final EventBus.UIEventBus eventBus;
 	private final LocalDateTimeConverter timeConverter;
+	private final MapForm mapForm;
+	private final ParticipantForm participantForm;
 
 	private MVerticalLayout readOnlyDataForm;
-	private MapForm mapForm;
 	private Grid<User> userGrid;
 	private Button participantsButton;
 	private Button locationButton;
 	private Button mediaBoardButton;
 
+	private Binder<SportEvent> binder;
+
 	@Autowired
 	public SingleEventView(SingleEventPresenter presenter,
-			LocalDateTimeConverter timeConverter, MapForm mapForm) {
+			EventBus.UIEventBus eventBus, LocalDateTimeConverter timeConverter,
+			MapForm mapForm, ParticipantForm participantForm) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
+		this.eventBus = eventBus;
 		this.timeConverter = timeConverter;
 		this.mapForm = mapForm;
-		initReadOnlyDataForm(MyBeanFactory.createNewSportEvent());
+		this.participantForm = participantForm;
+		eventBus.subscribe(this);
 	}
 
 	@Override
@@ -63,6 +76,8 @@ public class SingleEventView extends AbstractView {
 		participantsButton = new Button(PARTICIPANTS);
 		locationButton = new Button(LOCATION);
 		mediaBoardButton = new Button(MEDIA);
+
+		binder = new Binder<>(SportEvent.class);
 	}
 
 	@Override
@@ -87,12 +102,20 @@ public class SingleEventView extends AbstractView {
 	private void initCommandButtons() {
 		participantsButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 		participantsButton.setIcon(VaadinIcons.GROUP);
+		participantsButton.addClickListener(clickEvent -> {
+			participantForm.constructParticipantForm(
+					Optional.ofNullable(binder.getBean().getParticipants()));
+			participantForm.showInWindow(getUI());
+		});
 		locationButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 		locationButton.setIcon(VaadinIcons.MAP_MARKER);
+		locationButton.addClickListener(clickEvent -> {
+			mapForm.constructMapForm(Optional.ofNullable(binder.getBean()), true);
+			mapForm.showInWindow(getUI());
+		});
 		mediaBoardButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 		mediaBoardButton.setIcon(VaadinIcons.MOVIE);
 	}
-
 	private void initReadOnlyDataForm(SportEvent sportEvent) {
 		readOnlyDataForm.with(
 				new MLabel(ORGANIZER, sportEvent.getOrganizer().getUsername()),
@@ -112,5 +135,13 @@ public class SingleEventView extends AbstractView {
 	@Override
 	public void enter(ViewChangeListener.ViewChangeEvent viewChangeEvent) {
 		presenter.enter();
+	}
+
+	@EventBusListenerMethod
+	public void onJump(JumpToSelectedSportEvent event) {
+		SportEvent sportEvent = event.getSportEvent();
+		binder.setBean(sportEvent);
+		captionLabel.setValue(sportEvent.getName());
+		initReadOnlyDataForm(sportEvent);
 	}
 }

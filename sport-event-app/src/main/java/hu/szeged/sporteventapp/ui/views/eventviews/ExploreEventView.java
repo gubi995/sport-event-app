@@ -13,6 +13,7 @@ import java.util.Optional;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
@@ -29,6 +30,7 @@ import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.custom_components.MapForm;
+import hu.szeged.sporteventapp.ui.events.JumpToSelectedSportEvent;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
 
 @SpringView(name = "explore-events")
@@ -41,6 +43,7 @@ public class ExploreEventView extends AbstractView {
 	private final ExploreEventPresenter presenter;
 	private final LocalDateTimeConverter timeConverter;
 	private final MapForm mapForm;
+	private final EventBus.UIEventBus eventBus;
 
 	private Grid<SportEvent> grid;
 	private TextField nameFilter;
@@ -52,15 +55,18 @@ public class ExploreEventView extends AbstractView {
 	private CheckBox participantCheckBox;
 	private Button joinButton;
 	private Button leaveButton;
+	private Button detailsButton;
 	private ParticipantWindow participantWindow;
 
 	@Autowired
 	public ExploreEventView(ExploreEventPresenter presenter,
-			LocalDateTimeConverter timeConverter, MapForm mapForm) {
+			LocalDateTimeConverter timeConverter, MapForm mapForm,
+			EventBus.UIEventBus eventBus) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
 		this.timeConverter = timeConverter;
 		this.mapForm = mapForm;
+		this.eventBus = eventBus;
 	}
 
 	@Override
@@ -75,6 +81,7 @@ public class ExploreEventView extends AbstractView {
 		participantCheckBox = new CheckBox(DID_I_JOIN_FOR_IT);
 		joinButton = new Button(JOIN);
 		leaveButton = new Button(LEAVE);
+		detailsButton = new Button("Jump for " + DETAILS);
 	}
 
 	@Override
@@ -87,7 +94,8 @@ public class ExploreEventView extends AbstractView {
 				new MHorizontalLayout().withMargin(false).withFullWidth()
 						.add(new MHorizontalLayout().add(freeSpaceCheckBox,
 								participantCheckBox), Alignment.MIDDLE_LEFT)
-						.add(new MHorizontalLayout().add(joinButton, leaveButton),
+						.add(new MHorizontalLayout().add(detailsButton, joinButton,
+								leaveButton),
 								Alignment.MIDDLE_RIGHT));
 		addComponentsAndExpand(grid);
 	}
@@ -149,6 +157,9 @@ public class ExploreEventView extends AbstractView {
 	}
 
 	private void initButton(){
+		detailsButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		detailsButton.setIcon(VaadinIcons.EYE);
+		detailsButton.addClickListener(clickEvent -> jumpToSelectEvent());
 		joinButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 		joinButton.setIcon(VaadinIcons.FLAG_CHECKERED);
 		joinButton.addClickListener(clickEvent -> join());
@@ -195,6 +206,17 @@ public class ExploreEventView extends AbstractView {
 	private Boolean filterByDateRange(LocalDateTime time, LocalDateTime from,
 			LocalDateTime to) {
 		return time.isAfter(from) && time.isBefore(to);
+	}
+
+	public void jumpToSelectEvent() {
+		SportEvent sportEvent = grid.asSingleSelect().getValue();
+		if (sportEvent != null) {
+			getUI().getNavigator().navigateTo("event");
+			eventBus.publish(this, new JumpToSelectedSportEvent(this, sportEvent));
+		}
+		else {
+			showInfoNotification("Please select a sport event");
+		}
 	}
 
 	public void join() {

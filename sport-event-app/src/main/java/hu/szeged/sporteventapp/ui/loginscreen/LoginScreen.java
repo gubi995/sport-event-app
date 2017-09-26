@@ -101,7 +101,7 @@ public class LoginScreen extends CustomComponent {
 		Image appIcon = new Image();
 		appIcon.setWidth(50, Unit.PIXELS);
 		appIcon.setHeight(50, Unit.PIXELS);
-		appIcon.setSource(ImageUtil.setImageResource(APP_ICON));
+		appIcon.setSource(ImageUtil.setImageFileResource(APP_ICON));
 		return appIcon;
 	}
 

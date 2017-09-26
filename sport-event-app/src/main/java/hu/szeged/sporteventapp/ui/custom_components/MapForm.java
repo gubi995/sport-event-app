@@ -34,6 +34,7 @@ public class MapForm extends VerticalLayout implements INotifier {
 	@Autowired
 	public MapForm() {
 		setSizeFull();
+		addStyleName("map-form-v-layout");
 		initComponent();
 		initBinder();
 	}
