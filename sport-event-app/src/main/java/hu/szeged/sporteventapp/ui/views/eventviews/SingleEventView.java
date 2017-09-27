@@ -1,7 +1,6 @@
 package hu.szeged.sporteventapp.ui.views.eventviews;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
-import static hu.szeged.sporteventapp.ui.views.eventviews.SingleEventView.VIEW_NAME;
 
 import java.util.Optional;
 
@@ -10,7 +9,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.events.annotation.EventBusListenerMethod;
-import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
 import org.vaadin.viritin.label.MLabel;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
@@ -27,7 +25,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
-import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.custom_components.MapForm;
 import hu.szeged.sporteventapp.ui.custom_components.ParticipantForm;
 import hu.szeged.sporteventapp.ui.events.JumpToSelectedSportEvent;
@@ -129,7 +126,8 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 								.convertLocalDateTimeToString(sportEvent.getEndDate())),
 				new MLabel(MAX_PARTICIPANT,
 						String.valueOf(sportEvent.getMaxParticipant())),
-				new MLabel(DETAILS, sportEvent.getDetails()));
+				new MLabel(DETAILS, sportEvent.getDetails())
+						.withStyleName("normal-white-space"));
 	}
 
 	@Override
