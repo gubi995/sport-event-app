@@ -63,6 +63,6 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView> {
 		super.enter();
 		getView().initBinder(sessionUser);
 		getView().getUserImage()
-				.setSource(ImageUtil.setImageFileResource(sessionUser.getPictureName()));
+				.setSource(ImageUtil.setImageThemeResource(sessionUser.getPictureName()));
 	}
 }

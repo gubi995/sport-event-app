@@ -208,7 +208,7 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 				this.filename = filename;
 				String webappPath = VaadinService.getCurrent().getBaseDirectory()
 						.getAbsolutePath();
-				file = new File(webappPath + "/images/" + filename);
+				file = new File(webappPath + "/VAADIN/themes/mytheme/images/" + filename);
 				FileOutputStream fos = new FileOutputStream(file);
 				return fos;
 			}
