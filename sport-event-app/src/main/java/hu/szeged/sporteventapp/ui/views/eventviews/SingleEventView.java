@@ -135,11 +135,13 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 		presenter.enter();
 	}
 
+	// TODO Place this method to the presenter, and send the data for view from there
 	@EventBusListenerMethod
 	public void onJump(JumpToSelectedSportEvent event) {
 		SportEvent sportEvent = event.getSportEvent();
 		binder.setBean(sportEvent);
-		captionLabel.setValue(sportEvent.getName());
+		setCaptionLabelText(sportEvent.getName());
 		initReadOnlyDataForm(sportEvent);
+		eventBus.unsubscribe(this);
 	}
 }
