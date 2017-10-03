@@ -150,6 +150,7 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 		binder.setBean(sportEvent);
 		setCaptionLabelText(sportEvent.getName());
 		initReadOnlyDataForm(sportEvent);
+		messageBoardForm.setCurrentEvent(sportEvent);
 		eventBus.unsubscribe(this);
 	}
 }

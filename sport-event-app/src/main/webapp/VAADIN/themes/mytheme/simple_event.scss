@@ -2,7 +2,7 @@
   .event-data-viewer {
     background-color: white;
     border: 1px solid #c5c5c5;
-    width: 200px !important;
+    width: 200px;
     padding: 15px;
     .v-button {
       width: 100%;
@@ -34,6 +34,7 @@
   .post {
     border-bottom: 1px solid #c5c5c5;
     border-top: 1px solid #c5c5c5;
+    height: auto !important;
     .v-image {
       width: 50px;
       border: 1px solid #c5c5c5 !important;

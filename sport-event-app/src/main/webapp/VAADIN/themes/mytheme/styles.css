@@ -15165,6 +15165,7 @@ div.v-layout.v-horizontal.v-widget {
 .mytheme .post {
 	border-bottom: 1px solid #c5c5c5;
 	border-top: 1px solid #c5c5c5;
+	height: auto !important;
 }
 
 .mytheme .post .v-image {

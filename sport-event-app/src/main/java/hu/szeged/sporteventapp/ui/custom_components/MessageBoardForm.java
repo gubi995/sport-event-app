@@ -5,6 +5,7 @@ import static hu.szeged.sporteventapp.ui.constants.ViewConstants.POST;
 
 import java.util.List;
 
+import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
@@ -16,12 +17,10 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.Message;
-import hu.szeged.sporteventapp.backend.data.entity.MessageBoard;
-import hu.szeged.sporteventapp.backend.data.entity.User;
-import hu.szeged.sporteventapp.backend.service.SportEventService;
-import hu.szeged.sporteventapp.backend.service.UserService;
 import hu.szeged.sporteventapp.common.util.ImageUtil;
 import hu.szeged.sporteventapp.ui.views.INotifier;
+
+import javax.annotation.PostConstruct;
 
 @ViewScope
 @SpringComponent
@@ -29,10 +28,7 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 
 	private static final String MB_STYLE_NAME = "message-board";
 
-	private final SportEventService sportEventService;
-	private final UserService userService;
-	private MessageBoard messageBoard;
-	private User sessionUser;
+	private final MessageBoardPresenter presenter;
 
 	private TextArea textArea;
 	private MessageHolder messageHolder;
@@ -40,10 +36,8 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 	private Button refreshButton;
 
 	@Autowired
-	public MessageBoardForm(SportEventService sportEventService,
-			UserService userService) {
-		this.sportEventService = sportEventService;
-		this.userService = userService;
+	public MessageBoardForm(MessageBoardPresenter presenter) {
+		this.presenter = presenter;
 		initComponents();
 		buildContent();
 		setSizeFull();
@@ -62,6 +56,7 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 	private void initTextArea() {
 		textArea.setPlaceholder("Write your message...");
 		textArea.setWidth(100, Unit.PERCENTAGE);
+		textArea.addValueChangeListener(v -> setEnableStateOfPostButton());
 	}
 
 	private void initButton() {
@@ -81,6 +76,20 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 				.alignAll(Alignment.MIDDLE_RIGHT);
 	}
 
+    @PostConstruct
+	private void initPresenter(){
+        presenter.setMessageBoardForm(this);
+    }
+
+	private void setEnableStateOfPostButton() {
+		if (textArea.getValue().length() > 0) {
+			postButton.setEnabled(true);
+		}
+		else {
+			postButton.setEnabled(false);
+		}
+	}
+
 	public void setMessagesForMessageBoard(List<Message> messages) {
 		messageHolder.generatePosts(messages);
 	}
@@ -89,7 +98,11 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 		messageHolder.addPost(message);
 	}
 
-	private class MessageHolder extends Panel {
+	public void setCurrentEvent(SportEvent sportEvent){
+	    presenter.setCurrentSportEvent(sportEvent);
+    }
+
+    private class MessageHolder extends Panel {
 
 		private VerticalLayout contentLayout;
 
@@ -123,6 +136,7 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 		private void createPost() {
 			Image image = createImage();
 			Label label = createMassageBox();
+			label.setSizeFull();
 			this.addComponents(image, label);
 			this.setExpandRatio(image, 0.1f);
 			this.setExpandRatio(label, 0.9f);
@@ -136,7 +150,7 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 			return image;
 		}
 
-		private Label createMassageBox(){
+		private Label createMassageBox() {
 			return new Label(message.getText());
 		}
 	}
