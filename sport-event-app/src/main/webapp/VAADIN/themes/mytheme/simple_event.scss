@@ -2,7 +2,7 @@
   .event-data-viewer {
     background-color: white;
     border: 1px solid #c5c5c5;
-    width: 200px;
+    width: 200px !important;
     padding: 15px;
     .v-button {
       width: 100%;
@@ -17,6 +17,28 @@
 
   .normal-white-space {
     white-space: normal !important;
+  }
+
+  .v-slot-event-data-viewer {
+    width: 20% !important;
+  }
+
+  .message-board {
+    padding-top: 0px;
+  }
+
+  .v-slot-message-board {
+    width: 80% !important;
+  }
+
+  .post {
+    border-bottom: 1px solid #c5c5c5;
+    border-top: 1px solid #c5c5c5;
+    .v-image {
+      width: 50px;
+      border: 1px solid #c5c5c5 !important;
+      margin-bottom: 5px;
+    }
   }
 }
 

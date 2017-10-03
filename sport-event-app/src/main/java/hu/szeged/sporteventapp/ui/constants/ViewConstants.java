@@ -48,4 +48,7 @@ public class ViewConstants {
 	public static final String ORGANIZER = "Organizer";
 	public static final String MEDIA = "Media";
 	public static final String MESSAGE_BOARD= "Message boar";
+	public static final String POST = "Post";
+	public static final String START = "Start";
+	public static final String END = "End";
 }

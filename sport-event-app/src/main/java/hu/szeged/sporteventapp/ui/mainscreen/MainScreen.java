@@ -21,6 +21,8 @@ import hu.szeged.sporteventapp.ui.views.ErrorView;
 @SpringComponent
 public class MainScreen extends CustomComponent {
 
+	private static final String STYLE_NAME = "view-container";
+
 	private final VaadinSecurity vaadinSecurity;
 	private final SpringViewProvider springViewProvider;
 	private final ValoSideBar sideBar;
@@ -58,7 +60,7 @@ public class MainScreen extends CustomComponent {
 
 		viewContainer = new CssLayout();
 		viewContainer.setSizeFull();
-		viewContainer.addStyleName("view-container");
+		viewContainer.addStyleName(STYLE_NAME);
 		layout.addComponent(viewContainer);
 		layout.setExpandRatio(viewContainer, 1f);
 	}

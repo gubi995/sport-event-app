@@ -14,12 +14,14 @@ import com.vaadin.ui.themes.ValoTheme;
 
 public abstract class AbstractView extends VerticalLayout implements View, INotifier, Serializable {
 
+	private static final String CAPTION_STYLE_NAME = "caption-underline";
+	
 	private final Label captionLabel;
 
 	public AbstractView(String headerCaption) {
 		captionLabel = new Label();
 		captionLabel.setStyleName(ValoTheme.LABEL_H2);
-		captionLabel.addStyleName("caption-underline");
+		captionLabel.addStyleName(CAPTION_STYLE_NAME);
 		setSpacing(true);
 		setMargin(true);
 		initHeader();

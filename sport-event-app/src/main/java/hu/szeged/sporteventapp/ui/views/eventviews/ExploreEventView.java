@@ -39,6 +39,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 public class ExploreEventView extends AbstractView {
 
 	public static final String VIEW_NAME = "Explore events";
+	private static final String CENTER_ALIGN_STYLE = "v-align-center";
 
 	private final ExploreEventPresenter presenter;
 	private final LocalDateTimeConverter timeConverter;
@@ -76,7 +77,9 @@ public class ExploreEventView extends AbstractView {
 		locationFilter = new TextField(LOCATION);
 		sportTypeFilter = new TextField(SPORT_TYPE);
 		fromDateField = new DateTimeField(START_DATE_FROM);
+		fromDateField.setWidth(185, Unit.PIXELS);
 		toDateField = new DateTimeField(START_DATE_TO);
+		toDateField.setWidth(185, Unit.PIXELS);
 		freeSpaceCheckBox = new CheckBox(IS_THERE_FREE_SPACE);
 		participantCheckBox = new CheckBox(DID_I_JOIN_FOR_IT);
 		joinButton = new Button(JOIN);
@@ -90,7 +93,9 @@ public class ExploreEventView extends AbstractView {
 		initButton();
 		addComponents(
 				new MHorizontalLayout().withMargin(false).withFullWidth().add(nameFilter,
-						locationFilter, sportTypeFilter, fromDateField, toDateField),
+						locationFilter, sportTypeFilter, fromDateField, toDateField)
+						.withAlign(fromDateField, Alignment.MIDDLE_RIGHT)
+						.withAlign(toDateField, Alignment.MIDDLE_RIGHT),
 				new MHorizontalLayout().withMargin(false).withFullWidth()
 						.add(new MHorizontalLayout().add(freeSpaceCheckBox,
 								participantCheckBox), Alignment.MIDDLE_LEFT)
@@ -115,15 +120,15 @@ public class ExploreEventView extends AbstractView {
 	}
 
 	private void adjustGridCoumns(final Grid<SportEvent> grid) {
-		grid.addColumn(SportEvent::getName).setCaption("Event name");
-		grid.addColumn(SportEvent::getLocation).setCaption("Location");
-		grid.addColumn(SportEvent::getSportType).setCaption("Sport type");
+		grid.addColumn(SportEvent::getName).setCaption(NAME);
+		grid.addColumn(SportEvent::getLocation).setCaption(LOCATION);
+		grid.addColumn(SportEvent::getSportType).setCaption(SPORT_TYPE);
 		grid.setColumns("name", "location", "sportType");
 		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
-				sportEvent.getStartDate(), "yyyy.MM.dd  hh:mm")).setCaption("Start")
+				sportEvent.getStartDate(), "yyyy.MM.dd  hh:mm")).setCaption(START)
 				.setWidth(160);
 		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
-				sportEvent.getEndDate(), "yyyy.MM.dd hh:mm")).setCaption("End")
+				sportEvent.getEndDate(), "yyyy.MM.dd hh:mm")).setCaption(END)
 				.setWidth(160);
 		grid.addColumn(sportEvent -> {
 			long minutes = sportEvent.getStartDate().until(sportEvent.getEndDate(),
@@ -138,7 +143,7 @@ public class ExploreEventView extends AbstractView {
 				getUI().addWindow(participantWindow);
 			});
 			return button;
-		}).setStyleGenerator(e -> "v-align-center").setCaption("Participants");
+		}).setStyleGenerator(e -> CENTER_ALIGN_STYLE).setCaption(PARTICIPANTS);
 		grid.addComponentColumn(sportEvent -> {
 			Button button = new Button(VaadinIcons.GLOBE);
 			button.addClickListener(c -> {
@@ -146,7 +151,7 @@ public class ExploreEventView extends AbstractView {
 				mapForm.showInWindow(getUI());
 			});
 			return button;
-		}).setStyleGenerator(e -> "v-align-center").setCaption("Location");
+		}).setStyleGenerator(e -> CENTER_ALIGN_STYLE).setCaption(LOCATION);
 	}
 
 	private void initFilters() {
@@ -160,7 +165,7 @@ public class ExploreEventView extends AbstractView {
 		detailsButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		detailsButton.setIcon(VaadinIcons.EYE);
 		detailsButton.addClickListener(clickEvent -> jumpToSelectEvent());
-		joinButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
+		joinButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		joinButton.setIcon(VaadinIcons.FLAG_CHECKERED);
 		joinButton.addClickListener(clickEvent -> join());
 		leaveButton.setStyleName(ValoTheme.BUTTON_DANGER);

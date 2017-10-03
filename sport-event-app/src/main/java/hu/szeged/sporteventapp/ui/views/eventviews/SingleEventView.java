@@ -26,6 +26,7 @@ import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
 import hu.szeged.sporteventapp.ui.custom_components.MapForm;
+import hu.szeged.sporteventapp.ui.custom_components.MessageBoardForm;
 import hu.szeged.sporteventapp.ui.custom_components.ParticipantForm;
 import hu.szeged.sporteventapp.ui.events.JumpToSelectedSportEvent;
 import hu.szeged.sporteventapp.ui.listeners.JumpToSelectedEventListener;
@@ -36,14 +37,19 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 public class SingleEventView extends AbstractView implements JumpToSelectedEventListener {
 
 	public static final String VIEW_NAME = "Event";
+	private static final String DATA_LAYOUT = "data-layout";
+	private static final String EVENT_DATA_VIEWER = "event-data-viewer";
+	private static final String NORMAL_SPACE = "normal-white-space";
 
 	private final SingleEventPresenter presenter;
 	private final EventBus.UIEventBus eventBus;
 	private final LocalDateTimeConverter timeConverter;
 	private final MapForm mapForm;
 	private final ParticipantForm participantForm;
+	private final MessageBoardForm messageBoardForm;
 
 	private MVerticalLayout readOnlyDataForm;
+	private MHorizontalLayout contentLayout;
 	private Grid<User> userGrid;
 	private Button participantsButton;
 	private Button locationButton;
@@ -52,15 +58,16 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 	private Binder<SportEvent> binder;
 
 	@Autowired
-	public SingleEventView(SingleEventPresenter presenter,
-			EventBus.UIEventBus eventBus, LocalDateTimeConverter timeConverter,
-			MapForm mapForm, ParticipantForm participantForm) {
+	public SingleEventView(SingleEventPresenter presenter, EventBus.UIEventBus eventBus,
+			LocalDateTimeConverter timeConverter, MapForm mapForm,
+			ParticipantForm participantForm, MessageBoardForm messageBoardForm) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
 		this.eventBus = eventBus;
 		this.timeConverter = timeConverter;
 		this.mapForm = mapForm;
 		this.participantForm = participantForm;
+		this.messageBoardForm = messageBoardForm;
 		eventBus.subscribe(this);
 	}
 
@@ -69,10 +76,11 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 		userGrid = new Grid<>(User.class);
 		userGrid.setSizeFull();
 		readOnlyDataForm = new MVerticalLayout();
-		readOnlyDataForm.addStyleName("data-layout");
+		readOnlyDataForm.addStyleName(DATA_LAYOUT);
 		participantsButton = new Button(PARTICIPANTS);
 		locationButton = new Button(LOCATION);
 		mediaBoardButton = new Button(MEDIA);
+		contentLayout = new MHorizontalLayout();
 
 		binder = new Binder<>(SportEvent.class);
 	}
@@ -81,8 +89,8 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 	public void initBody() {
 		initGrid();
 		initCommandButtons();
-		addComponentsAndExpand(new MHorizontalLayout().withMargin(false)
-				.add(new MVerticalLayout().withStyleName("event-data-viewer").add(
+		addComponentsAndExpand(contentLayout.withMargin(false).withFullSize()
+				.add(new MVerticalLayout().withStyleName(EVENT_DATA_VIEWER).add(
 						readOnlyDataForm, participantsButton, locationButton,
 						mediaBoardButton)));
 	}
@@ -90,6 +98,7 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 	@PostConstruct
 	public void init() {
 		presenter.setView(this);
+		contentLayout.add(messageBoardForm);
 	}
 
 	private void initGrid() {
@@ -127,7 +136,7 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 				new MLabel(MAX_PARTICIPANT,
 						String.valueOf(sportEvent.getMaxParticipant())),
 				new MLabel(DETAILS, sportEvent.getDetails())
-						.withStyleName("normal-white-space"));
+						.withStyleName(NORMAL_SPACE));
 	}
 
 	@Override
@@ -135,7 +144,6 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 		presenter.enter();
 	}
 
-	// TODO Place this method to the presenter, and send the data for view from there
 	@EventBusListenerMethod
 	public void onJump(JumpToSelectedSportEvent event) {
 		SportEvent sportEvent = event.getSportEvent();

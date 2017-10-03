@@ -38,6 +38,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 public class ManageEventView extends AbstractView {
 
 	public static final String VIEW_NAME = "Manage my events";
+	private static final String H_LAYOUT_STYLE = "manage-event-h-layout";
 
 	private final ManageEventPresenter presenter;
 	private LocalDateTimeConverter timeConverter;
@@ -71,7 +72,7 @@ public class ManageEventView extends AbstractView {
 		addComponentsAndExpand(new MCssLayout().withFullWidth().add(
 				new MHorizontalLayout().withSpacing(true).add(nameFilter, createButton)
 						.withAlign(createButton, Alignment.BOTTOM_CENTER),
-						new MHorizontalLayout().withStyleName("manage-event-h-layout")
+						new MHorizontalLayout().withStyleName(H_LAYOUT_STYLE)
 								.withSpacing(true).add(grid, eventDataForm).withFullSize()
 								.withExpand(grid, 1)));
 		eventDataForm.setVisible(false);
@@ -109,15 +110,15 @@ public class ManageEventView extends AbstractView {
 	}
 
 	private void adjustGridCoumn(final Grid<SportEvent> grid) {
-		grid.addColumn(SportEvent::getName).setCaption("Event name");
-		grid.addColumn(SportEvent::getLocation).setCaption("Location");
-		grid.addColumn(SportEvent::getSportType).setCaption("Sport type");
+		grid.addColumn(SportEvent::getName).setCaption(NAME);
+		grid.addColumn(SportEvent::getLocation).setCaption(LOCATION);
+		grid.addColumn(SportEvent::getSportType).setCaption(SPORT_TYPE);
 		grid.setColumns("name", "location", "sportType");
 		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
-				sportEvent.getStartDate(), "yyyy.MM.dd  hh:mm")).setCaption("Start")
+				sportEvent.getStartDate(), "yyyy.MM.dd  hh:mm")).setCaption(START)
 				.setWidth(160);
 		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
-				sportEvent.getEndDate(), "yyyy.MM.dd hh:mm")).setCaption("End")
+				sportEvent.getEndDate(), "yyyy.MM.dd hh:mm")).setCaption(END)
 				.setWidth(160);
 		Grid.Column<SportEvent, String> duration = grid.addColumn(sportEvent -> {
 			long minutes = sportEvent.getStartDate().until(sportEvent.getEndDate(),
@@ -160,6 +161,8 @@ public class ManageEventView extends AbstractView {
 
 	private class EventDataForm extends FormLayout {
 
+		private static final String FORM_STYLE  = "event_form";
+
 		TextField nameField;
 		TextField locationField;
 		TextField maxParticipantField;
@@ -178,7 +181,7 @@ public class ManageEventView extends AbstractView {
 		public EventDataForm() {
 			super();
 			setMargin(false);
-			addStyleName("event_form");
+			addStyleName(FORM_STYLE);
 			setSizeUndefined();
 			initComponent();
 			initBinder();

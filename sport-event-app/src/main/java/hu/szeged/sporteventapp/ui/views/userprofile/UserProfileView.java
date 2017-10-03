@@ -40,6 +40,8 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 public class UserProfileView extends AbstractView implements View, Serializable {
 
 	public static final String VIEW_NAME = "My profile";
+	private static final String IMAGE_STYLE = "user-image";
+	private static final String GROUP_STYLE = "user-image-group";
 
 	private final UserProfilePresenter presenter;
 
@@ -187,9 +189,9 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 	private VerticalLayout createImageGroup() {
 		VerticalLayout layout = new VerticalLayout();
 		layout.setSizeUndefined();
-		layout.addStyleName("user-image-group");
+		layout.addStyleName(GROUP_STYLE);
 		layout.setSpacing(false);
-		userImage.addStyleName("user-image");
+		userImage.addStyleName(IMAGE_STYLE);
 		userImage.setHeight(200, Unit.PIXELS);
 		userImage.setWidth(200, Unit.PIXELS);
 		layout.addComponents(userImage, pictureUpload);

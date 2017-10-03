@@ -23,6 +23,9 @@ import hu.szeged.sporteventapp.ui.views.INotifier;
 @SpringComponent
 public class MapForm extends VerticalLayout implements INotifier {
 
+	private static final String MAP_FORM_STYLE = "map-form-v-layout";
+	private static final String POINT_FIELD_STYLE = "point-field-border";
+
 	private Boolean readOnly;
 	private Button clearButton;
 	private PointField pointField;
@@ -34,7 +37,7 @@ public class MapForm extends VerticalLayout implements INotifier {
 	@Autowired
 	public MapForm() {
 		setSizeFull();
-		addStyleName("map-form-v-layout");
+		addStyleName(MAP_FORM_STYLE);
 		initComponent();
 		initBinder();
 	}
@@ -45,7 +48,7 @@ public class MapForm extends VerticalLayout implements INotifier {
 		clearButton.addClickListener(c -> clearMapMarker());
 		buttonHolder = new MHorizontalLayout().add(clearButton);
 		pointField = new PointField(LOCATION);
-		pointField.addStyleName("point-field-border");
+		pointField.addStyleName(POINT_FIELD_STYLE);
 		banner = new NoLocationBanner();
 		binder = new Binder(SportEvent.class);
 	}
