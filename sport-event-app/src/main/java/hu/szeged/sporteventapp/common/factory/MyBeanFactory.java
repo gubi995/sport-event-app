@@ -14,8 +14,7 @@ import hu.szeged.sporteventapp.backend.data.entity.User;
 public class MyBeanFactory {
 
 	public static SportEvent createNewSportEvent() {
-		return new SportEvent("", "", LocalDateTime.now(), LocalDateTime.now(), 20, "",
-				"", null, new User(), new ArrayList<>(), new Album(),
-				new MessageBoard());
+		return new SportEvent("", "", LocalDateTime.now(), LocalDateTime.now(), 20, "", "", null, new User(),
+				new ArrayList<>(), new Album(), new MessageBoard());
 	}
 }

@@ -59,12 +59,10 @@ public class MapForm extends VerticalLayout implements INotifier {
 		if (readOnly) {
 			if (sportEvent.getPoint() != null) {
 				addComponentsAndExpand(pointField);
-			}
-			else {
+			} else {
 				addComponentsAndExpand(banner);
 			}
-		}
-		else {
+		} else {
 			addComponentsAndExpand(pointField);
 		}
 	}
@@ -116,8 +114,8 @@ public class MapForm extends VerticalLayout implements INotifier {
 		}
 
 		private void buildBanner() {
-			MLabel label = new MLabel("There is not given the location of event")
-					.withStyleName(ValoTheme.LABEL_H2, ValoTheme.LABEL_COLORED);
+			MLabel label = new MLabel("There is not given the location of event").withStyleName(ValoTheme.LABEL_H2,
+					ValoTheme.LABEL_COLORED);
 			addComponent(label);
 			setComponentAlignment(label, Alignment.MIDDLE_CENTER);
 		}

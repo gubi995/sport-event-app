@@ -41,17 +41,15 @@ public class ManageEventView extends AbstractView {
 	private static final String H_LAYOUT_STYLE = "manage-event-h-layout";
 
 	private final ManageEventPresenter presenter;
-	private LocalDateTimeConverter timeConverter;
 	private final MapForm mapForm;
-
+	private LocalDateTimeConverter timeConverter;
 	private Grid<SportEvent> grid;
 	private EventDataForm eventDataForm;
 	private TextField nameFilter;
 	private Button createButton;
 
 	@Autowired
-	public ManageEventView(ManageEventPresenter presenter, LocalDateTimeConverter timeConverter,
-						   MapForm mapForm) {
+	public ManageEventView(ManageEventPresenter presenter, LocalDateTimeConverter timeConverter, MapForm mapForm) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
 		this.timeConverter = timeConverter;
@@ -69,12 +67,11 @@ public class ManageEventView extends AbstractView {
 	public void initBody() {
 		grid = buildGrid();
 		initButtons();
-		addComponentsAndExpand(new MCssLayout().withFullWidth().add(
-				new MHorizontalLayout().withSpacing(true).add(nameFilter, createButton)
-						.withAlign(createButton, Alignment.BOTTOM_CENTER),
-						new MHorizontalLayout().withStyleName(H_LAYOUT_STYLE)
-								.withSpacing(true).add(grid, eventDataForm).withFullSize()
-								.withExpand(grid, 1)));
+		addComponentsAndExpand(new MCssLayout().withFullWidth()
+				.add(new MHorizontalLayout().withSpacing(true).add(nameFilter, createButton).withAlign(createButton,
+						Alignment.BOTTOM_CENTER),
+						new MHorizontalLayout().withStyleName(H_LAYOUT_STYLE).withSpacing(true).add(grid, eventDataForm)
+								.withFullSize().withExpand(grid, 1)));
 		eventDataForm.setVisible(false);
 	}
 
@@ -88,15 +85,13 @@ public class ManageEventView extends AbstractView {
 		grid.setSizeFull();
 
 		adjustGridCoumn(grid);
-		grid.asSingleSelect()
-				.addValueChangeListener(e -> showEventDetailForm(e.getValue()));
+		grid.asSingleSelect().addValueChangeListener(e -> showEventDetailForm(e.getValue()));
 
 		return grid;
 	}
 
 	private void initFilters() {
-		ListDataProvider<SportEvent> dataProvider = (ListDataProvider<SportEvent>) grid
-				.getDataProvider();
+		ListDataProvider<SportEvent> dataProvider = (ListDataProvider<SportEvent>) grid.getDataProvider();
 		nameFilter.addValueChangeListener(e -> updateFilters(dataProvider));
 	}
 
@@ -114,15 +109,13 @@ public class ManageEventView extends AbstractView {
 		grid.addColumn(SportEvent::getLocation).setCaption(LOCATION);
 		grid.addColumn(SportEvent::getSportType).setCaption(SPORT_TYPE);
 		grid.setColumns("name", "location", "sportType");
-		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
-				sportEvent.getStartDate(), "yyyy.MM.dd  hh:mm")).setCaption(START)
-				.setWidth(160);
-		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
-				sportEvent.getEndDate(), "yyyy.MM.dd hh:mm")).setCaption(END)
-				.setWidth(160);
+		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getStartDate(),
+				"yyyy.MM.dd  hh:mm")).setCaption(START).setWidth(160);
+		grid.addColumn(
+				sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getEndDate(), "yyyy.MM.dd hh:mm"))
+				.setCaption(END).setWidth(160);
 		Grid.Column<SportEvent, String> duration = grid.addColumn(sportEvent -> {
-			long minutes = sportEvent.getStartDate().until(sportEvent.getEndDate(),
-					ChronoUnit.MINUTES);
+			long minutes = sportEvent.getStartDate().until(sportEvent.getEndDate(), ChronoUnit.MINUTES);
 
 			return minutes / 60 + ":" + minutes % 60;
 		});
@@ -131,8 +124,7 @@ public class ManageEventView extends AbstractView {
 
 	private void updateFilters(final ListDataProvider<SportEvent> dataProvider) {
 		dataProvider.clearFilters();
-		dataProvider.addFilter(sportEvent -> caseInsensitiveContains(sportEvent.getName(),
-				nameFilter.getValue()));
+		dataProvider.addFilter(sportEvent -> caseInsensitiveContains(sportEvent.getName(), nameFilter.getValue()));
 	}
 
 	private Boolean caseInsensitiveContains(String where, String what) {
@@ -142,8 +134,7 @@ public class ManageEventView extends AbstractView {
 	private void showEventDetailForm(SportEvent sportEvent) {
 		if (sportEvent == null) {
 			eventDataForm.setVisible(false);
-		}
-		else {
+		} else {
 			eventDataForm.setVisible(true);
 			eventDataForm.setSportEvent(sportEvent);
 		}
@@ -161,7 +152,7 @@ public class ManageEventView extends AbstractView {
 
 	private class EventDataForm extends FormLayout {
 
-		private static final String FORM_STYLE  = "event_form";
+		private static final String FORM_STYLE = "event_form";
 
 		TextField nameField;
 		TextField locationField;
@@ -185,12 +176,10 @@ public class ManageEventView extends AbstractView {
 			setSizeUndefined();
 			initComponent();
 			initBinder();
-			addComponents(nameField, sportType, maxParticipantField,
-					startDateTimeField, endDateTimeField,
-					new MHorizontalLayout(locationField, locationButton).withFullSize()
-							.withAlign(locationButton, Alignment.BOTTOM_CENTER),
-					new MHorizontalLayout(participantsComboBox,
-							deleteParticipantButton).withFullSize()
+			addComponents(nameField, sportType, maxParticipantField, startDateTimeField, endDateTimeField,
+					new MHorizontalLayout(locationField, locationButton).withFullSize().withAlign(locationButton,
+							Alignment.BOTTOM_CENTER),
+					new MHorizontalLayout(participantsComboBox, deleteParticipantButton).withFullSize()
 							.withAlign(deleteParticipantButton, Alignment.BOTTOM_CENTER),
 					detailsArea, new MHorizontalLayout(saveButton, deleteButton));
 		}
@@ -206,13 +195,11 @@ public class ManageEventView extends AbstractView {
 			participantsComboBox = new ComboBox<>(PARTICIPANTS);
 			participantsComboBox.setTextInputAllowed(false);
 			participantsComboBox.setEmptySelectionAllowed(false);
-			participantsComboBox.setItemCaptionGenerator(
-					user -> user.getUsername() + " / " + user.getRealName());
+			participantsComboBox.setItemCaptionGenerator(user -> user.getUsername() + " / " + user.getRealName());
 			deleteParticipantButton = new Button();
 			deleteParticipantButton.setIcon(VaadinIcons.ERASER);
 			deleteParticipantButton.addStyleName(ValoTheme.BUTTON_DANGER);
-			deleteParticipantButton
-					.addClickListener(clickEvent -> deleteParticipantFromEvent());
+			deleteParticipantButton.addClickListener(clickEvent -> deleteParticipantFromEvent());
 			saveButton = new Button(SAVE);
 			saveButton.addStyleName(ValoTheme.BUTTON_PRIMARY);
 			saveButton.addClickListener(clickEvent -> save());
@@ -229,22 +216,18 @@ public class ManageEventView extends AbstractView {
 
 		private void initBinder() {
 			binder = new BeanValidationBinder<>(SportEvent.class);
-			binder.forField(nameField).asRequired(REQUIRED_MSG).bind(SportEvent::getName,
-					SportEvent::setName);
-			binder.forField(locationField).asRequired(REQUIRED_MSG)
-					.bind(SportEvent::getLocation, SportEvent::setLocation);
-			binder.forField(startDateTimeField).asRequired(REQUIRED_MSG)
-					.bind(SportEvent::getStartDate, SportEvent::setStartDate);
-			binder.forField(endDateTimeField).asRequired(REQUIRED_MSG)
-					.bind(SportEvent::getEndDate, SportEvent::setEndDate);
-			binder.forField(maxParticipantField)
-					.withConverter(new StringToIntegerConverter(WRONG_INPUT))
+			binder.forField(nameField).asRequired(REQUIRED_MSG).bind(SportEvent::getName, SportEvent::setName);
+			binder.forField(locationField).asRequired(REQUIRED_MSG).bind(SportEvent::getLocation,
+					SportEvent::setLocation);
+			binder.forField(startDateTimeField).asRequired(REQUIRED_MSG).bind(SportEvent::getStartDate,
+					SportEvent::setStartDate);
+			binder.forField(endDateTimeField).asRequired(REQUIRED_MSG).bind(SportEvent::getEndDate,
+					SportEvent::setEndDate);
+			binder.forField(maxParticipantField).withConverter(new StringToIntegerConverter(WRONG_INPUT))
 					.bind(SportEvent::getMaxParticipant, SportEvent::setMaxParticipant);
-			binder.forField(sportType).asRequired(REQUIRED_MSG)
-					.bind(SportEvent::getSportType,
+			binder.forField(sportType).asRequired(REQUIRED_MSG).bind(SportEvent::getSportType,
 					SportEvent::setSportType);
-			binder.forField(detailsArea).bind(SportEvent::getDetails,
-					SportEvent::setDetails);
+			binder.forField(detailsArea).bind(SportEvent::getDetails, SportEvent::setDetails);
 		}
 
 		private void setSportEvent(SportEvent sportEvent) {
@@ -259,8 +242,7 @@ public class ManageEventView extends AbstractView {
 				participantsComboBox.setEnabled(true);
 				deleteParticipantButton.setEnabled(true);
 				participantsComboBox.setItems(sportEvent.getParticipants());
-			}
-			else {
+			} else {
 				participantsComboBox.setEnabled(false);
 				deleteParticipantButton.setEnabled(false);
 				participantsComboBox.clear();
@@ -272,8 +254,7 @@ public class ManageEventView extends AbstractView {
 				presenter.save(binder.getBean());
 				presenter.updateGridDate();
 				setVisible(false);
-			}
-			else {
+			} else {
 				showWarningNotification(VALIDATION_WARNING_MSG);
 			}
 		}
@@ -283,8 +264,7 @@ public class ManageEventView extends AbstractView {
 				presenter.delete(binder.getBean());
 				presenter.updateGridDate();
 				setVisible(false);
-			}
-			else {
+			} else {
 				showWarningNotification(VALIDATION_WARNING_MSG);
 			}
 		}
@@ -298,13 +278,11 @@ public class ManageEventView extends AbstractView {
 			SportEvent sportEvent = binder.getBean();
 			User user = participantsComboBox.getValue();
 			if (sportEvent != null && user != null) {
-				presenter.deleteParticipantFromEvent(sportEvent,
-						user);
+				presenter.deleteParticipantFromEvent(sportEvent, user);
 				participantsComboBox.clear();
 				presenter.updateGridDate();
 				grid.select(sportEvent);
-			}
-			else {
+			} else {
 				showErrorNotification("Please choose a user before delete");
 			}
 		}

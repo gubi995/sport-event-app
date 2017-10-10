@@ -1,8 +1,5 @@
 package hu.szeged.sporteventapp.ui;
 
-import hu.szeged.sporteventapp.ui.loginscreen.LoginScreen;
-import hu.szeged.sporteventapp.ui.loginscreen.LoginScreenPresenter;
-import hu.szeged.sporteventapp.ui.mainscreen.MainScreenPresenter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.vaadin.spring.events.EventBus;
@@ -18,6 +15,10 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+
+import hu.szeged.sporteventapp.ui.loginscreen.LoginScreen;
+import hu.szeged.sporteventapp.ui.loginscreen.LoginScreenPresenter;
+import hu.szeged.sporteventapp.ui.mainscreen.MainScreenPresenter;
 
 @SpringUI
 @Push
@@ -45,21 +46,19 @@ public class SingleSecuredUI extends UI {
 		// Let's register a custom error handler to make the 'access denied' messages a
 		// bit friendlier.
 		setErrorHandler(new DefaultErrorHandler() {
+
 			@Override
 			public void error(com.vaadin.server.ErrorEvent event) {
-				if (SecurityExceptionUtils
-						.isAccessDeniedException(event.getThrowable())) {
+				if (SecurityExceptionUtils.isAccessDeniedException(event.getThrowable())) {
 					Notification.show("Sorry, you don't have access to do that.");
-				}
-				else {
+				} else {
 					super.error(event);
 				}
 			}
 		});
 		if (vaadinSecurity.isAuthenticated()) {
 			showMainScreen();
-		}
-		else {
+		} else {
 			showLoginScreen(request.getParameter("logout") != null);
 		}
 	}
@@ -91,8 +90,7 @@ public class SingleSecuredUI extends UI {
 	void onLogin(SuccessfulLoginEvent loginEvent) {
 		if (loginEvent.getSource().equals(this)) {
 			access(() -> showMainScreen());
-		}
-		else {
+		} else {
 			getPage().reload();
 		}
 	}

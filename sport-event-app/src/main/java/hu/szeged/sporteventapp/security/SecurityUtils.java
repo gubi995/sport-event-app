@@ -16,21 +16,19 @@ public class SecurityUtils {
 
 	public static String getUsername() {
 		SecurityContext context = SecurityContextHolder.getContext();
-		UserDetails userDetails = (UserDetails) context.getAuthentication()
-				.getPrincipal();
+		UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
 		return userDetails.getUsername();
 	}
 
 	public static boolean isCurrentUserInRole(String role) {
-		return getUserRoles().stream()
-				.filter(roleName -> roleName.equals(Objects.requireNonNull(role)))
-				.findAny().isPresent();
+		return getUserRoles().stream().filter(roleName -> roleName.equals(Objects.requireNonNull(role))).findAny()
+				.isPresent();
 	}
 
 	public static Set<String> getUserRoles() {
 		SecurityContext context = SecurityContextHolder.getContext();
-		return context.getAuthentication().getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+		return context.getAuthentication().getAuthorities().stream().map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toSet());
 	}
 
 }

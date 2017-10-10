@@ -17,8 +17,7 @@ public class Application {
 	}
 
 	/**
-	 * Provide custom system messages to make sure the application is reloaded when the
-	 * session expires.
+	 * Provide custom system messages to make sure the application is reloaded when the session expires.
 	 */
 	@Bean
 	SystemMessagesProvider systemMessagesProvider() {

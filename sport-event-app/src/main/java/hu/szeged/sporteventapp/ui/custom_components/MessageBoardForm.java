@@ -5,7 +5,8 @@ import static hu.szeged.sporteventapp.ui.constants.ViewConstants.POST;
 
 import java.util.List;
 
-import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
@@ -17,10 +18,9 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.Message;
+import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.common.util.ImageUtil;
 import hu.szeged.sporteventapp.ui.views.INotifier;
-
-import javax.annotation.PostConstruct;
 
 @ViewScope
 @SpringComponent
@@ -72,20 +72,18 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 	private void buildContent() {
 		addComponentsAndExpand(messageHolder);
 		add(textArea);
-		add(new MHorizontalLayout().add(refreshButton, postButton))
-				.alignAll(Alignment.MIDDLE_RIGHT);
+		add(new MHorizontalLayout().add(refreshButton, postButton)).alignAll(Alignment.MIDDLE_RIGHT);
 	}
 
-    @PostConstruct
-	private void initPresenter(){
-        presenter.setMessageBoardForm(this);
-    }
+	@PostConstruct
+	private void initPresenter() {
+		presenter.setMessageBoardForm(this);
+	}
 
 	private void setEnableStateOfPostButton() {
 		if (textArea.getValue().length() > 0) {
 			postButton.setEnabled(true);
-		}
-		else {
+		} else {
 			postButton.setEnabled(false);
 		}
 	}
@@ -98,11 +96,11 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 		messageHolder.addPost(message);
 	}
 
-	public void setCurrentEvent(SportEvent sportEvent){
-	    presenter.setCurrentSportEvent(sportEvent);
-    }
+	public void setCurrentEvent(SportEvent sportEvent) {
+		presenter.setCurrentSportEvent(sportEvent);
+	}
 
-    private class MessageHolder extends Panel {
+	private class MessageHolder extends Panel {
 
 		private VerticalLayout contentLayout;
 

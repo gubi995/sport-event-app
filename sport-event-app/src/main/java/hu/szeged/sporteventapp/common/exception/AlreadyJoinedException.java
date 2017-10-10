@@ -1,6 +1,7 @@
 package hu.szeged.sporteventapp.common.exception;
 
 public class AlreadyJoinedException extends Exception {
+
 	public AlreadyJoinedException() {
 	}
 
@@ -16,8 +17,8 @@ public class AlreadyJoinedException extends Exception {
 		super(cause);
 	}
 
-	public AlreadyJoinedException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
+	public AlreadyJoinedException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 }

@@ -15,24 +15,17 @@ public interface UserRepository extends JpaRepository<User, String> {
 
 	int countByEmail(String email);
 
-	//TODO Not necessary. Use save instead of like this
+	// TODO Not necessary. Use save instead of like this
 	@Modifying
 	@Query("UPDATE User user SET user.age = :age, user.realName = :realName, user.mobileNumber = :mobileNumber WHERE user.id = :id")
-	int updateUserAdditionalData(
-			@Param("id") String id,
-			@Param("age") int age,
-			@Param("realName") String realName,
+	int updateUserAdditionalData(@Param("id") String id, @Param("age") int age, @Param("realName") String realName,
 			@Param("mobileNumber") String mobileNumber);
 
 	@Modifying
 	@Query("UPDATE User user SET user.password = :password WHERE user.id = :id")
-	int updateUserPassword(
-			@Param("id") String id,
-			@Param("password") String password);
+	int updateUserPassword(@Param("id") String id, @Param("password") String password);
 
 	@Modifying
 	@Query("UPDATE User user SET user.pictureName = :pictureName WHERE user.id = :id")
-	int updateUserImageData(
-			@Param("id") String id,
-			@Param("pictureName") String pictureName);
+	int updateUserImageData(@Param("id") String id, @Param("pictureName") String pictureName);
 }

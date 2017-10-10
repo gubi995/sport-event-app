@@ -90,11 +90,10 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 	@Override
 	public void initBody() {
 		addComponent(new MHorizontalLayout(
-				new MVerticalLayout(createPasswordChangeGroup(),
-						createOptionFieldsGroup()).alignAll(Alignment.MIDDLE_RIGHT),
-				new MVerticalLayout(createImageGroup(), createReadOnlyGroup())
-						.alignAll(Alignment.MIDDLE_RIGHT)).withWidth(85,
-								Unit.PERCENTAGE));
+				new MVerticalLayout(createPasswordChangeGroup(), createOptionFieldsGroup())
+						.alignAll(Alignment.MIDDLE_RIGHT),
+				new MVerticalLayout(createImageGroup(), createReadOnlyGroup()).alignAll(Alignment.MIDDLE_RIGHT))
+						.withWidth(85, Unit.PERCENTAGE));
 	}
 
 	@PostConstruct
@@ -102,8 +101,7 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 		presenter.setView(this);
 		initPicutreUploader();
 
-		changePasswordButton.addClickListener(
-				clickEvent -> presenter.changePassword(getPasswordRelevantData()));
+		changePasswordButton.addClickListener(clickEvent -> presenter.changePassword(getPasswordRelevantData()));
 		updateButton.addClickListener(clickEvent -> {
 			presenter.updateUserData(getUpdateRelevantData());
 		});
@@ -113,12 +111,10 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 		binder.setBean(user);
 		binder.forField(usernameField).bind(User::getUsername, User::setUsername);
 		binder.forField(emailField).bind(User::getEmail, User::setEmail);
-		binder.forField(ageField).withConverter(Integer::parseInt, String::valueOf)
-				.bind(User::getAge, User::setAge);
+		binder.forField(ageField).withConverter(Integer::parseInt, String::valueOf).bind(User::getAge, User::setAge);
 		binder.forField(realNameField).bind(User::getRealName, User::setRealName);
 		binder.forField(mobileField).bind(User::getMobileNumber, User::setMobileNumber);
-		ValidatorUtil.addValidator(changePasswordButton, new PasswordValidator(),
-				newPasswordField);
+		ValidatorUtil.addValidator(changePasswordButton, new PasswordValidator(), newPasswordField);
 	}
 
 	public Map<String, String> getPasswordRelevantData() {
@@ -154,8 +150,7 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 		pictureUpload.setReceiver(imageUploader);
 		pictureUpload.addSucceededListener(imageUploader);
 		pictureUpload.addStartedListener(e -> {
-			if (!e.getMIMEType().equals("image/png")
-					&& !e.getMIMEType().equals("image/jpeg")) {
+			if (!e.getMIMEType().equals("image/png") && !e.getMIMEType().equals("image/jpeg")) {
 				showErrorNotification("Upload interrupted! It is not an image");
 				pictureUpload.interruptUpload();
 			}
@@ -181,8 +176,7 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 	private FormLayout createPasswordChangeGroup() {
 		FormLayout layout = new FormLayout();
 		layout.setSizeUndefined();
-		layout.addComponents(oldPasswordField, newPasswordField, validateField,
-				changePasswordButton);
+		layout.addComponents(oldPasswordField, newPasswordField, validateField, changePasswordButton);
 		return layout;
 	}
 
@@ -201,6 +195,7 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 	}
 
 	private class ImageUploader implements Upload.Receiver, Upload.SucceededListener {
+
 		private File file;
 		private String filename;
 
@@ -208,13 +203,11 @@ public class UserProfileView extends AbstractView implements View, Serializable 
 
 			try {
 				this.filename = filename;
-				String webappPath = VaadinService.getCurrent().getBaseDirectory()
-						.getAbsolutePath();
+				String webappPath = VaadinService.getCurrent().getBaseDirectory().getAbsolutePath();
 				file = new File(webappPath + "/VAADIN/themes/mytheme/images/" + filename);
 				FileOutputStream fos = new FileOutputStream(file);
 				return fos;
-			}
-			catch (final java.io.FileNotFoundException e) {
+			} catch (final java.io.FileNotFoundException e) {
 				showErrorNotification(e.getMessage());
 				return null;
 			}

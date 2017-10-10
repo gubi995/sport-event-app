@@ -60,8 +60,7 @@ public class ExploreEventView extends AbstractView {
 	private ParticipantWindow participantWindow;
 
 	@Autowired
-	public ExploreEventView(ExploreEventPresenter presenter,
-			LocalDateTimeConverter timeConverter, MapForm mapForm,
+	public ExploreEventView(ExploreEventPresenter presenter, LocalDateTimeConverter timeConverter, MapForm mapForm,
 			EventBus.UIEventBus eventBus) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
@@ -91,16 +90,12 @@ public class ExploreEventView extends AbstractView {
 	public void initBody() {
 		grid = buildGrid();
 		initButton();
-		addComponents(
-				new MHorizontalLayout().withMargin(false).withFullWidth().add(nameFilter,
-						locationFilter, sportTypeFilter, fromDateField, toDateField)
-						.withAlign(fromDateField, Alignment.MIDDLE_RIGHT)
-						.withAlign(toDateField, Alignment.MIDDLE_RIGHT),
+		addComponents(new MHorizontalLayout().withMargin(false).withFullWidth()
+				.add(nameFilter, locationFilter, sportTypeFilter, fromDateField, toDateField)
+				.withAlign(fromDateField, Alignment.MIDDLE_RIGHT).withAlign(toDateField, Alignment.MIDDLE_RIGHT),
 				new MHorizontalLayout().withMargin(false).withFullWidth()
-						.add(new MHorizontalLayout().add(freeSpaceCheckBox,
-								participantCheckBox), Alignment.MIDDLE_LEFT)
-						.add(new MHorizontalLayout().add(detailsButton, joinButton,
-								leaveButton),
+						.add(new MHorizontalLayout().add(freeSpaceCheckBox, participantCheckBox), Alignment.MIDDLE_LEFT)
+						.add(new MHorizontalLayout().add(detailsButton, joinButton, leaveButton),
 								Alignment.MIDDLE_RIGHT));
 		addComponentsAndExpand(grid);
 	}
@@ -124,15 +119,13 @@ public class ExploreEventView extends AbstractView {
 		grid.addColumn(SportEvent::getLocation).setCaption(LOCATION);
 		grid.addColumn(SportEvent::getSportType).setCaption(SPORT_TYPE);
 		grid.setColumns("name", "location", "sportType");
-		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
-				sportEvent.getStartDate(), "yyyy.MM.dd  hh:mm")).setCaption(START)
-				.setWidth(160);
-		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(
-				sportEvent.getEndDate(), "yyyy.MM.dd hh:mm")).setCaption(END)
-				.setWidth(160);
+		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getStartDate(),
+				"yyyy.MM.dd  hh:mm")).setCaption(START).setWidth(160);
+		grid.addColumn(
+				sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getEndDate(), "yyyy.MM.dd hh:mm"))
+				.setCaption(END).setWidth(160);
 		grid.addColumn(sportEvent -> {
-			long minutes = sportEvent.getStartDate().until(sportEvent.getEndDate(),
-					ChronoUnit.MINUTES);
+			long minutes = sportEvent.getStartDate().until(sportEvent.getEndDate(), ChronoUnit.MINUTES);
 
 			return minutes / 60 + ":" + minutes % 60;
 		}).setCaption("Duration(hour:min)");
@@ -155,13 +148,12 @@ public class ExploreEventView extends AbstractView {
 	}
 
 	private void initFilters() {
-		ListDataProvider<SportEvent> dataProvider = (ListDataProvider<SportEvent>) grid
-				.getDataProvider();
-		bindFiltersAndGrid(dataProvider, nameFilter, locationFilter, sportTypeFilter,
-				fromDateField, toDateField, freeSpaceCheckBox, participantCheckBox);
+		ListDataProvider<SportEvent> dataProvider = (ListDataProvider<SportEvent>) grid.getDataProvider();
+		bindFiltersAndGrid(dataProvider, nameFilter, locationFilter, sportTypeFilter, fromDateField, toDateField,
+				freeSpaceCheckBox, participantCheckBox);
 	}
 
-	private void initButton(){
+	private void initButton() {
 		detailsButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		detailsButton.setIcon(VaadinIcons.EYE);
 		detailsButton.addClickListener(clickEvent -> jumpToSelectEvent());
@@ -175,41 +167,32 @@ public class ExploreEventView extends AbstractView {
 
 	private void updateFilters(final ListDataProvider<SportEvent> dataProvider) {
 		dataProvider.clearFilters();
-		dataProvider.addFilter(sportEvent -> caseInsensitiveContains(sportEvent.getName(),
-				nameFilter.getValue()));
+		dataProvider.addFilter(sportEvent -> caseInsensitiveContains(sportEvent.getName(), nameFilter.getValue()));
 		dataProvider
-				.addFilter(sportEvent -> caseInsensitiveContains(sportEvent.getLocation(),
-						locationFilter.getValue()));
-		dataProvider.addFilter(sportEvent -> caseInsensitiveContains(
-				sportEvent.getSportType(), sportTypeFilter.getValue()));
+				.addFilter(sportEvent -> caseInsensitiveContains(sportEvent.getLocation(), locationFilter.getValue()));
+		dataProvider.addFilter(
+				sportEvent -> caseInsensitiveContains(sportEvent.getSportType(), sportTypeFilter.getValue()));
 		if (freeSpaceCheckBox.getValue()) {
-			dataProvider.addFilter(sportEvent -> sportEvent.getParticipants()
-					.size() < sportEvent.getMaxParticipant());
+			dataProvider.addFilter(sportEvent -> sportEvent.getParticipants().size() < sportEvent.getMaxParticipant());
 		}
 		if (participantCheckBox.getValue()) {
-			dataProvider.addFilter(sportEvent -> sportEvent.getParticipants()
-					.contains(presenter.getSessionUser()));
+			dataProvider.addFilter(sportEvent -> sportEvent.getParticipants().contains(presenter.getSessionUser()));
 		}
-		if (fromDateField.getOptionalValue().isPresent()
-				&& toDateField.getOptionalValue().isPresent()) {
-			dataProvider
-					.addFilter(sportEvent -> filterByDateRange(sportEvent.getStartDate(),
-							fromDateField.getValue(), toDateField.getValue()));
+		if (fromDateField.getOptionalValue().isPresent() && toDateField.getOptionalValue().isPresent()) {
+			dataProvider.addFilter(sportEvent -> filterByDateRange(sportEvent.getStartDate(), fromDateField.getValue(),
+					toDateField.getValue()));
 		}
 	}
 
-	private void bindFiltersAndGrid(final ListDataProvider<SportEvent> dataProvider,
-			AbstractField... fields) {
-		Arrays.stream(fields).forEach(
-				field -> field.addValueChangeListener(e -> updateFilters(dataProvider)));
+	private void bindFiltersAndGrid(final ListDataProvider<SportEvent> dataProvider, AbstractField... fields) {
+		Arrays.stream(fields).forEach(field -> field.addValueChangeListener(e -> updateFilters(dataProvider)));
 	}
 
 	private Boolean caseInsensitiveContains(String where, String what) {
 		return where.toLowerCase().contains(what.toLowerCase());
 	}
 
-	private Boolean filterByDateRange(LocalDateTime time, LocalDateTime from,
-			LocalDateTime to) {
+	private Boolean filterByDateRange(LocalDateTime time, LocalDateTime from, LocalDateTime to) {
 		return time.isAfter(from) && time.isBefore(to);
 	}
 
@@ -218,8 +201,7 @@ public class ExploreEventView extends AbstractView {
 		if (sportEvent != null) {
 			getUI().getNavigator().navigateTo("event");
 			eventBus.publish(this, new JumpToSelectedSportEvent(this, sportEvent));
-		}
-		else {
+		} else {
 			showInfoNotification("Please select a sport event");
 		}
 	}
@@ -228,8 +210,7 @@ public class ExploreEventView extends AbstractView {
 		SportEvent sportEvent = grid.asSingleSelect().getValue();
 		if (sportEvent != null) {
 			presenter.join(sportEvent);
-		}
-		else {
+		} else {
 			showInfoNotification("Please select a sport event");
 		}
 	}
@@ -238,8 +219,7 @@ public class ExploreEventView extends AbstractView {
 		SportEvent sportEvent = grid.asSingleSelect().getValue();
 		if (sportEvent != null) {
 			presenter.leave(sportEvent);
-		}
-		else {
+		} else {
 			showInfoNotification("Please select a sport event");
 		}
 	}
@@ -254,7 +234,7 @@ public class ExploreEventView extends AbstractView {
 		presenter.enter();
 	}
 
-	private class ParticipantWindow extends Window{
+	private class ParticipantWindow extends Window {
 
 		Grid<User> grid;
 
@@ -263,8 +243,8 @@ public class ExploreEventView extends AbstractView {
 			initContent();
 		}
 
-		private void initContent(){
-			setWidth(500,Unit.PIXELS);
+		private void initContent() {
+			setWidth(500, Unit.PIXELS);
 			setHeight(400, Unit.PIXELS);
 			setIcon(VaadinIcons.GROUP);
 			setCaption(PARTICIPANTS);
@@ -275,18 +255,18 @@ public class ExploreEventView extends AbstractView {
 			setContent(grid);
 		}
 
-		private Grid<User> buildGrid(){
+		private Grid<User> buildGrid() {
 			final Grid<User> grid = new Grid<>(User.class);
 			grid.setSizeFull();
-			grid.setColumns("username","realName");
+			grid.setColumns("username", "realName");
 			grid.setSelectionMode(Grid.SelectionMode.NONE);
 			return grid;
 		}
 
 		public void setUsers(List<User> users) {
-			if(users == null) {
+			if (users == null) {
 				grid.setItems(new HashSet<>());
-			}else {
+			} else {
 				grid.setItems(users);
 			}
 		}

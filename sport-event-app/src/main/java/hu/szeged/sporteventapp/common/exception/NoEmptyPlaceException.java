@@ -1,6 +1,7 @@
 package hu.szeged.sporteventapp.common.exception;
 
 public class NoEmptyPlaceException extends Exception {
+
 	public NoEmptyPlaceException() {
 	}
 
@@ -16,8 +17,8 @@ public class NoEmptyPlaceException extends Exception {
 		super(cause);
 	}
 
-	public NoEmptyPlaceException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
+	public NoEmptyPlaceException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 }

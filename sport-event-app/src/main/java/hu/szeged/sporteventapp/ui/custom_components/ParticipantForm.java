@@ -54,9 +54,8 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 
 	private void adjustGridCoumns(final Grid<User> grid) {
 		grid.setColumns("username", "realName", "email");
-		grid.addColumn(user -> ImageUtil.setImageThemeResource(user.getPictureName()),
-				new ImageRenderer()).setStyleGenerator(o -> "grid-profile-picture")
-				.setCaption("Profile picture");
+		grid.addColumn(user -> ImageUtil.setImageThemeResource(user.getPictureName()), new ImageRenderer())
+				.setStyleGenerator(o -> "grid-profile-picture").setCaption("Profile picture");
 		grid.addComponentColumn(user -> {
 			Button button = new Button(VaadinIcons.ENVELOPE);
 			button.addClickListener(c -> {
@@ -79,23 +78,18 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 	}
 
 	private void initFilters() {
-		ListDataProvider<User> dataProvider = (ListDataProvider<User>) grid
-				.getDataProvider();
+		ListDataProvider<User> dataProvider = (ListDataProvider<User>) grid.getDataProvider();
 		bindFiltersAndGrid(dataProvider, userNameFilter, realNameFilter);
 	}
 
-	private void bindFiltersAndGrid(final ListDataProvider<User> dataProvider,
-			AbstractField... fields) {
-		Arrays.stream(fields).forEach(
-				field -> field.addValueChangeListener(e -> updateFilters(dataProvider)));
+	private void bindFiltersAndGrid(final ListDataProvider<User> dataProvider, AbstractField... fields) {
+		Arrays.stream(fields).forEach(field -> field.addValueChangeListener(e -> updateFilters(dataProvider)));
 	}
 
 	private void updateFilters(final ListDataProvider<User> dataProvider) {
 		dataProvider.clearFilters();
-		dataProvider.addFilter(user -> caseInsensitiveContains(user.getUsername(),
-				userNameFilter.getValue()));
-		dataProvider.addFilter(user -> caseInsensitiveContains(user.getRealName(),
-				realNameFilter.getValue()));
+		dataProvider.addFilter(user -> caseInsensitiveContains(user.getUsername(), userNameFilter.getValue()));
+		dataProvider.addFilter(user -> caseInsensitiveContains(user.getRealName(), realNameFilter.getValue()));
 	}
 
 	private Boolean caseInsensitiveContains(String where, String what) {

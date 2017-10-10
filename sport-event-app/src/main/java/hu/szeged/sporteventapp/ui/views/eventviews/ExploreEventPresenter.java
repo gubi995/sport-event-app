@@ -22,8 +22,7 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 	private final SportEventService sportEventService;
 
 	@Autowired
-	public ExploreEventPresenter(SportEventService sportEventService,
-			UserService userService) {
+	public ExploreEventPresenter(SportEventService sportEventService, UserService userService) {
 		super(userService);
 		this.sportEventService = sportEventService;
 	}
@@ -32,14 +31,11 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 		try {
 			sportEventService.joinToSportEvent(sportEvent, sessionUser);
 			getView().showInfoNotification("Join was successful");
-		}
-		catch (AlreadyJoinedException e) {
+		} catch (AlreadyJoinedException e) {
 			getView().showWarningNotification(e.getMessage());
-		}
-		catch (NoEmptyPlaceException e) {
+		} catch (NoEmptyPlaceException e) {
 			getView().showErrorNotification(e.getMessage());
-		}
-		catch (ObjectOptimisticLockingFailureException e2){
+		} catch (ObjectOptimisticLockingFailureException e2) {
 			getView().showErrorNotification("Please wait a minute before leave");
 		}
 	}
@@ -48,11 +44,9 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 		try {
 			sportEventService.leaveFromSportEvent(sportEvent, sessionUser);
 			getView().showInfoNotification("Leave was successful");
-		}
-		catch (NotParticipantException e) {
+		} catch (NotParticipantException e) {
 			getView().showErrorNotification(e.getMessage());
-		}
-		catch (ObjectOptimisticLockingFailureException e2){
+		} catch (ObjectOptimisticLockingFailureException e2) {
 			getView().showErrorNotification("Please wait a minute before leave");
 		}
 	}

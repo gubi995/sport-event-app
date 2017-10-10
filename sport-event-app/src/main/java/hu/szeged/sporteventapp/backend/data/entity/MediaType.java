@@ -1,6 +1,9 @@
 package hu.szeged.sporteventapp.backend.data.entity;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,6 +24,6 @@ public class MediaType extends AbstractEntity {
 	String path;
 
 	@ManyToOne(optional = false)
-    @JoinColumn(name = "album_id")
+	@JoinColumn(name = "album_id")
 	Album album;
 }

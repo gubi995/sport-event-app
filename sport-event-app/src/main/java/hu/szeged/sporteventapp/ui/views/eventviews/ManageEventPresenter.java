@@ -18,8 +18,7 @@ public class ManageEventPresenter extends AbstractPresenter<ManageEventView> {
 	private final SportEventService sportEventService;
 
 	@Autowired
-	public ManageEventPresenter(SportEventService sportEventService,
-								UserService userService) {
+	public ManageEventPresenter(SportEventService sportEventService, UserService userService) {
 		super(userService);
 		this.sportEventService = sportEventService;
 	}

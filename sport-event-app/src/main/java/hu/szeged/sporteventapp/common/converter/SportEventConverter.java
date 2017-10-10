@@ -11,9 +11,7 @@ import hu.szeged.sporteventapp.ui.views.calenarview.SportEventItem;
 @Component
 public class SportEventConverter {
 
-	public List<SportEventItem> convertSportEventsToSportEventItems(
-			List<SportEvent> sportEvents) {
-		return sportEvents.stream().map(sportEvent -> new SportEventItem(sportEvent))
-				.collect(Collectors.toList());
+	public List<SportEventItem> convertSportEventsToSportEventItems(List<SportEvent> sportEvents) {
+		return sportEvents.stream().map(sportEvent -> new SportEventItem(sportEvent)).collect(Collectors.toList());
 	}
 }

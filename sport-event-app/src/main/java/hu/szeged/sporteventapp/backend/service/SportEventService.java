@@ -24,13 +24,13 @@ public class SportEventService {
 		this.eventRepository = eventRepository;
 	}
 
-    public List<SportEvent> findAll(){
-	    return eventRepository.findAll();
-    }
+	public List<SportEvent> findAll() {
+		return eventRepository.findAll();
+	}
 
-    public List<SportEvent> findSportEventByOrganizer(User user){
-        return eventRepository.findSportEventByOrganizer(user);
-    }
+	public List<SportEvent> findSportEventByOrganizer(User user) {
+		return eventRepository.findSportEventByOrganizer(user);
+	}
 
 	@Transactional
 	public void delete(SportEvent sportEvent) {
@@ -55,12 +55,10 @@ public class SportEventService {
 			if (!sportEvent.getParticipants().contains(user)) {
 				sportEvent.getParticipants().add(user);
 				eventRepository.save(sportEvent);
-			}
-			else {
+			} else {
 				throw new AlreadyJoinedException("It seems you are already joined");
 			}
-		}
-		else {
+		} else {
 			throw new NoEmptyPlaceException("Sorry, there is no empty place :(");
 		}
 	}
@@ -71,8 +69,7 @@ public class SportEventService {
 		if (sportEvent.getParticipants().contains(user)) {
 			sportEvent.getParticipants().remove(user);
 			eventRepository.save(sportEvent);
-		}
-		else {
+		} else {
 			throw new NotParticipantException("You are not participate on this event");
 		}
 	}

@@ -27,7 +27,7 @@ import hu.szeged.sporteventapp.ui.validator.PasswordValidator;
 public class LoginScreen extends CustomComponent {
 
 	private final EventBus.UIEventBus eventBus;
-
+	Binder<User> userBinder;
 	private TextField userNameFieldForLogin;
 	private TextField userNameFieldForRegister;
 	private TextField emailFieldForRegister;
@@ -38,8 +38,6 @@ public class LoginScreen extends CustomComponent {
 	private Button registerButton;
 	private Label infoLabelForLogin;
 	private Label infoLabelForRegister;
-
-	Binder<User> userBinder;
 	private User user;
 
 	@Autowired
@@ -86,13 +84,10 @@ public class LoginScreen extends CustomComponent {
 	}
 
 	private void initLayout() {
-		setCompositionRoot(
-				new MVerticalLayout().withFullSize().add(
-						new MVerticalLayout().withUndefinedSize()
-								.add(initAppIcon(), initAppTitle(),
-										initPanelForLogInAndRegistration())
-								.alignAll(Alignment.MIDDLE_CENTER),
-						Alignment.MIDDLE_CENTER));
+		setCompositionRoot(new MVerticalLayout().withFullSize()
+				.add(new MVerticalLayout().withUndefinedSize()
+						.add(initAppIcon(), initAppTitle(), initPanelForLogInAndRegistration())
+						.alignAll(Alignment.MIDDLE_CENTER), Alignment.MIDDLE_CENTER));
 		setSizeFull();
 		bindUserAndFields();
 	}
@@ -117,8 +112,7 @@ public class LoginScreen extends CustomComponent {
 		tabSheet.addStyleName(ValoTheme.TABSHEET_EQUAL_WIDTH_TABS);
 		tabSheet.addTab(createLoginLayout(), LOGIN);
 		tabSheet.addTab(createRegisterLayout(), REGISTER);
-		tabSheet.addSelectedTabChangeListener(
-				selectedTabChangeEvent -> settingInfoLabelAsDefault());
+		tabSheet.addSelectedTabChangeListener(selectedTabChangeEvent -> settingInfoLabelAsDefault());
 		panel.setWidth(400, Unit.PIXELS);
 		panel.setContent(tabSheet);
 		return panel;
@@ -139,14 +133,12 @@ public class LoginScreen extends CustomComponent {
 		registerButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		registerButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		registerButton.addClickListener((Button.ClickListener) event -> register());
-		formLayout.addComponents(infoLabelForRegister, userNameFieldForRegister,
-				emailFieldForRegister, passwordFieldForRegister, passwordFieldForValidate,
-				registerButton);
-		setFieldsAsRequired(userNameFieldForRegister, emailFieldForRegister,
-				passwordFieldForRegister, passwordFieldForValidate);
-		setComponentsWidthOnFullSize(infoLabelForRegister, registerButton,
-				userNameFieldForRegister, emailFieldForRegister, passwordFieldForRegister,
+		formLayout.addComponents(infoLabelForRegister, userNameFieldForRegister, emailFieldForRegister,
+				passwordFieldForRegister, passwordFieldForValidate, registerButton);
+		setFieldsAsRequired(userNameFieldForRegister, emailFieldForRegister, passwordFieldForRegister,
 				passwordFieldForValidate);
+		setComponentsWidthOnFullSize(infoLabelForRegister, registerButton, userNameFieldForRegister,
+				emailFieldForRegister, passwordFieldForRegister, passwordFieldForValidate);
 		return formLayout;
 	}
 
@@ -163,10 +155,8 @@ public class LoginScreen extends CustomComponent {
 		loginButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		loginButton.setClickShortcut(ShortcutAction.KeyCode.ENTER);
 		loginButton.addClickListener((Button.ClickListener) event -> login());
-		formLayout.addComponents(infoLabelForLogin, userNameFieldForLogin,
-				passwordFieldForLogin, loginButton);
-		setComponentsWidthOnFullSize(infoLabelForLogin, userNameFieldForLogin,
-				passwordFieldForLogin, loginButton);
+		formLayout.addComponents(infoLabelForLogin, userNameFieldForLogin, passwordFieldForLogin, loginButton);
+		setComponentsWidthOnFullSize(infoLabelForLogin, userNameFieldForLogin, passwordFieldForLogin, loginButton);
 		return formLayout;
 	}
 
@@ -184,21 +174,16 @@ public class LoginScreen extends CustomComponent {
 		if (userBinder.isValid()) {
 			if (user.getPassword().equals(passwordFieldForValidate.getValue())) {
 				eventBus.publish(this, new RegistrationEvent(this, user));
+			} else {
+				adjustRegisterLabel("The passwords are not samea", ValoTheme.LABEL_FAILURE, true);
 			}
-			else {
-				adjustRegisterLabel("The passwords are not samea",
-						ValoTheme.LABEL_FAILURE, true);
-			}
-		}
-		else {
-			adjustRegisterLabel("Please fill out all fields", ValoTheme.LABEL_FAILURE,
-					true);
+		} else {
+			adjustRegisterLabel("Please fill out all fields", ValoTheme.LABEL_FAILURE, true);
 		}
 	}
 
 	private void setFieldsAsRequired(TextField... fields) {
-		Arrays.stream(fields)
-				.forEach(textField -> textField.setRequiredIndicatorVisible(true));
+		Arrays.stream(fields).forEach(textField -> textField.setRequiredIndicatorVisible(true));
 	}
 
 	private void setComponentsWidthOnFullSize(AbstractComponent... components) {
@@ -209,15 +194,12 @@ public class LoginScreen extends CustomComponent {
 		userBinder = new Binder<>();
 		user = new User();
 		userBinder.setBean(user);
-		userBinder.forField(userNameFieldForRegister)
-				.asRequired("Every User must have username")
+		userBinder.forField(userNameFieldForRegister).asRequired("Every User must have username")
 				.bind(User::getUsername, User::setUsername);
-		userBinder.forField(passwordFieldForRegister)
-				.withValidator(new PasswordValidator())
-				.bind(User::getPassword, User::setPassword);
+		userBinder.forField(passwordFieldForRegister).withValidator(new PasswordValidator()).bind(User::getPassword,
+				User::setPassword);
 		userBinder.forField(emailFieldForRegister)
-				.withValidator(new EmailValidator(
-						"This doesn't look like a valid email address"))
+				.withValidator(new EmailValidator("This doesn't look like a valid email address"))
 				.bind(User::getEmail, User::setEmail);
 	}
 }

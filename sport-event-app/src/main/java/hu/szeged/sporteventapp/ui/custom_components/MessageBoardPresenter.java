@@ -21,8 +21,7 @@ public class MessageBoardPresenter {
 	private User sessionUser;
 
 	@Autowired
-	public MessageBoardPresenter(SportEventService sportEventService,
-			UserService userService) {
+	public MessageBoardPresenter(SportEventService sportEventService, UserService userService) {
 		this.sportEventService = sportEventService;
 		this.userService = userService;
 		initSessionUser();
@@ -32,20 +31,20 @@ public class MessageBoardPresenter {
 		sessionUser = userService.getCurrentUser();
 	}
 
-	public void setMessageBoardForm(MessageBoardForm messageBoardForm) {
-		this.messageBoardForm = messageBoardForm;
-	}
-
 	public MessageBoardForm getMessageBoardForm() {
 		return messageBoardForm;
 	}
 
-	public void setCurrentSportEvent(SportEvent currentSportEvent) {
-		this.currentSportEvent = currentSportEvent;
-        setMessagesForMessageBoard();
+	public void setMessageBoardForm(MessageBoardForm messageBoardForm) {
+		this.messageBoardForm = messageBoardForm;
 	}
 
-    private void setMessagesForMessageBoard() {
-	    getMessageBoardForm().setMessagesForMessageBoard(currentSportEvent.getMessageBoard().getMessages());
-    }
+	public void setCurrentSportEvent(SportEvent currentSportEvent) {
+		this.currentSportEvent = currentSportEvent;
+		setMessagesForMessageBoard();
+	}
+
+	private void setMessagesForMessageBoard() {
+		getMessageBoardForm().setMessagesForMessageBoard(currentSportEvent.getMessageBoard().getMessages());
+	}
 }

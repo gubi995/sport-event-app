@@ -1,6 +1,7 @@
 package hu.szeged.sporteventapp.common.exception;
 
 public class AlreadyExistsException extends Exception {
+
 	public AlreadyExistsException() {
 	}
 
@@ -16,8 +17,8 @@ public class AlreadyExistsException extends Exception {
 		super(cause);
 	}
 
-	public AlreadyExistsException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
+	public AlreadyExistsException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 }

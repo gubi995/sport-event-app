@@ -59,8 +59,8 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 
 	@Autowired
 	public SingleEventView(SingleEventPresenter presenter, EventBus.UIEventBus eventBus,
-			LocalDateTimeConverter timeConverter, MapForm mapForm,
-			ParticipantForm participantForm, MessageBoardForm messageBoardForm) {
+			LocalDateTimeConverter timeConverter, MapForm mapForm, ParticipantForm participantForm,
+			MessageBoardForm messageBoardForm) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
 		this.eventBus = eventBus;
@@ -90,9 +90,8 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 		initGrid();
 		initCommandButtons();
 		addComponentsAndExpand(contentLayout.withMargin(false).withFullSize()
-				.add(new MVerticalLayout().withStyleName(EVENT_DATA_VIEWER).add(
-						readOnlyDataForm, participantsButton, locationButton,
-						mediaBoardButton)));
+				.add(new MVerticalLayout().withStyleName(EVENT_DATA_VIEWER).add(readOnlyDataForm, participantsButton,
+						locationButton, mediaBoardButton)));
 	}
 
 	@PostConstruct
@@ -109,8 +108,7 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 		participantsButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 		participantsButton.setIcon(VaadinIcons.GROUP);
 		participantsButton.addClickListener(clickEvent -> {
-			participantForm.constructParticipantForm(
-					Optional.ofNullable(binder.getBean().getParticipants()));
+			participantForm.constructParticipantForm(Optional.ofNullable(binder.getBean().getParticipants()));
 			participantForm.showInWindow(getUI());
 		});
 		locationButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
@@ -122,21 +120,14 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 		mediaBoardButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 		mediaBoardButton.setIcon(VaadinIcons.MOVIE);
 	}
+
 	private void initReadOnlyDataForm(SportEvent sportEvent) {
-		readOnlyDataForm.with(
-				new MLabel(ORGANIZER, sportEvent.getOrganizer().getUsername()),
-				new MLabel(LOCATION, sportEvent.getLocation()),
-				new MLabel(SPORT_TYPE, sportEvent.getSportType()),
-				new MLabel(DATE_FROM,
-						timeConverter
-								.convertLocalDateTimeToString(sportEvent.getStartDate())),
-				new MLabel(DATE_TO,
-						timeConverter
-								.convertLocalDateTimeToString(sportEvent.getEndDate())),
-				new MLabel(MAX_PARTICIPANT,
-						String.valueOf(sportEvent.getMaxParticipant())),
-				new MLabel(DETAILS, sportEvent.getDetails())
-						.withStyleName(NORMAL_SPACE));
+		readOnlyDataForm.with(new MLabel(ORGANIZER, sportEvent.getOrganizer().getUsername()),
+				new MLabel(LOCATION, sportEvent.getLocation()), new MLabel(SPORT_TYPE, sportEvent.getSportType()),
+				new MLabel(DATE_FROM, timeConverter.convertLocalDateTimeToString(sportEvent.getStartDate())),
+				new MLabel(DATE_TO, timeConverter.convertLocalDateTimeToString(sportEvent.getEndDate())),
+				new MLabel(MAX_PARTICIPANT, String.valueOf(sportEvent.getMaxParticipant())),
+				new MLabel(DETAILS, sportEvent.getDetails()).withStyleName(NORMAL_SPACE));
 	}
 
 	@Override

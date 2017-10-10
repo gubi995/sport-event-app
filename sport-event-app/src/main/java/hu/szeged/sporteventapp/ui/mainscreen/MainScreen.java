@@ -29,8 +29,7 @@ public class MainScreen extends CustomComponent {
 	private CssLayout viewContainer;
 
 	@Autowired
-	public MainScreen(VaadinSecurity vaadinSecurity,
-			SpringViewProvider springViewProvider, ValoSideBar sideBar) {
+	public MainScreen(VaadinSecurity vaadinSecurity, SpringViewProvider springViewProvider, ValoSideBar sideBar) {
 		this.vaadinSecurity = vaadinSecurity;
 		this.springViewProvider = springViewProvider;
 		this.sideBar = sideBar;

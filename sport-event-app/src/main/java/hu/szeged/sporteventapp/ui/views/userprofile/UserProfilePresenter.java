@@ -19,8 +19,7 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView> {
 	private final PasswordEncoder passwordEncoder;
 
 	@Autowired
-	public UserProfilePresenter(UserService userService,
-			PasswordEncoder passwordEncoder) {
+	public UserProfilePresenter(UserService userService, PasswordEncoder passwordEncoder) {
 		super(userService);
 		this.passwordEncoder = passwordEncoder;
 	}
@@ -32,12 +31,10 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView> {
 		if (newPassword.equals(passwordForValidate)
 				&& passwordEncoder.matches(oldPassword, sessionUser.getPassword())) {
 			sessionUser.setPassword(passwordEncoder.encode(newPassword));
-			userService.updateUserPassword(sessionUser.getId(),
-					sessionUser.getPassword());
+			userService.updateUserPassword(sessionUser.getId(), sessionUser.getPassword());
 			getView().updateBinder(sessionUser);
 			getView().showInfoNotification("Password change was successful");
-		}
-		else {
+		} else {
 			getView().showErrorNotification("One of the password is incorrect");
 		}
 	}
@@ -46,8 +43,8 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView> {
 		sessionUser.setAge(Integer.parseInt(data.get("age")));
 		sessionUser.setRealName(data.get("full_name"));
 		sessionUser.setMobileNumber(data.get("mobile"));
-		userService.updateUserAdditionalData(sessionUser.getId(), sessionUser.getAge(),
-				sessionUser.getRealName(), sessionUser.getMobileNumber());
+		userService.updateUserAdditionalData(sessionUser.getId(), sessionUser.getAge(), sessionUser.getRealName(),
+				sessionUser.getMobileNumber());
 		getView().updateBinder(sessionUser);
 		getView().showInfoNotification("Data update was successful");
 	}
@@ -62,7 +59,6 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView> {
 	public void enter() {
 		super.enter();
 		getView().initBinder(sessionUser);
-		getView().getUserImage()
-				.setSource(ImageUtil.setImageThemeResource(sessionUser.getPictureName()));
+		getView().getUserImage().setSource(ImageUtil.setImageThemeResource(sessionUser.getPictureName()));
 	}
 }

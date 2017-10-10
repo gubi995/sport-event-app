@@ -5,16 +5,15 @@ import com.vaadin.data.Validator;
 import com.vaadin.data.ValueContext;
 
 public class PasswordValidator implements Validator<String> {
+
 	@Override
 	public ValidationResult apply(String password, ValueContext valueContext) {
-		if (password.length() > 7 && containLowerCharacter(password)
-				&& containUpperCharacter(password) && containNumber(password)) {
+		if (password.length() > 7 && containLowerCharacter(password) && containUpperCharacter(password)
+				&& containNumber(password)) {
 			return ValidationResult.ok();
-		}
-		else {
-			return ValidationResult
-					.error("The password length must greater than 7 character and "
-							+ "contains number, upper and lower character.");
+		} else {
+			return ValidationResult.error("The password length must greater than 7 character and "
+					+ "contains number, upper and lower character.");
 		}
 	}
 

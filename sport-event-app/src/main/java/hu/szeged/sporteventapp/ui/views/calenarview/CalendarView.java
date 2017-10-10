@@ -69,8 +69,7 @@ public class CalendarView extends AbstractView {
 	}
 
 	public void setCalendarItems(List<SportEvent> sportEventByOrganizer) {
-		dataProvider.setItems(eventConverter
-				.convertSportEventsToSportEventItems(sportEventByOrganizer));
+		dataProvider.setItems(eventConverter.convertSportEventsToSportEventItems(sportEventByOrganizer));
 		calendar.setDataProvider(dataProvider);
 		calendar.setHandler(this::onCalendarClick);
 	}
@@ -83,13 +82,10 @@ public class CalendarView extends AbstractView {
 
 	private void showCalendarData(SportEvent sportEvent) {
 		Notification notification = new Notification("Event information",
-				"Name: " + sportEvent.getName() + "<br>" + "Location: "
-						+ sportEvent.getLocation() + "<br>" + "Start: "
-						+ converter.convertLocalDateTimeToString(
-								sportEvent.getStartDate())
-						+ "<br>" + "End: "
-						+ converter.convertLocalDateTimeToString(sportEvent.getEndDate())
-						+ "<br>" + "Sport type: " + sportEvent.getSportType() + "<br>",
+				"Name: " + sportEvent.getName() + "<br>" + "Location: " + sportEvent.getLocation() + "<br>" + "Start: "
+						+ converter.convertLocalDateTimeToString(sportEvent.getStartDate()) + "<br>" + "End: "
+						+ converter.convertLocalDateTimeToString(sportEvent.getEndDate()) + "<br>" + "Sport type: "
+						+ sportEvent.getSportType() + "<br>",
 				Notification.Type.TRAY_NOTIFICATION);
 		notification.setHtmlContentAllowed(true);
 		notification.setIcon(VaadinIcons.VAADIN_V);

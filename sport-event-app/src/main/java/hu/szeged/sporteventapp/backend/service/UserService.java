@@ -42,11 +42,9 @@ public class UserService {
 	public User save(User user) throws AlreadyExistsException {
 		if (usernameIsExist(user.getUsername())) {
 			throw new AlreadyExistsException("Username already exists");
-		}
-		else if (emailIsExist(user.getEmail())) {
+		} else if (emailIsExist(user.getEmail())) {
 			throw new AlreadyExistsException("Email already exists");
-		}
-		else {
+		} else {
 			String hashedPassword = passwordEncoder.encode(user.getPassword());
 			user.setPassword(hashedPassword);
 			return userRepository.save(user);
@@ -59,8 +57,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public int updateUserAdditionalData(String id, int age, String realName,
-			String mobileNumber) {
+	public int updateUserAdditionalData(String id, int age, String realName, String mobileNumber) {
 		return userRepository.updateUserAdditionalData(id, age, realName, mobileNumber);
 	}
 

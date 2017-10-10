@@ -5,8 +5,7 @@ import org.vaadin.spring.sidebar.annotation.SideBarSection;
 import org.vaadin.spring.sidebar.annotation.SideBarSections;
 
 @Component
-@SideBarSections({
-        @SideBarSection(id = Sections.VIEWS, caption = "Views"),
+@SideBarSections({ @SideBarSection(id = Sections.VIEWS, caption = "Views"),
 		@SideBarSection(id = Sections.EVENT, caption = "Event"),
 		@SideBarSection(id = Sections.PROFILE, caption = "Profile"),
 		@SideBarSection(id = Sections.OPERATIONS, caption = "Operations") })

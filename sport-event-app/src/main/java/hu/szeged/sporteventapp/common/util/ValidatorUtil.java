@@ -8,17 +8,16 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 
 public class ValidatorUtil {
+
 	public static void addValidator(Button button, Validator validator, AbstractField field) {
 		field.addValueChangeListener(event -> {
-			ValidationResult result = validator.apply(event.getValue(),
-					new ValueContext(field));
+			ValidationResult result = validator.apply(event.getValue(), new ValueContext(field));
 
 			if (result.isError()) {
 				UserError error = new UserError(result.getErrorMessage());
 				field.setComponentError(error);
 				button.setEnabled(false);
-			}
-			else {
+			} else {
 				field.setComponentError(null);
 				button.setEnabled(true);
 			}

@@ -2,7 +2,6 @@ package hu.szeged.sporteventapp.ui.loginscreen;
 
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.DEFAULT_USER_IMAGE;
 
-import hu.szeged.sporteventapp.backend.data.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,6 +16,7 @@ import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
+import hu.szeged.sporteventapp.backend.data.enums.Role;
 import hu.szeged.sporteventapp.backend.service.UserService;
 import hu.szeged.sporteventapp.common.exception.AlreadyExistsException;
 import hu.szeged.sporteventapp.ui.events.LoginEvent;
@@ -34,8 +34,8 @@ public class LoginScreenPresenter implements LoginEventListener, RegistrationEve
 	private final UserService userService;
 
 	@Autowired
-	public LoginScreenPresenter(LoginScreen loginScreen, UserService userService,
-								EventBus.UIEventBus eventBus, VaadinSecurity vaadinSecurity) {
+	public LoginScreenPresenter(LoginScreen loginScreen, UserService userService, EventBus.UIEventBus eventBus,
+			VaadinSecurity vaadinSecurity) {
 		this.loginScreen = loginScreen;
 		this.userService = userService;
 		this.eventBus = eventBus;
@@ -50,16 +50,13 @@ public class LoginScreenPresenter implements LoginEventListener, RegistrationEve
 	@EventBusListenerMethod
 	public void onLogin(LoginEvent event) {
 		try {
-			final Authentication authentication = vaadinSecurity
-					.login(event.getUser().getUsername(), event.getUser().getPassword());
-			eventBus.publish(this,
-					new SuccessfulLoginEvent(loginScreen.getUI(), authentication));
+			final Authentication authentication = vaadinSecurity.login(event.getUser().getUsername(),
+					event.getUser().getPassword());
+			eventBus.publish(this, new SuccessfulLoginEvent(loginScreen.getUI(), authentication));
 			eventBus.unsubscribe(this);
-		}
-		catch (AuthenticationException e) {
+		} catch (AuthenticationException e) {
 			loginScreen.loginFailed(e.getMessage());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -67,18 +64,13 @@ public class LoginScreenPresenter implements LoginEventListener, RegistrationEve
 	@EventBusListenerMethod
 	public void onRegistration(RegistrationEvent event) {
 		try {
-			User user = new User(event.getUser().getUsername(),
-					event.getUser().getEmail(), event.getUser().getPassword(),
-					DEFAULT_USER_IMAGE,
-					Role.USER,0,"","", null, null, null);
+			User user = new User(event.getUser().getUsername(), event.getUser().getEmail(),
+					event.getUser().getPassword(), DEFAULT_USER_IMAGE, Role.USER, 0, "", "", null, null, null);
 			userService.save(user);
-			loginScreen.adjustRegisterLabel("Registration successful",
-					ValoTheme.LABEL_SUCCESS, true);
+			loginScreen.adjustRegisterLabel("Registration successful", ValoTheme.LABEL_SUCCESS, true);
 			loginScreen.clearAllRegisterRelatedFieldValue();
-		}
-		catch (TransactionSystemException | AlreadyExistsException e) {
-			loginScreen.adjustRegisterLabel(e.getMessage(), ValoTheme.LABEL_FAILURE,
-					true);
+		} catch (TransactionSystemException | AlreadyExistsException e) {
+			loginScreen.adjustRegisterLabel(e.getMessage(), ValoTheme.LABEL_FAILURE, true);
 		}
 	}
 

@@ -1,6 +1,5 @@
 package hu.szeged.sporteventapp.ui.views;
 
-
 import java.io.Serializable;
 
 import org.vaadin.viritin.layouts.MVerticalLayout;
@@ -15,7 +14,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public abstract class AbstractView extends VerticalLayout implements View, INotifier, Serializable {
 
 	private static final String CAPTION_STYLE_NAME = "caption-underline";
-	
+
 	private final Label captionLabel;
 
 	public AbstractView(String headerCaption) {
@@ -35,8 +34,7 @@ public abstract class AbstractView extends VerticalLayout implements View, INoti
 	}
 
 	private void initHeader() {
-		addComponent(new MVerticalLayout().withMargin(false).withSpacing(false)
-				.withWidth(100, Unit.PERCENTAGE)
+		addComponent(new MVerticalLayout().withMargin(false).withSpacing(false).withWidth(100, Unit.PERCENTAGE)
 				.add(captionLabel, Alignment.MIDDLE_CENTER));
 	};
 
