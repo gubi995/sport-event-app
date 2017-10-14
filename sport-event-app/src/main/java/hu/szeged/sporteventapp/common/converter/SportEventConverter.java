@@ -1,6 +1,7 @@
 package hu.szeged.sporteventapp.common.converter;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import hu.szeged.sporteventapp.ui.views.calenarview.SportEventItem;
 @Component
 public class SportEventConverter {
 
-	public List<SportEventItem> convertSportEventsToSportEventItems(List<SportEvent> sportEvents) {
+	public List<SportEventItem> convertSportEventsToSportEventItems(Set<SportEvent> sportEvents) {
 		return sportEvents.stream().map(sportEvent -> new SportEventItem(sportEvent)).collect(Collectors.toList());
 	}
 }

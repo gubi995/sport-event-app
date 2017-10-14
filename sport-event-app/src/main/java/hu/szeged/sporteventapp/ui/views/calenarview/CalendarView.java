@@ -2,7 +2,7 @@ package hu.szeged.sporteventapp.ui.views.calenarview;
 
 import static hu.szeged.sporteventapp.ui.views.calenarview.CalendarView.VIEW_NAME;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -68,7 +68,7 @@ public class CalendarView extends AbstractView {
 		presenter.setView(this);
 	}
 
-	public void setCalendarItems(List<SportEvent> sportEventByOrganizer) {
+	public void setCalendarItems(Set<SportEvent> sportEventByOrganizer) {
 		dataProvider.setItems(eventConverter.convertSportEventsToSportEventItems(sportEventByOrganizer));
 		calendar.setDataProvider(dataProvider);
 		calendar.setHandler(this::onCalendarClick);

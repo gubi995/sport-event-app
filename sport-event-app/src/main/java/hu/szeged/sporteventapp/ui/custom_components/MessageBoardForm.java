@@ -18,7 +18,8 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.Message;
-import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
+import hu.szeged.sporteventapp.backend.data.entity.MessageBoard;
+import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.util.ImageUtil;
 import hu.szeged.sporteventapp.ui.views.INotifier;
 
@@ -62,11 +63,18 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 	private void initButton() {
 		postButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		postButton.setIcon(VaadinIcons.PLAY_CIRCLE_O);
+		postButton.setEnabled(false);
 		postButton.addClickListener(e -> {
 			addPost(textArea.getValue());
 			textArea.clear();
 		});
 		refreshButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		refreshButton.addClickListener(e -> refreshMessages());
+	}
+
+	private void refreshMessages() {
+		messageHolder.clearMessages();
+		messageHolder.generatePosts(presenter.refreshMessagesForMessageBoard());
 	}
 
 	private void buildContent() {
@@ -81,10 +89,12 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 	}
 
 	private void setEnableStateOfPostButton() {
-		if (textArea.getValue().length() > 0) {
+		if (textArea.getValue().length() > 0 && textArea.getValue().length() < 255) {
 			postButton.setEnabled(true);
+			postButton.setDescription(null);
 		} else {
 			postButton.setEnabled(false);
+			postButton.setDescription("The length of message size must(min:1, max:254) character");
 		}
 	}
 
@@ -96,8 +106,8 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 		messageHolder.addPost(message);
 	}
 
-	public void setCurrentEvent(SportEvent sportEvent) {
-		presenter.setCurrentSportEvent(sportEvent);
+	public void setMessageBoard(MessageBoard messageBoard) {
+		presenter.setCurrentMessageBoard(messageBoard);
 	}
 
 	private class MessageHolder extends Panel {
@@ -111,11 +121,25 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 		}
 
 		public void addPost(String message) {
-			contentLayout.addComponent(new Post(new Message(message, null, null)));
+			Message msg = new Message(message, presenter.getMessageBoard(), presenter.getSessionUser());
+			presenter.saveMassage(msg);
+			contentLayout.addComponent(new Post(msg, true));
 		}
 
 		public void generatePosts(List<Message> messages) {
+			User user = presenter.getSessionUser();
+			for (Message message : messages) {
+				boolean messageIsMine = message.getUser().equals(user);
+				contentLayout.addComponent(new Post(message, messageIsMine));
+			}
+		}
 
+		public void clearMessages() {
+			contentLayout.removeAllComponents();
+		}
+
+		public void deletePost(Post post) {
+			this.contentLayout.removeComponent(post);
 		}
 	}
 
@@ -124,31 +148,55 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 		private static final String P_STYLE_NAME = "post";
 		private final Message message;
 
-		public Post(Message message) {
+		public Post(Message message, boolean messageIsMine) {
 			this.setStyleName(P_STYLE_NAME);
 			this.setWidth(100, Unit.PERCENTAGE);
 			this.message = message;
-			createPost();
+			createPost(messageIsMine);
 		}
 
-		private void createPost() {
+		private void createPost(boolean messageIsMine) {
 			Image image = createImage();
-			Label label = createMassageBox();
+			Label label = createMessageBox();
 			label.setSizeFull();
 			this.addComponents(image, label);
 			this.setExpandRatio(image, 0.1f);
-			this.setExpandRatio(label, 0.9f);
+			this.setExpandRatio(label, 0.8f);
 			this.setComponentAlignment(image, Alignment.MIDDLE_CENTER);
+			adjustDeleteButton(messageIsMine);
 		}
 
 		private Image createImage() {
+			User user = message.getUser();
 			Image image = new Image();
-			image.setCaption("Caption");
-			image.setSource(ImageUtil.setImageThemeResource("default-user.png"));
+			image.setCaption(user.getUsername());
+			image.setSource(ImageUtil.setImageThemeResource(user.getPictureName()));
 			return image;
 		}
 
-		private Label createMassageBox() {
+		private Button createDeleteButton() {
+			Button deleteButton = new Button();
+			deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
+			deleteButton.setIcon(VaadinIcons.CLOSE);
+			deleteButton.addClickListener(e -> deletePost());
+			return deleteButton;
+		}
+
+		private void adjustDeleteButton(boolean messageIsMine) {
+			if (messageIsMine) {
+				Button deleteButton = createDeleteButton();
+				this.addComponent(deleteButton);
+				this.setExpandRatio(deleteButton, 0.1f);
+				this.setComponentAlignment(deleteButton, Alignment.MIDDLE_CENTER);
+			}
+		}
+
+		private void deletePost() {
+			messageHolder.deletePost(this);
+			presenter.deleteMessage(this.message);
+		}
+
+		private Label createMessageBox() {
 			return new Label(message.getText());
 		}
 	}

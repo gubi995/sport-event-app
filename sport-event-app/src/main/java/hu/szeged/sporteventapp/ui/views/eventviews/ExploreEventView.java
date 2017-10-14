@@ -5,10 +5,7 @@ import static hu.szeged.sporteventapp.ui.views.eventviews.ExploreEventView.VIEW_
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 
@@ -263,7 +260,7 @@ public class ExploreEventView extends AbstractView {
 			return grid;
 		}
 
-		public void setUsers(List<User> users) {
+		public void setUsers(Set<User> users) {
 			if (users == null) {
 				grid.setItems(new HashSet<>());
 			} else {

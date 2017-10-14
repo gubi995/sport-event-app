@@ -1,7 +1,7 @@
 package hu.szeged.sporteventapp.common.factory;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.springframework.stereotype.Component;
 
@@ -15,6 +15,6 @@ public class MyBeanFactory {
 
 	public static SportEvent createNewSportEvent() {
 		return new SportEvent("", "", LocalDateTime.now(), LocalDateTime.now(), 20, "", "", null, new User(),
-				new ArrayList<>(), new Album(), new MessageBoard());
+				new HashSet<>(), new Album(), new MessageBoard());
 	}
 }

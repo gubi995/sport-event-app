@@ -3,8 +3,8 @@ package hu.szeged.sporteventapp.ui.custom_components;
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
@@ -65,14 +65,14 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 		}).setStyleGenerator(e -> "v-align-center").setCaption("Send mail");
 	}
 
-	public void constructParticipantForm(Optional<List<User>> participants) {
+	public void constructParticipantForm(Optional<Set<User>> participants) {
 		removeAllComponents();
 		addComponents(new MHorizontalLayout(userNameFilter, realNameFilter));
 		addComponentsAndExpand(grid);
 		participants.ifPresent(p -> setParticipants(p));
 	}
 
-	private void setParticipants(List<User> participants) {
+	private void setParticipants(Set<User> participants) {
 		grid.setItems(participants);
 		initFilters();
 	}

@@ -1,7 +1,7 @@
 package hu.szeged.sporteventapp.backend.data.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -50,7 +50,7 @@ public class SportEvent extends AbstractEntity {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "participate_in_event", joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
-	private List<User> participants;
+	private Set<User> participants;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "album_id")

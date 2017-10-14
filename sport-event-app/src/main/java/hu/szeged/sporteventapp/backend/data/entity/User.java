@@ -1,6 +1,6 @@
 package hu.szeged.sporteventapp.backend.data.entity;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -47,11 +47,11 @@ public class User extends AbstractEntity {
 	private String mobileNumber;
 
 	@OneToMany(mappedBy = "organizer", cascade = CascadeType.ALL)
-	private List<SportEvent> organizedEvents;
+	private Set<SportEvent> organizedEvents;
 
 	@ManyToMany(mappedBy = "participants", fetch = FetchType.EAGER)
-	private List<SportEvent> eventsImAttending;
+	private Set<SportEvent> eventsImAttending;
 
-	@OneToMany(mappedBy = "user")
-	private List<Message> messages;
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	private Set<Message> messages;
 }
