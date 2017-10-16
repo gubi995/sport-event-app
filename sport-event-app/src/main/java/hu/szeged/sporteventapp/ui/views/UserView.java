@@ -1,7 +1,6 @@
 package hu.szeged.sporteventapp.ui.views;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.vaadin.spring.sidebar.annotation.FontAwesomeIcon;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 
@@ -16,7 +15,6 @@ import com.vaadin.ui.Notification;
 import hu.szeged.sporteventapp.backend.MyBackend;
 import hu.szeged.sporteventapp.ui.Sections;
 
-@Secured({ "USER", "ADMIN" })
 @SpringView(name = "user")
 @SideBarItem(sectionId = Sections.VIEWS, caption = "User View")
 @FontAwesomeIcon(FontAwesome.ARCHIVE)

@@ -38,7 +38,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 public class ManageEventView extends AbstractView {
 
 	public static final String VIEW_NAME = "Manage my events";
-	private static final String H_LAYOUT_STYLE = "manage-event-h-layout";
+	private static final String H_LAYOUT_STYLE = "h-layout-with-top-bottom-padding";
 
 	private final ManageEventPresenter presenter;
 	private final MapForm mapForm;
@@ -252,7 +252,7 @@ public class ManageEventView extends AbstractView {
 		private void save() {
 			if (binder.isValid()) {
 				presenter.save(binder.getBean());
-				presenter.updateGridDate();
+				presenter.updateGridData();
 				setVisible(false);
 			} else {
 				showWarningNotification(VALIDATION_WARNING_MSG);
@@ -262,7 +262,7 @@ public class ManageEventView extends AbstractView {
 		private void delete() {
 			if (binder.isValid()) {
 				presenter.delete(binder.getBean());
-				presenter.updateGridDate();
+				presenter.updateGridData();
 				setVisible(false);
 			} else {
 				showWarningNotification(VALIDATION_WARNING_MSG);
@@ -280,7 +280,7 @@ public class ManageEventView extends AbstractView {
 			if (sportEvent != null && user != null) {
 				presenter.deleteParticipantFromEvent(sportEvent, user);
 				participantsComboBox.clear();
-				presenter.updateGridDate();
+				presenter.updateGridData();
 				grid.select(sportEvent);
 			} else {
 				showErrorNotification("Please choose a user before delete");

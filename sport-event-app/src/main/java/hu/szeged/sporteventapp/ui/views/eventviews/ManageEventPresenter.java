@@ -36,13 +36,13 @@ public class ManageEventPresenter extends AbstractPresenter<ManageEventView> {
 		sportEventService.deleteParticipantFromEvent(event, user);
 	}
 
-	public void updateGridDate() {
+	public void updateGridData() {
 		getView().setGridItems(sportEventService.findSportEventByOrganizer(sessionUser));
 	}
 
 	@Override
 	public void enter() {
 		super.enter();
-		updateGridDate();
+		updateGridData();
 	}
 }

@@ -18,11 +18,11 @@ public class Message extends AbstractEntity {
 	@Basic
 	String text;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, cascade = CascadeType.ALL)
 	@JoinColumn(name = "message_board_id")
 	MessageBoard containingMessageBoard;
 
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	User user;
 }

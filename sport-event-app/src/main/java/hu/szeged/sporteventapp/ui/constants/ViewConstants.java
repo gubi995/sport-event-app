@@ -52,4 +52,8 @@ public class ViewConstants {
 	public static final String POST = "Post";
 	public static final String START = "Start";
 	public static final String END = "End";
+	public static final String SUBJECT = "Subject";
+	public static final String MESSAGE = "Message";
+	public static final String SEND = "Send";
+	public static final String HIDE = "Hide";
 }

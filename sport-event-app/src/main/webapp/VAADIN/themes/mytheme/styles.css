@@ -15065,7 +15065,7 @@ div.v-layout.v-horizontal.v-widget {
 	margin-bottom: 5px;
 }
 
-.mytheme .manage-event-h-layout {
+.mytheme .h-layout-with-top-bottom-padding {
 	padding-top: 15px;
 	padding-bottom: 37px;
 }
@@ -15086,6 +15086,11 @@ div.v-layout.v-horizontal.v-widget {
 	width: 35px;
 	margin-bottom: 3px;
 	border: 1px solid #c5c5c5 !important;
+}
+
+.mytheme .email-label {
+	margin-top: 0px !important;
+	border-bottom: 1px solid #c5c5c5 !important;
 }
 
 .mytheme .v-Notification {

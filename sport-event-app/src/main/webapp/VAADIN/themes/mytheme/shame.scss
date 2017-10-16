@@ -8,12 +8,12 @@
     }
   }
 
-  .manage-event-h-layout {
+  .h-layout-with-top-bottom-padding {
     padding-top: 15px;
     padding-bottom: 37px;
   }
 
-  .point-field-border{
+  .point-field-border {
     border: 1px solid #c5c5c5;
   }
 
@@ -28,6 +28,11 @@
       margin-bottom: 3px;
       border: 1px solid #c5c5c5 !important;
     }
+  }
+
+  .email-label {
+    margin-top: 0px !important;
+    border-bottom: 1px solid #c5c5c5 !important;
   }
 }
 

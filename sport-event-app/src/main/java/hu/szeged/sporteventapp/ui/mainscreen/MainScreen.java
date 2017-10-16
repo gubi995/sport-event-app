@@ -1,13 +1,13 @@
 package hu.szeged.sporteventapp.ui.mainscreen;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.spring.annotation.PrototypeScope;
 import org.vaadin.spring.security.VaadinSecurity;
 import org.vaadin.spring.sidebar.components.ValoSideBar;
 import org.vaadin.spring.sidebar.security.VaadinSecurityItemFilter;
 
 import com.vaadin.navigator.Navigator;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.spring.navigator.SpringViewProvider;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.CustomComponent;
@@ -17,7 +17,7 @@ import com.vaadin.ui.UI;
 import hu.szeged.sporteventapp.ui.views.AccessDeniedView;
 import hu.szeged.sporteventapp.ui.views.ErrorView;
 
-@PrototypeScope
+@UIScope
 @SpringComponent
 public class MainScreen extends CustomComponent {
 

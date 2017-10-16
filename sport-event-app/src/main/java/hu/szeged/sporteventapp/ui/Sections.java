@@ -8,11 +8,13 @@ import org.vaadin.spring.sidebar.annotation.SideBarSections;
 @SideBarSections({ @SideBarSection(id = Sections.VIEWS, caption = "Views"),
 		@SideBarSection(id = Sections.EVENT, caption = "Event"),
 		@SideBarSection(id = Sections.PROFILE, caption = "Profile"),
-		@SideBarSection(id = Sections.OPERATIONS, caption = "Operations") })
+		@SideBarSection(id = Sections.OPERATIONS, caption = "Operations"),
+		@SideBarSection(id = Sections.ADMIN, caption = "Admin") })
 public class Sections {
 
 	public static final String VIEWS = "views";
 	public static final String OPERATIONS = "operations";
 	public static final String EVENT = "event";
 	public static final String PROFILE = "profile";
+	public static final String ADMIN = "admin";
 }

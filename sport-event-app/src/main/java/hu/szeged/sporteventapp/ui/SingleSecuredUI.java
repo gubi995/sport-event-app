@@ -13,7 +13,6 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.server.DefaultErrorHandler;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 
 import hu.szeged.sporteventapp.ui.loginscreen.LoginScreen;
@@ -50,7 +49,7 @@ public class SingleSecuredUI extends UI {
 			@Override
 			public void error(com.vaadin.server.ErrorEvent event) {
 				if (SecurityExceptionUtils.isAccessDeniedException(event.getThrowable())) {
-					Notification.show("Sorry, you don't have access to do that.");
+					// Notification.show("Sorry, you don't have access to do that.");
 				} else {
 					super.error(event);
 				}

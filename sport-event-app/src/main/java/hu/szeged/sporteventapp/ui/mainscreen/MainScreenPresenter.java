@@ -1,12 +1,12 @@
 package hu.szeged.sporteventapp.ui.mainscreen;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.spring.annotation.PrototypeScope;
 
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.spring.navigator.SpringViewProvider;
 
-@PrototypeScope
+@UIScope
 @SpringComponent
 public class MainScreenPresenter {
 

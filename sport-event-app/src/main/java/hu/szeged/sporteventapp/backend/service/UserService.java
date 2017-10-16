@@ -1,5 +1,8 @@
 package hu.szeged.sporteventapp.backend.service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +23,10 @@ public class UserService {
 	public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+	}
+
+	public Set<User> findAll() {
+		return new HashSet<>(userRepository.findAll());
 	}
 
 	public User getCurrentUser() {
@@ -67,7 +74,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void delete(String userId) {
-		userRepository.deleteById(userId);
+	public void delete(User user) {
+		userRepository.delete(user);
 	}
 }
