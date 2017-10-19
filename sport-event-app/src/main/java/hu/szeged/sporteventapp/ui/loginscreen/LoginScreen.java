@@ -57,7 +57,7 @@ public class LoginScreen extends CustomComponent {
 	public void loginFailed(String message) {
 		userNameFieldForLogin.focus();
 		userNameFieldForLogin.selectAll();
-		infoLabelForLogin.setValue(String.format("Login failed: %s", message));
+		infoLabelForLogin.setValue(message);
 		infoLabelForLogin.setStyleName(ValoTheme.LABEL_FAILURE);
 		infoLabelForLogin.setVisible(true);
 	}

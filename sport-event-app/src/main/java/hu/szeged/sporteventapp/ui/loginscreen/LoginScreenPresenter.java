@@ -55,7 +55,7 @@ public class LoginScreenPresenter implements LoginEventListener, RegistrationEve
 			eventBus.publish(this, new SuccessfulLoginEvent(loginScreen.getUI(), authentication));
 			eventBus.unsubscribe(this);
 		} catch (AuthenticationException e) {
-			loginScreen.loginFailed(e.getMessage());
+			loginScreen.loginFailed("Wrong username or password");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

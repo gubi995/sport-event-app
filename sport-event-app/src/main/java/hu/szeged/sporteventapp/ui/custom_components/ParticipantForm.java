@@ -6,11 +6,12 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.label.MLabel;
 import org.vaadin.viritin.layouts.MCssLayout;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
-import org.vaadin.viritin.layouts.MVerticalLayout;
 
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
@@ -54,10 +55,14 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 		deleteButton = new Button(DELETE);
 		deleteButton.setStyleName(ValoTheme.BUTTON_DANGER);
 		deleteButton.addClickListener(e -> {
-			presenter.delete(grid.asSingleSelect().getValue());
-			presenter.updateGridData();
+			delete(grid.asSingleSelect().getOptionalValue());
 		});
 		grid = buildGrid();
+	}
+
+	@PostConstruct
+	private void init() {
+		presenter.setParticipantForm(this);
 	}
 
 	private Grid<User> buildGrid() {
@@ -76,10 +81,19 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 		grid.addComponentColumn(user -> {
 			Button mailButton = new Button(VaadinIcons.ENVELOPE);
 			mailButton.addClickListener(c -> {
-				emailSendForm.setVisible(true);
+				openEmailForm(grid.asSingleSelect().getOptionalValue());
 			});
 			return mailButton;
 		}).setStyleGenerator(e -> "v-align-center").setCaption("Send mail");
+	}
+
+	private void openEmailForm(Optional<User> user) {
+		if (user.isPresent()) {
+			emailSendForm.setUser(user.get());
+			emailSendForm.setVisible(true);
+		} else {
+			showInfoNotification(PLEASE_SELECT_A_ROW);
+		}
 	}
 
 	public void constructParticipantForm(Optional<Set<User>> participants) {
@@ -94,7 +108,7 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 	public void constructParticipantFormInAdminMode(Optional<Set<User>> participants) {
 		removeAllComponents();
 		addComponentsAndExpand(
-				new MVerticalLayout()
+				new MCssLayout()
 						.withFullWidth().add(
 								new MHorizontalLayout().withSpacing(true).withFullWidth()
 										.add(new MHorizontalLayout().add(userNameFilter, realNameFilter),
@@ -106,7 +120,7 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 		participants.ifPresent(p -> setParticipants(p));
 	}
 
-	private void setParticipants(Set<User> participants) {
+	public void setParticipants(Set<User> participants) {
 		grid.setItems(participants);
 		initFilters();
 	}
@@ -130,6 +144,15 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 		return where.toLowerCase().contains(what.toLowerCase());
 	}
 
+	private void delete(Optional<User> user) {
+		if (user.isPresent()) {
+			presenter.delete(user.get());
+			presenter.updateGridData();
+		} else {
+			showInfoNotification(PLEASE_SELECT_A_ROW);
+		}
+	}
+
 	public void showInWindow(UI ui) {
 		Window window = new Window(PARTICIPANTS);
 		window.setSizeFull();
@@ -147,12 +170,14 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 
 		private static final String CAPTION_STYLE = "email-label";
 
-		TextField subjectField;
-		Label toUsernameLabel;
-		Label toEmailLabel;
-		TextArea textArea;
-		Button sendButton;
-		Button hideButton;
+		private TextField subjectField;
+		private Label toUsernameLabel;
+		private Label toEmailLabel;
+		private TextArea textArea;
+		private Button sendButton;
+		private Button hideButton;
+
+		private User addressee;
 
 		public EmailSendForm() {
 			super();
@@ -180,21 +205,21 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 			hideButton.addClickListener(c -> this.setVisible(false));
 		}
 
-		private void setAddressee(User user) {
-			setFromData(user);
-		}
-
-		private void setFromData(User user) {
-			toUsernameLabel.setValue(user.getUsername());
-			toEmailLabel.setValue(user.getEmail());
-		}
-
 		private void send() {
-			// if (binder.isValid()) {
-			// presenter.send();
-			// } else {
-			// showWarningNotification(VALIDATION_WARNING_MSG);
-			// }
+			Optional<String> subject = subjectField.getOptionalValue();
+			Optional<String> text = textArea.getOptionalValue();
+			if (subject.isPresent() && text.isPresent()) {
+				presenter.sendEmail(addressee.getEmail(), subjectField.getValue(), textArea.getValue());
+				showInfoNotification("Message sent successfully");
+			} else {
+				showWarningNotification("The subject and the message is not be empty");
+			}
+		}
+
+		public void setUser(User user) {
+			addressee = user;
+			toUsernameLabel.setValue(addressee.getUsername());
+			toEmailLabel.setValue(addressee.getEmail());
 		}
 	}
 }

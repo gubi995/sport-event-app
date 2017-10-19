@@ -199,7 +199,7 @@ public class ExploreEventView extends AbstractView {
 			getUI().getNavigator().navigateTo("event");
 			eventBus.publish(this, new JumpToSelectedSportEvent(this, sportEvent));
 		} else {
-			showInfoNotification("Please select a sport event");
+			showInfoNotification(PLEASE_SELECT_A_ROW);
 		}
 	}
 
@@ -208,7 +208,7 @@ public class ExploreEventView extends AbstractView {
 		if (sportEvent != null) {
 			presenter.join(sportEvent);
 		} else {
-			showInfoNotification("Please select a sport event");
+			showInfoNotification(PLEASE_SELECT_A_ROW);
 		}
 	}
 
@@ -217,7 +217,7 @@ public class ExploreEventView extends AbstractView {
 		if (sportEvent != null) {
 			presenter.leave(sportEvent);
 		} else {
-			showInfoNotification("Please select a sport event");
+			showInfoNotification(PLEASE_SELECT_A_ROW);
 		}
 	}
 
