@@ -16,7 +16,7 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 
 import hu.szeged.sporteventapp.ui.Sections;
-import hu.szeged.sporteventapp.ui.custom_components.ParticipantForm;
+import hu.szeged.sporteventapp.ui.custom_components.ParticipantFormAdminMode;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
 
 @SpringView(name = "admin")
@@ -28,13 +28,13 @@ public class AdminView extends AbstractView {
 	public static final String VIEW_NAME = "Admin panel";
 
 	private final AdminPresenter presenter;
-	private final ParticipantForm participantForm;
+	private final ParticipantFormAdminMode form;
 
 	@Autowired
-	public AdminView(AdminPresenter presenter, ParticipantForm participantForm) {
+	public AdminView(AdminPresenter presenter, ParticipantFormAdminMode form) {
 		super(VIEW_NAME);
 		this.presenter = presenter;
-		this.participantForm = participantForm;
+		this.form = form;
 	}
 
 	@Override
@@ -50,8 +50,8 @@ public class AdminView extends AbstractView {
 	@PostConstruct
 	public void init() {
 		presenter.setView(this);
-		participantForm.constructParticipantFormInAdminMode(Optional.ofNullable(presenter.getUsers()));
-		addComponentsAndExpand(participantForm);
+		form.constructParticipantForm(Optional.ofNullable(presenter.getUsers()));
+		addComponentsAndExpand(form);
 	}
 
 	@Override

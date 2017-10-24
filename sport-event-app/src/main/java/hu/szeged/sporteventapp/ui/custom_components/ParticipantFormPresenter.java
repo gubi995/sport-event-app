@@ -1,7 +1,8 @@
 package hu.szeged.sporteventapp.ui.custom_components;
 
 import java.io.Serializable;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,7 +10,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
-import hu.szeged.sporteventapp.backend.service.EmailService;
+import hu.szeged.sporteventapp.backend.data.enums.Role;
 import hu.szeged.sporteventapp.backend.service.UserService;
 
 @UIScope
@@ -17,26 +18,19 @@ import hu.szeged.sporteventapp.backend.service.UserService;
 public class ParticipantFormPresenter implements Serializable {
 
 	private final UserService userService;
-	private final EmailService emailService;
 	private ParticipantForm participantForm;
-	private User sessionUser;
 
 	@Autowired
-	public ParticipantFormPresenter(UserService userService, EmailService emailService) {
+	public ParticipantFormPresenter(UserService userService) {
 		this.userService = userService;
-		this.emailService = emailService;
-		initSessionUser();
 	}
 
-	private void initSessionUser() {
-		sessionUser = userService.getCurrentUser();
+	private Set<User> getUsersWithoutAdmins(Set<User> users) {
+		return users.stream().filter(user -> user.getRole().equals(Role.USER)).collect(Collectors.toSet());
 	}
 
-	private String template() {
-		return String.format(
-				"\n\nThe Email sent over Sport Community App\nThe sender username: %s, email: %s\n"
-						+ "\nBest regards,\nSport Community App\n\nPlease don't reply for this email",
-				sessionUser.getUsername(), sessionUser.getEmail());
+	public Set<User> getUsers() {
+		return getUsersWithoutAdmins(userService.findAll());
 	}
 
 	public void setParticipantForm(ParticipantForm participantForm) {
@@ -47,16 +41,11 @@ public class ParticipantFormPresenter implements Serializable {
 		return participantForm;
 	}
 
-	//TODO nem műkszik
 	public void delete(User user) {
 		userService.delete(user);
 	}
 
 	public void updateGridData() {
-		getParticipantForm().setParticipants(userService.findAll());
-	}
-
-	public void sendEmail(String to, String subject, String text) {
-		emailService.sendSimpleMessage(to, subject, text + template());
+		getParticipantForm().setParticipants(getUsers());
 	}
 }
