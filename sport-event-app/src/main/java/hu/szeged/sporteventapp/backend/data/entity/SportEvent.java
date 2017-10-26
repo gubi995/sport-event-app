@@ -49,7 +49,9 @@ public class SportEvent extends AbstractEntity {
 	private User organizer;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "participate_in_event", joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	@JoinTable(name = "participate_in_event",
+			joinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
 	private Set<User> participants;
 
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

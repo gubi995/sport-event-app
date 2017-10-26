@@ -17,7 +17,7 @@ import lombok.Setter;
 @Table(name = "message_board")
 public class MessageBoard extends AbstractEntity {
 
-	@OneToMany(mappedBy = "containingMessageBoard", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "containingMessageBoard", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	Set<Message> messages;
 
 	@OneToOne(mappedBy = "messageBoard")
