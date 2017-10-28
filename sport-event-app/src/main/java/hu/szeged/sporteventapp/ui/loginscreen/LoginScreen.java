@@ -26,6 +26,9 @@ import hu.szeged.sporteventapp.ui.validator.PasswordValidator;
 @SpringComponent
 public class LoginScreen extends CustomComponent {
 
+	private static final String APP_BACKGROUND = "app-background";
+	private static final String APP_CAPTION = "app-caption";
+
 	private final EventBus.UIEventBus eventBus;
 	Binder<User> userBinder;
 	private TextField userNameFieldForLogin;
@@ -84,7 +87,7 @@ public class LoginScreen extends CustomComponent {
 	}
 
 	private void initLayout() {
-		setCompositionRoot(new MVerticalLayout().withFullSize()
+		setCompositionRoot(new MVerticalLayout().withFullSize().withStyleName(APP_BACKGROUND)
 				.add(new MVerticalLayout().withUndefinedSize()
 						.add(initAppIcon(), initAppTitle(), initPanelForLogInAndRegistration())
 						.alignAll(Alignment.MIDDLE_CENTER), Alignment.MIDDLE_CENTER));
@@ -103,6 +106,7 @@ public class LoginScreen extends CustomComponent {
 	private Label initAppTitle() {
 		Label title = new Label("Go sport together!");
 		title.addStyleName(ValoTheme.LABEL_H2);
+		title.addStyleName(APP_CAPTION);
 		return title;
 	}
 

@@ -11,8 +11,18 @@
     }
   }
 
-  .caption-underline{
-    border-bottom: 1px solid #c5c5c5;;
+  .caption-underline {
+    border-bottom: 1px solid #c5c5c5;
+  }
+
+  .app-background {
+    background: url("images/app/app_background.png") no-repeat;
+    background-size: cover;
+  }
+
+  .app-caption {
+    font-weight: bolder;
+    text-decoration-line: overline;
   }
 }
 
