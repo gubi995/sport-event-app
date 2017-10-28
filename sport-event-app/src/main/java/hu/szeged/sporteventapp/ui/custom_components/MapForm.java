@@ -23,6 +23,7 @@ import hu.szeged.sporteventapp.ui.views.INotifier;
 @SpringComponent
 public class MapForm extends VerticalLayout implements INotifier {
 
+	public static final String CAPTION = LOCATION + " / " + ROUTE;
 	private static final String MAP_FORM_STYLE = "map-form-v-layout";
 	private static final String POINT_FIELD_STYLE = "point-field-border";
 
@@ -93,18 +94,6 @@ public class MapForm extends VerticalLayout implements INotifier {
 	public void constructMapForm(Optional<SportEvent> sportEvent, boolean readOnly) {
 		setReadOnlyMode(readOnly);
 		setSportEvent(sportEvent);
-	}
-
-	public void showInWindow(UI ui) {
-		Window window = new Window(LOCATION + " / " + ROUTE);
-		window.setWidth(800, Unit.PIXELS);
-		window.setHeight(600, Unit.PIXELS);
-		window.setIcon(VaadinIcons.MAP_MARKER);
-		window.setResizable(false);
-		window.setDraggable(false);
-		window.setContent(this);
-		window.center();
-		ui.addWindow(window);
 	}
 
 	private class NoLocationBanner extends VerticalLayout {

@@ -25,6 +25,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
+import hu.szeged.sporteventapp.common.util.DialogueUtil;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.custom_components.MapForm;
 import hu.szeged.sporteventapp.ui.events.JumpToSelectedSportEvent;
@@ -138,7 +139,7 @@ public class ExploreEventView extends AbstractView {
 			Button button = new Button(VaadinIcons.GLOBE);
 			button.addClickListener(c -> {
 				mapForm.constructMapForm(Optional.ofNullable(sportEvent), true);
-				mapForm.showInWindow(getUI());
+				DialogueUtil.showInWindow(getUI(), mapForm, mapForm.CAPTION, VaadinIcons.MAP_MARKER, 800, 600);
 			});
 			return button;
 		}).setStyleGenerator(e -> CENTER_ALIGN_STYLE).setCaption(LOCATION);

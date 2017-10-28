@@ -28,6 +28,7 @@ import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
 import hu.szeged.sporteventapp.common.factory.MyBeanFactory;
+import hu.szeged.sporteventapp.common.util.DialogueUtil;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.custom_components.MapForm;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
@@ -271,7 +272,7 @@ public class ManageEventView extends AbstractView {
 
 		private void adjustLocationPoint() {
 			mapForm.constructMapForm(Optional.ofNullable(binder.getBean()), false);
-			mapForm.showInWindow(getUI());
+			DialogueUtil.showInWindow(getUI(), mapForm, mapForm.CAPTION, VaadinIcons.MAP_MARKER, 800, 600);
 		}
 
 		private void deleteParticipantFromEvent() {

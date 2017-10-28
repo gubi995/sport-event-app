@@ -121,15 +121,4 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 	private Boolean caseInsensitiveContains(String where, String what) {
 		return where.toLowerCase().contains(what.toLowerCase());
 	}
-
-	public void showInWindow(UI ui) {
-		Window window = new Window(PARTICIPANTS);
-		window.setSizeFull();
-		window.setIcon(VaadinIcons.GROUP);
-		window.setResizable(false);
-		window.setDraggable(false);
-		window.setContent(this);
-		window.center();
-		ui.addWindow(window);
-	}
 }

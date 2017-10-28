@@ -25,6 +25,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
+import hu.szeged.sporteventapp.common.util.DialogueUtil;
 import hu.szeged.sporteventapp.ui.custom_components.MapForm;
 import hu.szeged.sporteventapp.ui.custom_components.MessageBoardForm;
 import hu.szeged.sporteventapp.ui.custom_components.ParticipantForm;
@@ -109,13 +110,13 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 		participantsButton.setIcon(VaadinIcons.GROUP);
 		participantsButton.addClickListener(clickEvent -> {
 			participantForm.constructParticipantForm(Optional.ofNullable(binder.getBean().getParticipants()));
-			participantForm.showInWindow(getUI());
+			DialogueUtil.showInWindow(getUI(), participantForm, PARTICIPANTS, VaadinIcons.GROUP);
 		});
 		locationButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 		locationButton.setIcon(VaadinIcons.MAP_MARKER);
 		locationButton.addClickListener(clickEvent -> {
 			mapForm.constructMapForm(Optional.ofNullable(binder.getBean()), true);
-			mapForm.showInWindow(getUI());
+			DialogueUtil.showInWindow(getUI(), mapForm, mapForm.CAPTION, VaadinIcons.MAP_MARKER, 800, 600);
 		});
 		mediaBoardButton.setStyleName(ValoTheme.BUTTON_FRIENDLY);
 		mediaBoardButton.setIcon(VaadinIcons.MOVIE);
