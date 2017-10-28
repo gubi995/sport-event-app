@@ -21,7 +21,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.renderers.ImageRenderer;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
-import hu.szeged.sporteventapp.common.util.ImageUtil;
+import hu.szeged.sporteventapp.common.util.ResourceUtil;
 import hu.szeged.sporteventapp.ui.views.INotifier;
 
 @ViewScope
@@ -69,7 +69,7 @@ public class ParticipantForm extends VerticalLayout implements INotifier {
 
 	private void adjustGridCoumns(final Grid<User> grid) {
 		grid.setColumns("username", "realName", "email");
-		grid.addColumn(user -> ImageUtil.setImageThemeResource(user.getPictureName()), new ImageRenderer())
+		grid.addColumn(user -> ResourceUtil.setUserImageResource(user.getPictureName()), new ImageRenderer())
 				.setStyleGenerator(o -> "grid-profile-picture").setCaption("Profile picture");
 		grid.addComponentColumn(user -> {
 			Button mailButton = new Button(VaadinIcons.ENVELOPE);

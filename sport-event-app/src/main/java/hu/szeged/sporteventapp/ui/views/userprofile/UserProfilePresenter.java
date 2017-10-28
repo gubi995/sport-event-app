@@ -9,7 +9,7 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 
 import hu.szeged.sporteventapp.backend.service.UserService;
-import hu.szeged.sporteventapp.common.util.ImageUtil;
+import hu.szeged.sporteventapp.common.util.ResourceUtil;
 import hu.szeged.sporteventapp.ui.AbstractPresenter;
 
 @UIScope
@@ -59,6 +59,6 @@ public class UserProfilePresenter extends AbstractPresenter<UserProfileView> {
 	public void enter() {
 		super.enter();
 		getView().initBinder(sessionUser);
-		getView().getUserImage().setSource(ImageUtil.setImageThemeResource(sessionUser.getPictureName()));
+		getView().getUserImage().setSource(ResourceUtil.setUserImageResource(sessionUser.getPictureName()));
 	}
 }

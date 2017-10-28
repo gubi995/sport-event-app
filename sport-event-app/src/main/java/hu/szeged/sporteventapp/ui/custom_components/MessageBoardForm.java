@@ -20,7 +20,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import hu.szeged.sporteventapp.backend.data.entity.Message;
 import hu.szeged.sporteventapp.backend.data.entity.MessageBoard;
 import hu.szeged.sporteventapp.backend.data.entity.User;
-import hu.szeged.sporteventapp.common.util.ImageUtil;
+import hu.szeged.sporteventapp.common.util.ResourceUtil;
 import hu.szeged.sporteventapp.ui.views.INotifier;
 
 @ViewScope
@@ -170,7 +170,7 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 			User user = message.getUser();
 			Image image = new Image();
 			image.setCaption(user.getUsername());
-			image.setSource(ImageUtil.setImageThemeResource(user.getPictureName()));
+			image.setSource(ResourceUtil.setUserImageResource(user.getPictureName()));
 			return image;
 		}
 

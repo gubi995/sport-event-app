@@ -17,7 +17,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
-import hu.szeged.sporteventapp.common.util.ImageUtil;
+import hu.szeged.sporteventapp.common.util.ResourceUtil;
 import hu.szeged.sporteventapp.ui.events.LoginEvent;
 import hu.szeged.sporteventapp.ui.events.RegistrationEvent;
 import hu.szeged.sporteventapp.ui.validator.PasswordValidator;
@@ -96,7 +96,7 @@ public class LoginScreen extends CustomComponent {
 		Image appIcon = new Image();
 		appIcon.setWidth(50, Unit.PIXELS);
 		appIcon.setHeight(50, Unit.PIXELS);
-		appIcon.setSource(ImageUtil.setImageFileResource(APP_ICON));
+		appIcon.setSource(ResourceUtil.setAppIconResource(APP_ICON));
 		return appIcon;
 	}
 
