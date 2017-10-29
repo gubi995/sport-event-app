@@ -5,21 +5,19 @@ import static hu.szeged.sporteventapp.ui.constants.ViewConstants.VIDEOS;
 
 import javax.annotation.PostConstruct;
 
+import com.vaadin.spring.annotation.UIScope;
 import hu.szeged.sporteventapp.backend.data.entity.Album;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.ui.views.INotifier;
 
-import java.util.List;
-
-@ViewScope
+@UIScope
 @SpringComponent
 public class MediaViewer extends VerticalLayout implements INotifier {
 

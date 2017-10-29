@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
@@ -34,6 +35,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 @SpringView(name = "profile")
 @SideBarItem(sectionId = Sections.PROFILE, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.USER_CARD)
+@UIScope
 public class UserProfileView extends AbstractView implements Upload.SucceededListener {
 
 	public static final String VIEW_NAME = "My profile";

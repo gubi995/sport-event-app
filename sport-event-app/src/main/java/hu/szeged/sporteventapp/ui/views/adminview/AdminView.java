@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
@@ -23,6 +24,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 @Secured("ADMIN")
 @SideBarItem(sectionId = Sections.ADMIN, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.COFFEE)
+@UIScope
 public class AdminView extends AbstractView {
 
 	public static final String VIEW_NAME = "Admin panel";

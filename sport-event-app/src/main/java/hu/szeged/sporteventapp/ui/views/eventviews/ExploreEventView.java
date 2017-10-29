@@ -9,6 +9,7 @@ import java.util.*;
 
 import javax.annotation.PostConstruct;
 
+import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
@@ -34,6 +35,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 @SpringView(name = "explore-events")
 @SideBarItem(sectionId = Sections.EVENT, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.FILE_SEARCH)
+@UIScope
 public class ExploreEventView extends AbstractView {
 
 	public static final String VIEW_NAME = "Explore events";

@@ -4,18 +4,18 @@ import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 
 import java.util.Optional;
 
-import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.ViewScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.label.MLabel;
 
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.ui.views.INotifier;
 
-@ViewScope
+@UIScope
 @SpringComponent
 public class EmailSendForm extends VerticalLayout implements INotifier {
 

@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.events.annotation.EventBusListenerMethod;
@@ -36,6 +37,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 
 @SpringView(name = "event")
 @VaadinFontIcon(VaadinIcons.STAR_O)
+@UIScope
 public class SingleEventView extends AbstractView implements JumpToSelectedEventListener, Upload.SucceededListener {
 
 	public static final String VIEW_NAME = "Event";
