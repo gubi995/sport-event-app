@@ -1,4 +1,4 @@
-@mixin simple_event {
+@mixin single_event {
   .event-data-viewer {
     background-color: white;
     border: 1px solid #c5c5c5;
@@ -6,6 +6,16 @@
     padding: 15px;
     .v-button {
       width: 100%;
+    }
+    .v-upload {
+      width: 100%;
+      border: 1px solid #1362b1;;
+      .v-button{
+        background: #197de1;
+        text-align: center;
+        color: #eaf4e9;
+        font-weight: 400;
+      }
     }
   }
 

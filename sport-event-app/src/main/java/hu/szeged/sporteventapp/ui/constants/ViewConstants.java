@@ -57,4 +57,6 @@ public class ViewConstants {
 	public static final String SEND = "Send";
 	public static final String HIDE = "Hide";
 	public static final String PLEASE_SELECT_A_ROW = "Please select a row";
+	public static final String PICTURES = "Pictures";
+	public static final String VIDEOS = "Videos";
 }

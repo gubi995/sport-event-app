@@ -4,11 +4,11 @@ import com.vaadin.server.ThemeResource;
 
 public class ResourceUtil {
 
-	private static String APP = "app/";
-	private static String EVENT = "event/";
-	private static String USER = "user/";
-	private static String VIDEOS = "videos/";
-	private static String IMAGES = "images/";
+	public static String APP = "app/";
+	public static String EVENT = "event/";
+	public static String USER = "user/";
+	public static String VIDEOS = "videos/";
+	public static String IMAGES = "images/";
 
 	public static ThemeResource setAppIconResource(String pictureName) {
 		return new ThemeResource(IMAGES + APP + pictureName);

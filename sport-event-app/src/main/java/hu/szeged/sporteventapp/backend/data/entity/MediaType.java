@@ -18,12 +18,9 @@ import lombok.Setter;
 public class MediaType extends AbstractEntity {
 
 	@Basic
-	String name;
-
-	@Basic
-	String path;
+	protected String name;
 
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "album_id")
-	Album album;
+	protected Album album;
 }

@@ -15120,6 +15120,19 @@ div.v-layout.v-horizontal.v-widget {
 	text-decoration-line: overline;
 }
 
+.mytheme .arrow-style {
+	background: transparent;
+	border: none;
+	width: 50px;
+	height: 64px;
+	font-size: xx-large;
+	cursor: pointer;
+}
+
+.mytheme .arrow-style:hover {
+	color: #197de1;
+}
+
 .mytheme .event_form .v-horizontallayout {
 	width: 100% !important;
 }
@@ -15153,6 +15166,18 @@ div.v-layout.v-horizontal.v-widget {
 
 .mytheme .event-data-viewer .v-button {
 	width: 100%;
+}
+
+.mytheme .event-data-viewer .v-upload {
+	width: 100%;
+	border: 1px solid #1362b1;
+}
+
+.mytheme .event-data-viewer .v-upload .v-button {
+	background: #197de1;
+	text-align: center;
+	color: #eaf4e9;
+	font-weight: 400;
 }
 
 .mytheme .data-layout {

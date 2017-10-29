@@ -1,6 +1,6 @@
 package hu.szeged.sporteventapp.backend.data.entity;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -22,11 +22,11 @@ public class Album extends AbstractEntity {
 
 	@Basic
 	@OneToMany(mappedBy = "album")
-	Set<Picture> pictures;
+	List<Picture> pictures;
 
 	@Basic
 	@OneToMany(mappedBy = "album")
-	Set<Video> videos;
+	List<Video> videos;
 
 	@OneToOne(mappedBy = "album")
 	SportEvent sportEvent;
