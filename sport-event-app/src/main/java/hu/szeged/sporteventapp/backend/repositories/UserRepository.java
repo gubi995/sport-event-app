@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
 	int countByEmail(String email);
 
-	// TODO Not necessary. Use save instead of like this
+	// We can use the save method instead of like below. I only keep it as example of custom query.
 	@Modifying
 	@Query("UPDATE User user SET user.age = :age, user.realName = :realName, user.mobileNumber = :mobileNumber WHERE user.id = :id")
 	int updateUserAdditionalData(@Param("id") String id, @Param("age") int age, @Param("realName") String realName,

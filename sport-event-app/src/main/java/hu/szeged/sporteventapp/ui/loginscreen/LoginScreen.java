@@ -112,18 +112,22 @@ public class LoginScreen extends CustomComponent {
 
 	private Panel initPanelForLogInAndRegistration() {
 		Panel panel = new Panel();
+		panel.setSizeUndefined();
 		TabSheet tabSheet = new TabSheet();
+		tabSheet.setWidth(400, Unit.PIXELS);
+		tabSheet.setSizeUndefined();
 		tabSheet.addStyleName(ValoTheme.TABSHEET_EQUAL_WIDTH_TABS);
 		tabSheet.addTab(createLoginLayout(), LOGIN);
 		tabSheet.addTab(createRegisterLayout(), REGISTER);
 		tabSheet.addSelectedTabChangeListener(selectedTabChangeEvent -> settingInfoLabelAsDefault());
-		panel.setWidth(400, Unit.PIXELS);
+		panel.setWidth(410, Unit.PIXELS);
 		panel.setContent(tabSheet);
 		return panel;
 	}
 
 	private FormLayout createRegisterLayout() {
 		FormLayout formLayout = new FormLayout();
+		formLayout.setWidth(400, Unit.PIXELS);
 		formLayout.setMargin(true);
 		formLayout.setSpacing(true);
 		infoLabelForRegister = new Label();
@@ -148,6 +152,7 @@ public class LoginScreen extends CustomComponent {
 
 	private FormLayout createLoginLayout() {
 		FormLayout formLayout = new FormLayout();
+		formLayout.setWidth(400, Unit.PIXELS);
 		formLayout.setMargin(true);
 		formLayout.setSpacing(true);
 		infoLabelForLogin = new Label();
