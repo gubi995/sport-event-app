@@ -69,6 +69,7 @@ public class LoginScreenPresenter implements LoginEventListener, RegistrationEve
 			userService.save(user);
 			loginScreen.adjustRegisterLabel("Registration successful", ValoTheme.LABEL_SUCCESS, true);
 			loginScreen.clearAllRegisterRelatedFieldValue();
+			loginScreen.clearComponentError();
 		} catch (TransactionSystemException | AlreadyExistsException e) {
 			loginScreen.adjustRegisterLabel(e.getMessage(), ValoTheme.LABEL_FAILURE, true);
 		}

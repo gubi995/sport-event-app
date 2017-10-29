@@ -86,6 +86,12 @@ public class LoginScreen extends CustomComponent {
 		infoLabelForRegister.setVisible(false);
 	}
 
+	public void clearComponentError(){
+		userNameFieldForRegister.setComponentError(null);
+		emailFieldForRegister.setComponentError(null);
+		passwordFieldForRegister.setComponentError(null);
+	}
+
 	private void initLayout() {
 		setCompositionRoot(new MVerticalLayout().withFullSize().withStyleName(APP_BACKGROUND)
 				.add(new MVerticalLayout().withUndefinedSize()
