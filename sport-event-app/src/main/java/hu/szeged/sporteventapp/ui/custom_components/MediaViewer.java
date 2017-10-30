@@ -3,18 +3,16 @@ package hu.szeged.sporteventapp.ui.custom_components;
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.PICTURES;
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.VIDEOS;
 
-import javax.annotation.PostConstruct;
-
-import com.vaadin.spring.annotation.UIScope;
-import hu.szeged.sporteventapp.backend.data.entity.Album;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
+import hu.szeged.sporteventapp.backend.data.entity.Album;
 import hu.szeged.sporteventapp.ui.views.INotifier;
 
 @UIScope
@@ -38,15 +36,11 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 	@Autowired
 	public MediaViewer(MediaPresenter presenter) {
 		this.presenter = presenter;
+		presenter.setMediaViewer(this);
 		setSizeFull();
 		initComponent();
 		initMainContent();
 		initStartState();
-	}
-
-	@PostConstruct
-	private void initPresenter() {
-		presenter.setMediaViewer(this);
 	}
 
 	private void initComponent() {
@@ -66,9 +60,15 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 
 	private void initButtons() {
 		pictureButton.setIcon(VaadinIcons.CAMERA);
-		pictureButton.addClickListener(c -> switchToPictureState());
+		pictureButton.addClickListener(c -> {
+			switchToPictureState();
+			presenter.initPictureContent();
+		});
 		videoButton.setIcon(VaadinIcons.MOVIE);
-		videoButton.addClickListener(c -> switchToVideoState());
+		videoButton.addClickListener(c -> {
+			switchToVideoState();
+			presenter.initVideoContent();
+		});
 		leftButton.setIcon(VaadinIcons.CHEVRON_LEFT);
 		leftButton.addStyleName(ARROW_BUTTON_STYLE);
 		rightButton.setIcon(VaadinIcons.CHEVRON_RIGHT);
@@ -124,8 +124,25 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 		mediaContainer.setComponentAlignment(component, Alignment.MIDDLE_CENTER);
 	}
 
-	public void setMedia(Album album){
-		presenter.setPictures(album.getPictures());
-		presenter.setVideos(album.getVideos());
+	public void setMedia(Album album) {
+		presenter.setAlbum(album);
+	}
+
+	public Image getDisplayedImage() {
+		return displayedImage;
+	}
+
+	public Video getDisplayedVideo() {
+		return displayedVideo;
+	}
+
+	public Label getCaptionLabel() {
+		return captionLabel;
+	}
+
+	@Override
+	public void attach() {
+		super.attach();
+		presenter.setImageContent();
 	}
 }
