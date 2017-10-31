@@ -43,9 +43,13 @@ public class SingleEventPresenter extends AbstractPresenter<SingleEventView> {
 
 	public void saveMedia(Upload.SucceededEvent event) {
 		if (event.getMIMEType().equals(WrappedUpload.JPG) || event.getMIMEType().equals(WrappedUpload.PNG)) {
-			pictureRepository.save(new Picture(event.getFilename(), sportEvent.getAlbum()));
+			Picture picture = new Picture(event.getFilename(), sportEvent.getAlbum());
+			pictureRepository.save(picture);
+			getView().getBinder().getBean().getAlbum().getPictures().add(picture);
 		} else if (event.getMIMEType().equals(WrappedUpload.MP4) || event.getMIMEType().equals(WrappedUpload.OGG)) {
-			videoRepository.save(new Video(event.getFilename(), sportEvent.getAlbum()));
+			Video video = new Video(event.getFilename(), sportEvent.getAlbum());
+			videoRepository.save(video);
+			getView().getBinder().getBean().getAlbum().getVideos().add(video);
 		}
 	}
 

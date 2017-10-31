@@ -4,6 +4,7 @@ import static hu.szeged.sporteventapp.ui.constants.ViewConstants.PICTURES;
 import static hu.szeged.sporteventapp.ui.constants.ViewConstants.VIDEOS;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.viritin.label.MLabel;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.icons.VaadinIcons;
@@ -21,6 +22,7 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 
 	public static final String CAPTION = "Media";
 	private static final String ARROW_BUTTON_STYLE = "arrow-style";
+	private static final String MEDIA_CONTAINER_STYLE = "media-container";
 
 	private final MediaPresenter presenter;
 
@@ -45,7 +47,9 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 
 	private void initComponent() {
 		displayedImage = new Image();
+		displayedImage.setResponsive(true);
 		displayedVideo = new Video();
+		displayedVideo.setResponsive(true);
 		pictureButton = new Button(PICTURES);
 		videoButton = new Button(VIDEOS);
 		leftButton = new NativeButton();
@@ -53,9 +57,14 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 		captionLabel = new Label("Caption");
 		captionLabel.addStyleName(ValoTheme.LABEL_H2);
 		mediaContainer = new VerticalLayout();
+		initMediaContainer();
+		initButtons();
+	}
+
+	private void initMediaContainer() {
+		mediaContainer.addStyleName(MEDIA_CONTAINER_STYLE);
 		mediaContainer.setSizeFull();
 		mediaContainer.setMargin(false);
-		initButtons();
 	}
 
 	private void initButtons() {
@@ -124,6 +133,13 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 		mediaContainer.setComponentAlignment(component, Alignment.MIDDLE_CENTER);
 	}
 
+	public void showNoFileUploadedYet() {
+		mediaContainer.removeAllComponents();
+		MLabel label = new MLabel("No file uploaded yet.").withStyleName(ValoTheme.LABEL_H2, ValoTheme.LABEL_COLORED);
+		mediaContainer.addComponent(label);
+		mediaContainer.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
+	}
+
 	public void setMedia(Album album) {
 		presenter.setAlbum(album);
 	}
@@ -138,6 +154,14 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 
 	public Label getCaptionLabel() {
 		return captionLabel;
+	}
+
+	public NativeButton getLeftButton() {
+		return leftButton;
+	}
+
+	public NativeButton getRightButton() {
+		return rightButton;
 	}
 
 	@Override

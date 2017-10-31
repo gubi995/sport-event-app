@@ -4,6 +4,7 @@
 @import "base";
 @import "eventform";
 @import "single_event";
+@import "media_viewer";
 
 // This file prefixes all rules with the theme name to avoid causing conflicts with other themes.
 // The actual styles should be defined in mytheme.scss
@@ -15,6 +16,7 @@
   @include base;
   @include eventform;
   @include single_event;
+  @include media_viewer;
 }
 
 

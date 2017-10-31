@@ -36,15 +36,23 @@ public class MediaPresenter implements Serializable {
 	}
 
 	public void setImageContent() {
-		Picture currentPicture = pictures.get(picturePosition);
-		mediaViewer.getDisplayedImage().setSource(ResourceUtil.setEventImageResource(currentPicture.getName()));
-		mediaViewer.getCaptionLabel().setValue(getFileNameWithoutExtension(currentPicture.getName()));
+		if (!pictures.isEmpty()) {
+			Picture currentPicture = pictures.get(picturePosition);
+			mediaViewer.getDisplayedImage().setSource(ResourceUtil.setEventImageResource(currentPicture.getName()));
+			mediaViewer.getCaptionLabel().setValue(getFileNameWithoutExtension(currentPicture.getName()));
+		} else {
+			mediaViewer.showNoFileUploadedYet();
+		}
 	}
 
 	public void setVideoContent() {
-		Video currentVideo = videos.get(videoPosition);
-		mediaViewer.getDisplayedVideo().setSource(ResourceUtil.setVideoResource(currentVideo.getName()));
-		mediaViewer.getCaptionLabel().setValue(getFileNameWithoutExtension(currentVideo.getName()));
+		if (!videos.isEmpty()) {
+			Video currentVideo = videos.get(videoPosition);
+			mediaViewer.getDisplayedVideo().setSource(ResourceUtil.setVideoResource(currentVideo.getName()));
+			mediaViewer.getCaptionLabel().setValue(getFileNameWithoutExtension(currentVideo.getName()));
+		} else {
+			mediaViewer.showNoFileUploadedYet();
+		}
 	}
 
 	public void setAlbum(Album album) {
@@ -64,5 +72,21 @@ public class MediaPresenter implements Serializable {
 
 	private String getFileNameWithoutExtension(String filename) {
 		return filename.split("\\.")[0];
+	}
+
+	private void nextMediaIsExist() {
+		if (picturePosition == pictures.size() || videoPosition == videos.size()) {
+			mediaViewer.getRightButton().setEnabled(false);
+		} else {
+			mediaViewer.getRightButton().setEnabled(true);
+		}
+	}
+
+	private void previousMediaIsExist() {
+		if (picturePosition == 0 || videoPosition == 0) {
+			mediaViewer.getLeftButton().setEnabled(false);
+		} else {
+			mediaViewer.getLeftButton().setEnabled(true);
+		}
 	}
 }

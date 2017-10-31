@@ -1,0 +1,25 @@
+@mixin media_viewer {
+  .media-container {
+    .v-image {
+      max-width: 100%;
+      height: auto !important;
+    }
+    .v-video {
+      width: auto !important;
+      max-height: 500px !important;
+    }
+  }
+
+  .arrow-style {
+    background: transparent;
+    border: none;
+    width: 50px;
+    height: 64px;
+    font-size: xx-large;
+    cursor: pointer;
+    &:hover {
+      color: #197de1;
+    }
+  }
+}
+
