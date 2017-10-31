@@ -43,6 +43,7 @@ public class MediaPresenter implements Serializable {
 		} else {
 			mediaViewer.showNoFileUploadedYet();
 		}
+		checkNextAndPreviousMedia();
 	}
 
 	public void setVideoContent() {
@@ -53,6 +54,7 @@ public class MediaPresenter implements Serializable {
 		} else {
 			mediaViewer.showNoFileUploadedYet();
 		}
+		checkNextAndPreviousMedia();
 	}
 
 	public void setAlbum(Album album) {
@@ -74,19 +76,28 @@ public class MediaPresenter implements Serializable {
 		return filename.split("\\.")[0];
 	}
 
+	private void checkNextAndPreviousMedia() {
+		nextMediaIsExist();
+		previousMediaIsExist();
+	}
+
 	private void nextMediaIsExist() {
 		if (picturePosition == pictures.size() || videoPosition == videos.size()) {
 			mediaViewer.getRightButton().setEnabled(false);
+			mediaViewer.getRightButton().removeStyleName(mediaViewer.ARROW_HOVER_STYLE);
 		} else {
 			mediaViewer.getRightButton().setEnabled(true);
+			mediaViewer.getRightButton().addStyleName(mediaViewer.ARROW_HOVER_STYLE);
 		}
 	}
 
 	private void previousMediaIsExist() {
 		if (picturePosition == 0 || videoPosition == 0) {
 			mediaViewer.getLeftButton().setEnabled(false);
+			mediaViewer.getLeftButton().removeStyleName(mediaViewer.ARROW_HOVER_STYLE);
 		} else {
 			mediaViewer.getLeftButton().setEnabled(true);
+			mediaViewer.getLeftButton().addStyleName(mediaViewer.ARROW_HOVER_STYLE);
 		}
 	}
 }

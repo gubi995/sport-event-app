@@ -21,6 +21,7 @@ import hu.szeged.sporteventapp.ui.views.INotifier;
 public class MediaViewer extends VerticalLayout implements INotifier {
 
 	public static final String CAPTION = "Media";
+	public static final String ARROW_HOVER_STYLE = "arrow-hover-style";
 	private static final String ARROW_BUTTON_STYLE = "arrow-style";
 	private static final String MEDIA_CONTAINER_STYLE = "media-container";
 
