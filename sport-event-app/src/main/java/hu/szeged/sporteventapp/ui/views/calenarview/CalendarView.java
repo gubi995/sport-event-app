@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
-import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.addon.calendar.Calendar;
 import org.vaadin.addon.calendar.item.BasicItemProvider;
@@ -18,6 +17,7 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.Page;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Notification;
 
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
@@ -29,7 +29,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 @SpringView(name = "calendar")
 @SideBarItem(sectionId = Sections.EVENT, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.CALENDAR)
-@UIScope
+@ViewScope
 public class CalendarView extends AbstractView {
 
 	public static final String VIEW_NAME = "Calendar";

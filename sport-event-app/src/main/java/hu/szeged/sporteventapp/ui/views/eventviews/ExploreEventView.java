@@ -9,7 +9,6 @@ import java.util.*;
 
 import javax.annotation.PostConstruct;
 
-import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
@@ -20,6 +19,7 @@ import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -35,7 +35,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 @SpringView(name = "explore-events")
 @SideBarItem(sectionId = Sections.EVENT, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.FILE_SEARCH)
-@UIScope
+@ViewScope
 public class ExploreEventView extends AbstractView {
 
 	public static final String VIEW_NAME = "Explore events";

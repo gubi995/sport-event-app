@@ -8,15 +8,15 @@ import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.Album;
 import hu.szeged.sporteventapp.ui.views.INotifier;
 
-@UIScope
 @SpringComponent
+@ViewScope
 public class MediaViewer extends VerticalLayout implements INotifier {
 
 	public static final String CAPTION = "Media";

@@ -11,7 +11,7 @@ import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.data.Binder;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
@@ -20,8 +20,8 @@ import com.vaadin.ui.themes.ValoTheme;
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.ui.views.INotifier;
 
-@UIScope
 @SpringComponent
+@ViewScope
 public class MapForm extends VerticalLayout implements INotifier {
 
 	public static final String CAPTION = LOCATION + " / " + ROUTE;

@@ -2,6 +2,7 @@ package hu.szeged.sporteventapp.ui.views;
 
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.spring.annotation.ViewScope;
 import org.vaadin.spring.sidebar.annotation.FontAwesomeIcon;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 
@@ -20,7 +21,7 @@ import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
 @SpringView(name = "")
 @SideBarItem(sectionId = Sections.VIEWS, caption = "Home", order = 0)
 @VaadinFontIcon(VaadinIcons.HOME)
-@UIScope
+@ViewScope
 public class HomeView extends VerticalLayout implements View {
 
 	public HomeView() {

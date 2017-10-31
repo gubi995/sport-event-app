@@ -9,7 +9,6 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
-import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
@@ -22,6 +21,7 @@ import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -37,7 +37,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 @SpringView(name = "manage-my-events")
 @SideBarItem(sectionId = Sections.EVENT, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.FILE_PROCESS)
-@UIScope
+@ViewScope
 public class ManageEventView extends AbstractView {
 
 	public static final String VIEW_NAME = "Manage my events";

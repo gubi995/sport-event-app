@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
-import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.events.annotation.EventBusListenerMethod;
@@ -20,6 +19,7 @@ import com.vaadin.data.Binder;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Upload;
@@ -37,7 +37,7 @@ import hu.szeged.sporteventapp.ui.views.AbstractView;
 
 @SpringView(name = "event")
 @VaadinFontIcon(VaadinIcons.STAR_O)
-@UIScope
+@ViewScope
 public class SingleEventView extends AbstractView implements JumpToSelectedEventListener, Upload.SucceededListener {
 
 	public static final String VIEW_NAME = "Event";
@@ -163,6 +163,11 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 	@Override
 	public void uploadSucceeded(Upload.SucceededEvent succeededEvent) {
 		presenter.saveMedia(succeededEvent);
+		mediaViewer.setMedia(binder.getBean().getAlbum());
+	}
+
+	public Binder<SportEvent> getBinder() {
+		return binder;
 	}
 
 	@EventBusListenerMethod
