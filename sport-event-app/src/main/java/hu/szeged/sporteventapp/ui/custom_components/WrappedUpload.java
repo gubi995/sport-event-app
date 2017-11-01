@@ -1,9 +1,6 @@
 package hu.szeged.sporteventapp.ui.custom_components;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,8 +21,9 @@ import hu.szeged.sporteventapp.common.util.ResourceUtil;
 import hu.szeged.sporteventapp.ui.views.INotifier;
 
 @SpringComponent
-public class WrappedUpload extends CustomComponent implements INotifier, Upload.Receiver, Upload.StartedListener,
-		Upload.ProgressListener, Upload.FailedListener, Upload.SucceededListener, Upload.FinishedListener {
+public class WrappedUpload extends CustomComponent
+		implements INotifier, Upload.Receiver, Upload.StartedListener, Upload.ProgressListener, Upload.FailedListener,
+		Upload.SucceededListener, Upload.FinishedListener, Serializable {
 
 	public static final String JPG = "image/jpeg";
 	public static final String PNG = "image/png";

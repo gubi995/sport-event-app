@@ -32,6 +32,10 @@ public class SportEventService {
 		return eventRepository.findSportEventByOrganizer(user);
 	}
 
+	public List<SportEvent> findSportEventBySportType(String sportType){
+		return eventRepository.findSportEventBySportType(sportType);
+	}
+
 	@Transactional
 	public void delete(SportEvent sportEvent) {
 		eventRepository.delete(sportEvent);

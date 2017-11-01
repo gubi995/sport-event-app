@@ -12,4 +12,6 @@ public interface SportEventRepository extends JpaRepository<SportEvent, String> 
 	List<SportEvent> findAll();
 
 	List<SportEvent> findSportEventByOrganizer(User user);
+
+	List<SportEvent> findSportEventBySportType(String sportType);
 }

@@ -15145,26 +15145,22 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .mytheme .event_form .v-textfield {
-	width: 100%;
+	width: 100% !important;
 }
 
 .mytheme .event_form .v-textarea {
-	width: 100%;
+	width: 100% !important;
 }
 
 .mytheme .event_form .v-datefield {
-	width: 100%;
+	width: 100% !important;
 }
 
 .mytheme .event_form .v-select {
 	width: 100% !important;
 }
 
-.mytheme .event_form .v-select-select {
-	width: 100% !important;
-}
-
-.mytheme .event_form .v-filterselect {
+.mytheme .event_form .full-width-filterselect {
 	width: 100% !important;
 }
 

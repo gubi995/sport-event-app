@@ -3,6 +3,7 @@ package hu.szeged.sporteventapp.backend.service;
 import java.util.HashSet;
 import java.util.Set;
 
+import hu.szeged.sporteventapp.backend.data.enums.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,10 @@ public class UserService {
 
 	public User findByUsername(String username) {
 		return userRepository.findByUsername(username);
+	}
+
+	public int countAllByRole(Role role){
+		return userRepository.countAllByRole(role);
 	}
 
 	@Transactional

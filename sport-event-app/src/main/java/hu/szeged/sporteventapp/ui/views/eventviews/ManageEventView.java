@@ -158,6 +158,7 @@ public class ManageEventView extends AbstractView {
 	private class EventDataForm extends FormLayout {
 
 		private static final String FORM_STYLE = "event_form";
+		private static final String FULL_WIDTH = "full-width-filterselect";
 
 		TextField nameField;
 		TextField locationField;
@@ -196,6 +197,7 @@ public class ManageEventView extends AbstractView {
 			sportType = new ComboBox<>(SPORT_TYPE);
 			sportType.setEmptySelectionAllowed(false);
 			sportType.setItems(SportType.getAllSportType());
+			sportType.addStyleName(FULL_WIDTH);
 			startDateTimeField = new DateTimeField(START_DATE);
 			endDateTimeField = new DateTimeField(END_DATE);
 			detailsArea = new TextArea(DETAILS);

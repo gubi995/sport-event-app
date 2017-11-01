@@ -1,5 +1,6 @@
 package hu.szeged.sporteventapp.backend.repositories;
 
+import hu.szeged.sporteventapp.backend.data.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,8 @@ import hu.szeged.sporteventapp.backend.data.entity.User;
 public interface UserRepository extends JpaRepository<User, String> {
 
 	User findByUsername(String username);
+
+	int countAllByRole(Role role);
 
 	int countByUsername(String username);
 

@@ -95,6 +95,7 @@ public class MapForm extends VerticalLayout implements INotifier {
 	public void constructMapForm(Optional<SportEvent> sportEvent, boolean readOnly) {
 		setReadOnlyMode(readOnly);
 		setSportEvent(sportEvent);
+		pointField.getMap().setZoomLevel(100f);
 	}
 
 	private class NoLocationBanner extends VerticalLayout {
