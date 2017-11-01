@@ -81,8 +81,10 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 		});
 		leftButton.setIcon(VaadinIcons.CHEVRON_LEFT);
 		leftButton.addStyleName(ARROW_BUTTON_STYLE);
+		leftButton.addClickListener(c -> presenter.navigateToLeft());
 		rightButton.setIcon(VaadinIcons.CHEVRON_RIGHT);
 		rightButton.addStyleName(ARROW_BUTTON_STYLE);
+		rightButton.addClickListener(c -> presenter.navigateToRight());
 	}
 
 	private void initMainContent() {
@@ -116,7 +118,7 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 		switchToPictureState();
 	}
 
-	private void switchToPictureState() {
+	public void switchToPictureState() {
 		videoButton.removeStyleName(ValoTheme.BUTTON_PRIMARY);
 		pictureButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		redrawMediaContainer(displayedImage);
@@ -137,6 +139,7 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 	public void showNoFileUploadedYet() {
 		mediaContainer.removeAllComponents();
 		MLabel label = new MLabel("No file uploaded yet.").withStyleName(ValoTheme.LABEL_H2, ValoTheme.LABEL_COLORED);
+		captionLabel.setValue("");
 		mediaContainer.addComponent(label);
 		mediaContainer.setComponentAlignment(label, Alignment.MIDDLE_CENTER);
 	}
@@ -168,6 +171,7 @@ public class MediaViewer extends VerticalLayout implements INotifier {
 	@Override
 	public void attach() {
 		super.attach();
-		presenter.setImageContent();
+		initStartState();
+		presenter.initPictureContent();
 	}
 }

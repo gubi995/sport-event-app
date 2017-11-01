@@ -18,12 +18,17 @@ import hu.szeged.sporteventapp.common.util.ResourceUtil;
 @SpringComponent
 public class MediaPresenter implements Serializable {
 
+	private static final String IMAGE_CONTEXT = "Image";
+	private static final String VIDEO_CONTEXT = "Video";
+
 	private List<Picture> pictures;
 	private List<Video> videos;
 	private MediaViewer mediaViewer;
 
 	private int picturePosition;
 	private int videoPosition;
+	private int position = 0;
+	private String currentContext;
 
 	@Autowired
 	public MediaPresenter() {
@@ -36,25 +41,23 @@ public class MediaPresenter implements Serializable {
 	}
 
 	public void setImageContent() {
+		currentContext = IMAGE_CONTEXT;
 		if (!pictures.isEmpty()) {
-			Picture currentPicture = pictures.get(picturePosition);
-			mediaViewer.getDisplayedImage().setSource(ResourceUtil.setEventImageResource(currentPicture.getName()));
-			mediaViewer.getCaptionLabel().setValue(getFileNameWithoutExtension(currentPicture.getName()));
+			loadPicture();
 		} else {
 			mediaViewer.showNoFileUploadedYet();
 		}
-		checkNextAndPreviousMedia();
+		checkNavigationIsPossible(picturePosition, pictures);
 	}
 
 	public void setVideoContent() {
+		currentContext = VIDEO_CONTEXT;
 		if (!videos.isEmpty()) {
-			Video currentVideo = videos.get(videoPosition);
-			mediaViewer.getDisplayedVideo().setSource(ResourceUtil.setVideoResource(currentVideo.getName()));
-			mediaViewer.getCaptionLabel().setValue(getFileNameWithoutExtension(currentVideo.getName()));
+			loadVideo();
 		} else {
 			mediaViewer.showNoFileUploadedYet();
 		}
-		checkNextAndPreviousMedia();
+		checkNavigationIsPossible(videoPosition, videos);
 	}
 
 	public void setAlbum(Album album) {
@@ -72,32 +75,74 @@ public class MediaPresenter implements Serializable {
 		setImageContent();
 	}
 
+	private void loadPicture() {
+		Picture currentPicture = pictures.get(picturePosition);
+		mediaViewer.getDisplayedImage().setSource(ResourceUtil.setEventImageResource(currentPicture.getName()));
+		mediaViewer.getCaptionLabel().setValue(getFileNameWithoutExtension(currentPicture.getName()));
+	}
+
+	private void loadVideo() {
+		Video currentVideo = videos.get(videoPosition);
+		mediaViewer.getDisplayedVideo().setSource(ResourceUtil.setVideoResource(currentVideo.getName()));
+		mediaViewer.getCaptionLabel().setValue(getFileNameWithoutExtension(currentVideo.getName()));
+	}
+
 	private String getFileNameWithoutExtension(String filename) {
 		return filename.split("\\.")[0];
 	}
 
-	private void checkNextAndPreviousMedia() {
-		nextMediaIsExist();
-		previousMediaIsExist();
+	private void checkNavigationIsPossible(int position, List media) {
+		checkLeftNavigation(position);
+		checkRightNavigation(position, media);
 	}
 
-	private void nextMediaIsExist() {
-		if (picturePosition == pictures.size() || videoPosition == videos.size()) {
-			mediaViewer.getRightButton().setEnabled(false);
-			mediaViewer.getRightButton().removeStyleName(mediaViewer.ARROW_HOVER_STYLE);
+	private void checkLeftNavigation(int position) {
+		if (position > 0) {
+			mediaViewer.getLeftButton().setEnabled(true);
+			mediaViewer.getLeftButton().addStyleName(mediaViewer.ARROW_HOVER_STYLE);
 		} else {
-			mediaViewer.getRightButton().setEnabled(true);
-			mediaViewer.getRightButton().addStyleName(mediaViewer.ARROW_HOVER_STYLE);
+			mediaViewer.getLeftButton().setEnabled(false);
+			mediaViewer.getLeftButton().removeStyleName(mediaViewer.ARROW_HOVER_STYLE);
 		}
 	}
 
-	private void previousMediaIsExist() {
-		if (picturePosition == 0 || videoPosition == 0) {
-			mediaViewer.getLeftButton().setEnabled(false);
-			mediaViewer.getLeftButton().removeStyleName(mediaViewer.ARROW_HOVER_STYLE);
+	private void checkRightNavigation(int position, List media) {
+		if (position < media.size() - 1) {
+			mediaViewer.getRightButton().setEnabled(true);
+			mediaViewer.getRightButton().addStyleName(mediaViewer.ARROW_HOVER_STYLE);
 		} else {
-			mediaViewer.getLeftButton().setEnabled(true);
-			mediaViewer.getLeftButton().addStyleName(mediaViewer.ARROW_HOVER_STYLE);
+			mediaViewer.getRightButton().setEnabled(false);
+			mediaViewer.getRightButton().removeStyleName(mediaViewer.ARROW_HOVER_STYLE);
+		}
+	}
+
+	public void navigateToLeft() {
+		switch (currentContext) {
+		case IMAGE_CONTEXT:
+			--picturePosition;
+			loadPicture();
+			checkNavigationIsPossible(picturePosition, pictures);
+			break;
+		case VIDEO_CONTEXT:
+			--videoPosition;
+			loadVideo();
+			checkNavigationIsPossible(videoPosition, videos);
+			break;
+		}
+	}
+
+	public void navigateToRight() {
+		switch (currentContext) {
+		case IMAGE_CONTEXT:
+			++picturePosition;
+			loadPicture();
+			checkNavigationIsPossible(picturePosition, pictures);
+			break;
+		case VIDEO_CONTEXT:
+			++videoPosition;
+			loadVideo();
+			checkNavigationIsPossible(videoPosition, videos);
+			break;
 		}
 	}
 }
