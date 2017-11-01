@@ -15164,6 +15164,10 @@ div.v-layout.v-horizontal.v-widget {
 	width: 100% !important;
 }
 
+.mytheme .event_form .v-filterselect {
+	width: 100% !important;
+}
+
 .mytheme .event-data-viewer {
 	background-color: white;
 	border: 1px solid #c5c5c5;

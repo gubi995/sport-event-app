@@ -27,6 +27,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
+import hu.szeged.sporteventapp.backend.data.enums.SportType;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
 import hu.szeged.sporteventapp.common.factory.MyBeanFactory;
 import hu.szeged.sporteventapp.common.util.DialogueUtil;
@@ -161,7 +162,7 @@ public class ManageEventView extends AbstractView {
 		TextField nameField;
 		TextField locationField;
 		TextField maxParticipantField;
-		TextField sportType;
+		ComboBox<String> sportType;
 		DateTimeField startDateTimeField;
 		TextArea detailsArea;
 		DateTimeField endDateTimeField;
@@ -192,7 +193,9 @@ public class ManageEventView extends AbstractView {
 			nameField = new TextField(NAME);
 			locationField = new TextField(LOCATION);
 			maxParticipantField = new TextField(MAX_PARTICIPANT);
-			sportType = new TextField(SPORT_TYPE);
+			sportType = new ComboBox<>(SPORT_TYPE);
+			sportType.setEmptySelectionAllowed(false);
+			sportType.setItems(SportType.getAllSportType());
 			startDateTimeField = new DateTimeField(START_DATE);
 			endDateTimeField = new DateTimeField(END_DATE);
 			detailsArea = new TextArea(DETAILS);
