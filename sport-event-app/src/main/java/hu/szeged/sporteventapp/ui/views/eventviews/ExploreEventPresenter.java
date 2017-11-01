@@ -36,7 +36,7 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 		} catch (NoEmptyPlaceException e) {
 			getView().showErrorNotification(e.getMessage());
 		} catch (ObjectOptimisticLockingFailureException e2) {
-			getView().showErrorNotification("Please wait a minute before leave");
+			getView().showWarningNotification("Please wait a minute before leave");
 		}
 	}
 
@@ -45,9 +45,9 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 			sportEventService.leaveFromSportEvent(sportEvent, sessionUser);
 			getView().showInfoNotification("Leave was successful");
 		} catch (NotParticipantException e) {
-			getView().showErrorNotification(e.getMessage());
+			getView().showWarningNotification(e.getMessage());
 		} catch (ObjectOptimisticLockingFailureException e2) {
-			getView().showErrorNotification("Please wait a minute before leave");
+			getView().showWarningNotification("Please wait a minute before leave");
 		}
 	}
 

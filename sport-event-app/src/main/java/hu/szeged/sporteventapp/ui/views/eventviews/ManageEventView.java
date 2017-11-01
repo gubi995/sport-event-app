@@ -30,6 +30,7 @@ import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
 import hu.szeged.sporteventapp.common.factory.MyBeanFactory;
 import hu.szeged.sporteventapp.common.util.DialogueUtil;
+import hu.szeged.sporteventapp.common.util.LocalDateTimeUtil;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.custom_components.MapForm;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
@@ -222,10 +223,14 @@ public class ManageEventView extends AbstractView {
 			binder.forField(nameField).asRequired(REQUIRED_MSG).bind(SportEvent::getName, SportEvent::setName);
 			binder.forField(locationField).asRequired(REQUIRED_MSG).bind(SportEvent::getLocation,
 					SportEvent::setLocation);
-			binder.forField(startDateTimeField).asRequired(REQUIRED_MSG).bind(SportEvent::getStartDate,
-					SportEvent::setStartDate);
-			binder.forField(endDateTimeField).asRequired(REQUIRED_MSG).bind(SportEvent::getEndDate,
-					SportEvent::setEndDate);
+			binder.forField(startDateTimeField)
+					.withValidator(time -> LocalDateTimeUtil.isFutureDate(time), "Date is must be in the future")
+					.asRequired(REQUIRED_MSG).bind(SportEvent::getStartDate, SportEvent::setStartDate);
+			binder.forField(endDateTimeField)
+					.withValidator(
+							time -> LocalDateTimeUtil.isStartDateBeforeEndDate(startDateTimeField.getValue(), time),
+							"End date must be after the start date")
+					.asRequired(REQUIRED_MSG).bind(SportEvent::getEndDate, SportEvent::setEndDate);
 			binder.forField(maxParticipantField).withConverter(new StringToIntegerConverter(WRONG_INPUT))
 					.bind(SportEvent::getMaxParticipant, SportEvent::setMaxParticipant);
 			binder.forField(sportType).asRequired(REQUIRED_MSG).bind(SportEvent::getSportType,
@@ -259,6 +264,7 @@ public class ManageEventView extends AbstractView {
 				setVisible(false);
 			} else {
 				showWarningNotification(VALIDATION_WARNING_MSG);
+				binder.validate();
 			}
 		}
 
@@ -269,6 +275,7 @@ public class ManageEventView extends AbstractView {
 				setVisible(false);
 			} else {
 				showWarningNotification(VALIDATION_WARNING_MSG);
+				binder.validate();
 			}
 		}
 

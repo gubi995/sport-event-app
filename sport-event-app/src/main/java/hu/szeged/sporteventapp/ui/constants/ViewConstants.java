@@ -59,4 +59,5 @@ public class ViewConstants {
 	public static final String PLEASE_SELECT_A_ROW = "Please select a row";
 	public static final String PICTURES = "Pictures";
 	public static final String VIDEOS = "Videos";
+	public static final String INFO_NOTIFICATION_STYLE = "info-notification-style";
 }

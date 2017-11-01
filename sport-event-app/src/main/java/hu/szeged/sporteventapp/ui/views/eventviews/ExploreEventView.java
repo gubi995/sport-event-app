@@ -23,6 +23,7 @@ import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
+import de.steinwedel.messagebox.MessageBox;
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
@@ -159,7 +160,10 @@ public class ExploreEventView extends AbstractView {
 		detailsButton.addClickListener(clickEvent -> jumpToSelectEvent());
 		joinButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		joinButton.setIcon(VaadinIcons.FLAG_CHECKERED);
-		joinButton.addClickListener(clickEvent -> join());
+		joinButton.addClickListener(clickEvent -> {
+			MessageBox.createQuestion().asModal(true).withCaption("Question Dialog").withMessage("Do you really want to join?")
+					.withYesButton(() -> join()).withNoButton().open();
+		});
 		leaveButton.setStyleName(ValoTheme.BUTTON_DANGER);
 		leaveButton.setIcon(VaadinIcons.EXIT_O);
 		leaveButton.addClickListener(clickEvent -> leave());

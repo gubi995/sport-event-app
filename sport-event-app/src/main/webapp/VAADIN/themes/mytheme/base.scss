@@ -24,5 +24,12 @@
     font-weight: bolder;
     text-decoration-line: overline;
   }
+
+  .info-notification-style {
+    background: #197de1;;
+    .v-Notification-caption, .v-Notification-description, .v-icon {
+      color: white;
+    }
+  }
 }
 

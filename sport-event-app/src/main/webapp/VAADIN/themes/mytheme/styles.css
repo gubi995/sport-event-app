@@ -15132,6 +15132,14 @@ div.v-layout.v-horizontal.v-widget {
 	text-decoration-line: overline;
 }
 
+.mytheme .info-notification-style {
+	background: #197de1;
+}
+
+.mytheme .info-notification-style .v-Notification-caption, .mytheme .info-notification-style .v-Notification-description, .mytheme .info-notification-style .v-icon {
+	color: white;
+}
+
 .mytheme .event_form .v-horizontallayout {
 	width: 100% !important;
 }

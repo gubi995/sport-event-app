@@ -26,7 +26,8 @@ public interface INotifier extends Serializable {
 	}
 
 	default void showInfoNotification(String message) {
-		Notification notification = new Notification(INFO, message, Notification.Type.HUMANIZED_MESSAGE);
+		Notification notification = new Notification(INFO, message, Notification.Type.TRAY_NOTIFICATION);
+		notification.setStyleName(INFO_NOTIFICATION_STYLE);
 		notification.setIcon(VaadinIcons.SMILEY_O);
 		notification.setPosition(Position.BOTTOM_RIGHT);
 		notification.show(Page.getCurrent());
