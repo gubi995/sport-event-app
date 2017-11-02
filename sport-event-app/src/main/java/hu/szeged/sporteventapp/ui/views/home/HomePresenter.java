@@ -65,5 +65,6 @@ public class HomePresenter extends AbstractPresenter<HomeView> {
 		gatherSportByPopularity();
 		getView().getMemberCounter().setPopulationNumber(String.valueOf(countPopulationOfPage()));
 		getView().getMostSportyMembers().generateContent(gatherMostSportyMembers());
+		getView().getSinglePieChartView().generateChart(gatherSportByPopularity());
 	}
 }

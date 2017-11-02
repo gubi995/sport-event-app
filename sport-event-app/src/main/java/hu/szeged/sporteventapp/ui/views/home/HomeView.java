@@ -1,5 +1,7 @@
 package hu.szeged.sporteventapp.ui.views.home;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -8,18 +10,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
 import org.vaadin.viritin.label.MLabel;
-import org.vaadin.viritin.layouts.MGridLayout;
+import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
+import com.byteowls.vaadin.chartjs.ChartJs;
+import com.byteowls.vaadin.chartjs.config.PieChartConfig;
+import com.byteowls.vaadin.chartjs.data.Dataset;
+import com.byteowls.vaadin.chartjs.data.PieDataset;
+import com.byteowls.vaadin.chartjs.utils.ColorUtils;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.themes.ValoTheme;
 
 import hu.szeged.sporteventapp.backend.data.entity.User;
+import hu.szeged.sporteventapp.backend.data.enums.SportType;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
 
@@ -36,6 +46,7 @@ public class HomeView extends AbstractView {
 	private IntroductionPanel introductionPanel;
 	private MemberCounter memberCounter;
 	private MostSportyMembers mostSportyMembers;
+	private SinglePieChartView singlePieChartView;
 
 	@Autowired
 	public HomeView(HomePresenter presenter) {
@@ -48,13 +59,16 @@ public class HomeView extends AbstractView {
 		introductionPanel = new IntroductionPanel();
 		memberCounter = new MemberCounter();
 		mostSportyMembers = new MostSportyMembers();
+		singlePieChartView = new SinglePieChartView();
 	}
 
 	@Override
 	public void initBody() {
 		memberCounter.setPopulationNumber("546");
-		addComponentsAndExpand(
-				new MGridLayout(2, 2).withMargin(false).add(introductionPanel, memberCounter, mostSportyMembers));
+		MHorizontalLayout topLayout = new MHorizontalLayout().add(introductionPanel, memberCounter);
+		MHorizontalLayout bottomLayout = new MHorizontalLayout().add(singlePieChartView, mostSportyMembers);
+		addComponentsAndExpand(new MVerticalLayout().withMargin(false).add(topLayout, bottomLayout)
+				.withExpandRatio(topLayout, 0.2f).withExpandRatio(bottomLayout, 0.8f));
 	}
 
 	@PostConstruct
@@ -73,6 +87,10 @@ public class HomeView extends AbstractView {
 
 	public MostSportyMembers getMostSportyMembers() {
 		return mostSportyMembers;
+	}
+
+	public SinglePieChartView getSinglePieChartView() {
+		return singlePieChartView;
 	}
 
 	public class MemberCounter extends Panel {
@@ -110,7 +128,7 @@ public class HomeView extends AbstractView {
 
 	public class IntroductionPanel extends Panel {
 
-		private static final String WELCOME_TEXT = "I hope this website will help you to found sports possibilities"
+		private static final String WELCOME_TEXT = "I hope this website will help you to find sports possibilities"
 				+ " and make new friendship. The other waiting for you that join their sports events or "
 				+ "organize one!";
 
@@ -118,5 +136,47 @@ public class HomeView extends AbstractView {
 			setContent(new MVerticalLayout().add(new MLabel("Hello here!").withStyleName(ValoTheme.LABEL_H3),
 					new MLabel(WELCOME_TEXT)));
 		}
+	}
+
+	public class SinglePieChartView extends Panel {
+
+		public SinglePieChartView() {
+			setWidth(750, Unit.PIXELS);
+		}
+
+		public void generateChart(Map<String, Integer> sports) {
+			Component chart = getChart(sports);
+			chart.setWidth(600, Unit.PIXELS);
+			setContent(new MVerticalLayout().add(chart).withAlign(chart, Alignment.MIDDLE_CENTER));
+		}
+
+		private Component getChart(Map<String, Integer> sports) {
+			PieChartConfig config = new PieChartConfig();
+			config.data().labels(SportType.getAllSportType().toArray(new String[0]))
+					.addDataset(new PieDataset().label("Dataset")).and();
+
+			config.options().responsive(true).title().display(true).text("Sports popularity").and().animation()
+					// .animateScale(true)
+					.animateRotate(true).and().done();
+
+			List<String> labels = config.data().getLabels();
+			for (Dataset<?, ?> ds : config.data().getDatasets()) {
+				PieDataset lds = (PieDataset) ds;
+				List<Double> data = new ArrayList<>();
+				List<String> colors = new ArrayList<>();
+				for (String label : labels) {
+					data.add((double) sports.get(label));
+					colors.add(ColorUtils.randomColor(0.7));
+				}
+				lds.backgroundColor(colors.toArray(new String[colors.size()]));
+				lds.dataAsList(data);
+			}
+
+			ChartJs chart = new ChartJs(config);
+			chart.setJsLoggingEnabled(true);
+
+			return chart;
+		}
+
 	}
 }
