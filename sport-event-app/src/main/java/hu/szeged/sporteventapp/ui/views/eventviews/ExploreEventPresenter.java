@@ -38,6 +38,7 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 		} catch (ObjectOptimisticLockingFailureException e2) {
 			getView().showWarningNotification("Please wait a minute before leave");
 		}
+		updateGridData();
 	}
 
 	public void leave(SportEvent sportEvent) {
@@ -49,19 +50,24 @@ public class ExploreEventPresenter extends AbstractPresenter<ExploreEventView> {
 		} catch (ObjectOptimisticLockingFailureException e2) {
 			getView().showWarningNotification("Please wait a minute before leave");
 		}
+		updateGridData();
+	}
+
+	public boolean isParticipant(SportEvent sportEvent) {
+		return sportEvent.getParticipants().contains(sessionUser);
 	}
 
 	public User getSessionUser() {
 		return sessionUser;
 	}
 
-	public void updateGridDate() {
+	public void updateGridData() {
 		getView().setGridItems(sportEventService.findAll());
 	}
 
 	@Override
 	public void enter() {
 		super.enter();
-		updateGridDate();
+		updateGridData();
 	}
 }

@@ -15,7 +15,7 @@ public class LocalDateTimeConverter {
 	}
 
 	public String convertLocalDateTimeToString(LocalDateTime localDateTime) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd  hh:mm");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd  HH:mm");
 		String formatDateTime = localDateTime.format(formatter);
 		return formatDateTime;
 	}

@@ -29,8 +29,8 @@ public class ViewConstants {
 	public static final String DATE_FROM = "From";
 	public static final String START_DATE_TO = "To(star date)";
 	public static final String DATE_TO = "To";
-	public static final String IS_THERE_FREE_SPACE = "Is there free space";
-	public static final String DID_I_JOIN_FOR_IT = "Did I join for it?";
+	public static final String FREE_SPACE = "Free space";
+	public static final String ALREADY_JOINED = "Already joined";
 	public static final String MAX_PARTICIPANT = "Max participant";
 	public static final String SPORT_TYPE = "Sport type";
 	public static final String START_DATE = "Start date";
@@ -60,4 +60,6 @@ public class ViewConstants {
 	public static final String PICTURES = "Pictures";
 	public static final String VIDEOS = "Videos";
 	public static final String INFO_NOTIFICATION_STYLE = "info-notification-style";
+	public static final String EXPORT_TO_CSV = "Export to CSV";
+	public static final String SPORT_EVENT = "Sport event";
 }

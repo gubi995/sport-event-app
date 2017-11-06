@@ -40,6 +40,15 @@
     }
   }
 
+  .grid-participant-column {
+    .v-label {
+      width: 60px;
+    }
+    pre {
+      font-family: "Open Sans", sans-serif;
+    }
+  }
+
   .email-label {
     margin-top: 0px !important;
     border-bottom: 1px solid #c5c5c5 !important;

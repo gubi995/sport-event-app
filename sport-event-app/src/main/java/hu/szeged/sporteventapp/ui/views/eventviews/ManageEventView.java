@@ -34,20 +34,23 @@ import hu.szeged.sporteventapp.common.util.DialogueUtil;
 import hu.szeged.sporteventapp.common.util.LocalDateTimeUtil;
 import hu.szeged.sporteventapp.ui.Sections;
 import hu.szeged.sporteventapp.ui.custom_components.MapForm;
+import hu.szeged.sporteventapp.ui.custom_components.exporter.CSVExporter;
 import hu.szeged.sporteventapp.ui.views.AbstractView;
 
 @SpringView(name = "manage-my-events")
 @SideBarItem(sectionId = Sections.EVENT, caption = VIEW_NAME)
 @VaadinFontIcon(VaadinIcons.FILE_PROCESS)
 @ViewScope
-public class ManageEventView extends AbstractView {
+public class ManageEventView extends AbstractView implements Button.ClickListener{
 
 	public static final String VIEW_NAME = "Manage my events";
 	private static final String H_LAYOUT_STYLE = "h-layout-with-top-bottom-padding";
 
 	private final ManageEventPresenter presenter;
 	private final MapForm mapForm;
+
 	private LocalDateTimeConverter timeConverter;
+	private CSVExporter exporter;
 	private Grid<SportEvent> grid;
 	private EventDataForm eventDataForm;
 	private TextField nameFilter;
@@ -66,6 +69,8 @@ public class ManageEventView extends AbstractView {
 		eventDataForm = new EventDataForm();
 		nameFilter = new TextField(NAME);
 		createButton = new Button();
+		exporter = new CSVExporter();
+		exporter.setCaption(EXPORT_TO_CSV);
 	}
 
 	@Override
@@ -73,8 +78,9 @@ public class ManageEventView extends AbstractView {
 		grid = buildGrid();
 		initButtons();
 		addComponentsAndExpand(new MCssLayout().withFullWidth()
-				.add(new MHorizontalLayout().withSpacing(true).add(nameFilter, createButton).withAlign(createButton,
-						Alignment.BOTTOM_CENTER),
+				.add(new MHorizontalLayout().withSpacing(true).withFullWidth().add(nameFilter, createButton, exporter)
+						.withAlign(createButton, Alignment.BOTTOM_CENTER).withAlign(exporter, Alignment.BOTTOM_RIGHT)
+						.withExpand(nameFilter, 0.1f).withExpand(createButton, 0.1f).withExpand(exporter, 0.7f),
 						new MHorizontalLayout().withStyleName(H_LAYOUT_STYLE).withSpacing(true).add(grid, eventDataForm)
 								.withFullSize().withExpand(grid, 1)));
 		eventDataForm.setVisible(false);
@@ -107,6 +113,21 @@ public class ManageEventView extends AbstractView {
 			eventDataForm.setSportEvent(MyBeanFactory.createNewSportEvent());
 			grid.asSingleSelect().clear();
 		});
+		exporter.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+		exporter.setIcon(VaadinIcons.SHARE_SQUARE);
+		exporter.addClickListener(this);
+	}
+
+
+	@Override
+	public void buttonClick(Button.ClickEvent clickEvent) {
+			grid.asSingleSelect().getOptionalValue().ifPresent(s -> exporter.exportSportEvent(s));
+	}
+
+	@Override
+	public void detach() {
+		exporter.removeClickListener(this);
+		super.detach();
 	}
 
 	private void adjustGridCoumn(final Grid<SportEvent> grid) {
@@ -115,10 +136,10 @@ public class ManageEventView extends AbstractView {
 		grid.addColumn(SportEvent::getSportType).setCaption(SPORT_TYPE);
 		grid.setColumns("name", "location", "sportType");
 		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getStartDate(),
-				"yyyy.MM.dd  hh:mm")).setCaption(START).setWidth(160);
+				"yyyy.MM.dd  HH:mm")).setCaption(START).setWidth(170);
 		grid.addColumn(
-				sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getEndDate(), "yyyy.MM.dd hh:mm"))
-				.setCaption(END).setWidth(160);
+				sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getEndDate(), "yyyy.MM.dd HH:mm"))
+				.setCaption(END).setWidth(170);
 		Grid.Column<SportEvent, String> duration = grid.addColumn(sportEvent -> {
 			long minutes = sportEvent.getStartDate().until(sportEvent.getEndDate(), ChronoUnit.MINUTES);
 

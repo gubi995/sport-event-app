@@ -15100,6 +15100,14 @@ div.v-layout.v-horizontal.v-widget {
 	border: 1px solid #c5c5c5 !important;
 }
 
+.mytheme .grid-participant-column .v-label {
+	width: 60px;
+}
+
+.mytheme .grid-participant-column pre {
+	font-family: "Open Sans", sans-serif;
+}
+
 .mytheme .email-label {
 	margin-top: 0px !important;
 	border-bottom: 1px solid #c5c5c5 !important;

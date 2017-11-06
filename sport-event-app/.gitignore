@@ -3,3 +3,5 @@ target
 .idea
 *.iml
 src/main/resources/VAADIN
+src/main/webapp/VAADIN/themes/mytheme/images
+src/main/webapp/VAADIN/themes/mytheme/videos

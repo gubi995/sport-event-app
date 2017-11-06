@@ -9,23 +9,26 @@ import java.util.*;
 
 import javax.annotation.PostConstruct;
 
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.spring.events.EventBus;
 import org.vaadin.spring.sidebar.annotation.SideBarItem;
 import org.vaadin.spring.sidebar.annotation.VaadinFontIcon;
+import org.vaadin.teemu.switchui.Switch;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.ViewChangeListener;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringView;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.steinwedel.messagebox.MessageBox;
 import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
+import hu.szeged.sporteventapp.backend.data.enums.SportType;
 import hu.szeged.sporteventapp.common.converter.LocalDateTimeConverter;
 import hu.szeged.sporteventapp.common.util.DialogueUtil;
 import hu.szeged.sporteventapp.ui.Sections;
@@ -41,6 +44,7 @@ public class ExploreEventView extends AbstractView {
 
 	public static final String VIEW_NAME = "Explore events";
 	private static final String CENTER_ALIGN_STYLE = "v-align-center";
+	private static final String PARTICIPANT_COLUMN_STYLE = "grid-participant-column";
 
 	private final ExploreEventPresenter presenter;
 	private final LocalDateTimeConverter timeConverter;
@@ -50,13 +54,13 @@ public class ExploreEventView extends AbstractView {
 	private Grid<SportEvent> grid;
 	private TextField nameFilter;
 	private TextField locationFilter;
-	private TextField sportTypeFilter;
+	private ComboBox<String> sportTypeFilter;
 	private DateTimeField fromDateField;
 	private DateTimeField toDateField;
 	private CheckBox freeSpaceCheckBox;
 	private CheckBox participantCheckBox;
-	private Button joinButton;
-	private Button leaveButton;
+	// private Button joinButton;
+	// private Button leaveButton;
 	private Button detailsButton;
 	private ParticipantWindow participantWindow;
 
@@ -75,15 +79,16 @@ public class ExploreEventView extends AbstractView {
 		participantWindow = new ParticipantWindow();
 		nameFilter = new TextField(NAME);
 		locationFilter = new TextField(LOCATION);
-		sportTypeFilter = new TextField(SPORT_TYPE);
+		sportTypeFilter = new ComboBox<>(SPORT_TYPE);
+		sportTypeFilter.setItems(SportType.getAllSportType());
 		fromDateField = new DateTimeField(START_DATE_FROM);
 		fromDateField.setWidth(185, Unit.PIXELS);
 		toDateField = new DateTimeField(START_DATE_TO);
 		toDateField.setWidth(185, Unit.PIXELS);
-		freeSpaceCheckBox = new CheckBox(IS_THERE_FREE_SPACE);
-		participantCheckBox = new CheckBox(DID_I_JOIN_FOR_IT);
-		joinButton = new Button(JOIN);
-		leaveButton = new Button(LEAVE);
+		freeSpaceCheckBox = new CheckBox(FREE_SPACE);
+		participantCheckBox = new CheckBox(ALREADY_JOINED);
+		// joinButton = new Button(JOIN);
+		// leaveButton = new Button(LEAVE);
 		detailsButton = new Button("Jump for " + DETAILS);
 	}
 
@@ -96,7 +101,7 @@ public class ExploreEventView extends AbstractView {
 				.withAlign(fromDateField, Alignment.MIDDLE_RIGHT).withAlign(toDateField, Alignment.MIDDLE_RIGHT),
 				new MHorizontalLayout().withMargin(false).withFullWidth()
 						.add(new MHorizontalLayout().add(freeSpaceCheckBox, participantCheckBox), Alignment.MIDDLE_LEFT)
-						.add(new MHorizontalLayout().add(detailsButton, joinButton, leaveButton),
+						.add(new MHorizontalLayout().add(detailsButton/* , joinButton, leaveButton */),
 								Alignment.MIDDLE_RIGHT));
 		addComponentsAndExpand(grid);
 	}
@@ -120,24 +125,19 @@ public class ExploreEventView extends AbstractView {
 		grid.addColumn(SportEvent::getLocation).setCaption(LOCATION);
 		grid.addColumn(SportEvent::getSportType).setCaption(SPORT_TYPE);
 		grid.setColumns("name", "location", "sportType");
-		grid.addColumn(sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getStartDate(),
-				"yyyy.MM.dd  hh:mm")).setCaption(START).setWidth(160);
 		grid.addColumn(
-				sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getEndDate(), "yyyy.MM.dd hh:mm"))
-				.setCaption(END).setWidth(160);
+				sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getStartDate(), "yyyy.MM.dd HH:mm"))
+				.setCaption(START).setWidth(170);
+		grid.addColumn(
+				sportEvent -> timeConverter.convertLocalDateTimeToString(sportEvent.getEndDate(), "yyyy.MM.dd HH:mm"))
+				.setCaption(END).setWidth(170);
 		grid.addColumn(sportEvent -> {
 			long minutes = sportEvent.getStartDate().until(sportEvent.getEndDate(), ChronoUnit.MINUTES);
 
 			return minutes / 60 + ":" + minutes % 60;
 		}).setCaption("Duration(hour:min)");
-		grid.addComponentColumn(sportEvent -> {
-			Button button = new Button(VaadinIcons.GROUP);
-			button.addClickListener(c -> {
-				participantWindow.setUsers(sportEvent.getParticipants());
-				getUI().addWindow(participantWindow);
-			});
-			return button;
-		}).setStyleGenerator(e -> CENTER_ALIGN_STYLE).setCaption(PARTICIPANTS);
+		grid.addComponentColumn(this::generateParticipantColumnComponent).setStyleGenerator(e -> CENTER_ALIGN_STYLE)
+				.setCaption(PARTICIPANTS);
 		grid.addComponentColumn(sportEvent -> {
 			Button button = new Button(VaadinIcons.GLOBE);
 			button.addClickListener(c -> {
@@ -146,11 +146,37 @@ public class ExploreEventView extends AbstractView {
 			});
 			return button;
 		}).setStyleGenerator(e -> CENTER_ALIGN_STYLE).setCaption(LOCATION);
+		grid.addComponentColumn(sportEvent -> {
+			Switch button = new Switch();
+			button.setValue(presenter.isParticipant(sportEvent));
+			button.addValueChangeListener(vc -> {
+				if (button.getValue()) {
+					join(sportEvent);
+				} else {
+					leave(sportEvent);
+				}
+			});
+			return button;
+		}).setStyleGenerator(e -> CENTER_ALIGN_STYLE).setCaption("????");
+	}
+
+	private CssLayout generateParticipantColumnComponent(SportEvent sportEvent) {
+		CssLayout layout = new CssLayout();
+		layout.addStyleName(PARTICIPANT_COLUMN_STYLE);
+		Button button = new Button(VaadinIcons.GROUP);
+		button.addClickListener(c -> {
+			participantWindow.setUsers(sportEvent.getParticipants());
+			getUI().addWindow(participantWindow);
+		});
+		String labelText = String.format("%3d/%3d", sportEvent.getParticipants().size(),
+				sportEvent.getMaxParticipant());
+		layout.addComponents(new Label(labelText, ContentMode.PREFORMATTED), button);
+		return layout;
 	}
 
 	private void initFilters() {
 		ListDataProvider<SportEvent> dataProvider = (ListDataProvider<SportEvent>) grid.getDataProvider();
-		bindFiltersAndGrid(dataProvider, nameFilter, locationFilter, sportTypeFilter, fromDateField, toDateField,
+		bindFiltersAndGrid(dataProvider, sportTypeFilter, nameFilter, locationFilter, fromDateField, toDateField,
 				freeSpaceCheckBox, participantCheckBox);
 	}
 
@@ -158,15 +184,15 @@ public class ExploreEventView extends AbstractView {
 		detailsButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		detailsButton.setIcon(VaadinIcons.EYE);
 		detailsButton.addClickListener(clickEvent -> jumpToSelectEvent());
-		joinButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		joinButton.setIcon(VaadinIcons.FLAG_CHECKERED);
-		joinButton.addClickListener(clickEvent -> {
-			MessageBox.createQuestion().asModal(true).withCaption("Question Dialog").withMessage("Do you really want to join?")
-					.withYesButton(() -> join()).withNoButton().open();
-		});
-		leaveButton.setStyleName(ValoTheme.BUTTON_DANGER);
-		leaveButton.setIcon(VaadinIcons.EXIT_O);
-		leaveButton.addClickListener(clickEvent -> leave());
+		// joinButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		// joinButton.setIcon(VaadinIcons.FLAG_CHECKERED);
+		// joinButton.addClickListener(clickEvent -> {
+		// MessageBox.createQuestion().asModal(true).withCaption("Question Dialog")
+		// .withMessage("Do you really want to join?").withYesButton(() -> join()).withNoButton().open();
+		// });
+		// leaveButton.setStyleName(ValoTheme.BUTTON_DANGER);
+		// leaveButton.setIcon(VaadinIcons.EXIT_O);
+		// leaveButton.addClickListener(clickEvent -> leave());
 	}
 
 	private void updateFilters(final ListDataProvider<SportEvent> dataProvider) {
@@ -174,8 +200,8 @@ public class ExploreEventView extends AbstractView {
 		dataProvider.addFilter(sportEvent -> caseInsensitiveContains(sportEvent.getName(), nameFilter.getValue()));
 		dataProvider
 				.addFilter(sportEvent -> caseInsensitiveContains(sportEvent.getLocation(), locationFilter.getValue()));
-		dataProvider.addFilter(
-				sportEvent -> caseInsensitiveContains(sportEvent.getSportType(), sportTypeFilter.getValue()));
+		dataProvider.addFilter(sportEvent -> caseInsensitiveContains(sportEvent.getSportType(),
+				Strings.nullToEmpty(sportTypeFilter.getValue())));
 		if (freeSpaceCheckBox.getValue()) {
 			dataProvider.addFilter(sportEvent -> sportEvent.getParticipants().size() < sportEvent.getMaxParticipant());
 		}
@@ -188,7 +214,9 @@ public class ExploreEventView extends AbstractView {
 		}
 	}
 
-	private void bindFiltersAndGrid(final ListDataProvider<SportEvent> dataProvider, AbstractField... fields) {
+	private void bindFiltersAndGrid(final ListDataProvider<SportEvent> dataProvider, ComboBox<String> comboBox,
+			AbstractField... fields) {
+		comboBox.addValueChangeListener(e -> updateFilters(dataProvider));
 		Arrays.stream(fields).forEach(field -> field.addValueChangeListener(e -> updateFilters(dataProvider)));
 	}
 
@@ -210,8 +238,7 @@ public class ExploreEventView extends AbstractView {
 		}
 	}
 
-	public void join() {
-		SportEvent sportEvent = grid.asSingleSelect().getValue();
+	public void join(SportEvent sportEvent) {
 		if (sportEvent != null) {
 			presenter.join(sportEvent);
 		} else {
@@ -219,8 +246,7 @@ public class ExploreEventView extends AbstractView {
 		}
 	}
 
-	public void leave() {
-		SportEvent sportEvent = grid.asSingleSelect().getValue();
+	public void leave(SportEvent sportEvent) {
 		if (sportEvent != null) {
 			presenter.leave(sportEvent);
 		} else {

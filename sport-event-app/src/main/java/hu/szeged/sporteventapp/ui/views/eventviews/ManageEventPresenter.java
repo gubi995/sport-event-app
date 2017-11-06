@@ -11,6 +11,10 @@ import hu.szeged.sporteventapp.backend.service.SportEventService;
 import hu.szeged.sporteventapp.backend.service.UserService;
 import hu.szeged.sporteventapp.ui.AbstractPresenter;
 
+import java.util.Optional;
+
+import static hu.szeged.sporteventapp.ui.constants.ViewConstants.PLEASE_SELECT_A_ROW;
+
 @UIScope
 @SpringComponent
 public class ManageEventPresenter extends AbstractPresenter<ManageEventView> {
@@ -44,5 +48,14 @@ public class ManageEventPresenter extends AbstractPresenter<ManageEventView> {
 	public void enter() {
 		super.enter();
 		updateGridData();
+	}
+
+	public void exportData(Optional<SportEvent> sportEvent) {
+		if(sportEvent.isPresent()){
+
+			getView().showInfoNotification("Export was successful");
+		}else {
+			getView().showWarningNotification(PLEASE_SELECT_A_ROW);
+		}
 	}
 }
