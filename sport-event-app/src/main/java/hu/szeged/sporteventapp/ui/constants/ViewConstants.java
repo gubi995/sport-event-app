@@ -62,4 +62,5 @@ public class ViewConstants {
 	public static final String INFO_NOTIFICATION_STYLE = "info-notification-style";
 	public static final String EXPORT_TO_CSV = "Export to CSV";
 	public static final String SPORT_EVENT = "Sport event";
+	public static final String CIRCULAR = "Circular";
 }

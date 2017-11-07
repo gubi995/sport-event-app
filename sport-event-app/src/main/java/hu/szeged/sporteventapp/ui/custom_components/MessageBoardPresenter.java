@@ -12,11 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
 
-import hu.szeged.sporteventapp.backend.data.entity.AbstractEntity;
-import hu.szeged.sporteventapp.backend.data.entity.Message;
-import hu.szeged.sporteventapp.backend.data.entity.MessageBoard;
-import hu.szeged.sporteventapp.backend.data.entity.User;
+import hu.szeged.sporteventapp.backend.data.entity.*;
 import hu.szeged.sporteventapp.backend.repositories.MessageRepository;
+import hu.szeged.sporteventapp.backend.service.EmailService;
 import hu.szeged.sporteventapp.backend.service.UserService;
 
 @UIScope
@@ -25,14 +23,17 @@ public class MessageBoardPresenter implements Serializable {
 
 	private final UserService userService;
 	private final MessageRepository messageRepository;
+	private final EmailService emailService;
 	private MessageBoardForm messageBoardForm;
 	private MessageBoard currentMessageBoard;
 	private User sessionUser;
 
 	@Autowired
-	public MessageBoardPresenter(UserService userService, MessageRepository messageRepository) {
+	public MessageBoardPresenter(UserService userService, MessageRepository messageRepository,
+			EmailService emailService) {
 		this.userService = userService;
 		this.messageRepository = messageRepository;
+		this.emailService = emailService;
 		initSessionUser();
 	}
 
@@ -82,5 +83,17 @@ public class MessageBoardPresenter implements Serializable {
 
 	public void deleteMessage(Message message) {
 		messageRepository.delete(message);
+	}
+
+	public void sendCircular(String postText, SportEvent sportEvent, String subject) {
+		sportEvent.getParticipants().stream()
+				.forEach(user -> emailService.sendSimpleMessage(user.getEmail(), subject, postText + template()));
+	}
+
+	private String template() {
+		return String.format(
+				"\n\nThe Email sent over Sport Community App\nThe sender username: %s, email: %s\n"
+						+ "\nBest regards,\nSport Community App\n\nPlease don't reply for this email",
+				sessionUser.getUsername(), sessionUser.getEmail());
 	}
 }

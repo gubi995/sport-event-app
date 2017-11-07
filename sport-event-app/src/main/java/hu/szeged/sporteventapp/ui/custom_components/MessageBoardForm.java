@@ -1,24 +1,26 @@
 package hu.szeged.sporteventapp.ui.custom_components;
 
-import static hu.szeged.sporteventapp.ui.constants.ViewConstants.MESSAGE_BOARD;
-import static hu.szeged.sporteventapp.ui.constants.ViewConstants.POST;
+import static hu.szeged.sporteventapp.ui.constants.ViewConstants.*;
 
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.viritin.layouts.MHorizontalLayout;
 import org.vaadin.viritin.layouts.MVerticalLayout;
 
+import com.vaadin.data.Binder;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.ViewScope;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
+import de.steinwedel.messagebox.MessageBox;
 import hu.szeged.sporteventapp.backend.data.entity.Message;
-import hu.szeged.sporteventapp.backend.data.entity.MessageBoard;
+import hu.szeged.sporteventapp.backend.data.entity.SportEvent;
 import hu.szeged.sporteventapp.backend.data.entity.User;
 import hu.szeged.sporteventapp.common.util.ResourceUtil;
 import hu.szeged.sporteventapp.ui.views.INotifier;
@@ -35,6 +37,9 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 	private MessageHolder messageHolder;
 	private Button postButton;
 	private Button refreshButton;
+	private Button circularButton;
+
+	private Binder<SportEvent> binder;
 
 	@Autowired
 	public MessageBoardForm(MessageBoardPresenter presenter) {
@@ -50,6 +55,8 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 		textArea = new TextArea();
 		postButton = new Button(POST);
 		refreshButton = new Button(VaadinIcons.REFRESH);
+		circularButton = new Button(CIRCULAR);
+		binder = new Binder<>(SportEvent.class);
 		initTextArea();
 		initButton();
 	}
@@ -64,12 +71,36 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 		postButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		postButton.setIcon(VaadinIcons.PLAY_CIRCLE_O);
 		postButton.setEnabled(false);
-		postButton.addClickListener(e -> {
-			addPost(textArea.getValue());
-			textArea.clear();
-		});
+		postButton.addClickListener(e -> sendPost());
 		refreshButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		refreshButton.addClickListener(e -> refreshMessages());
+		circularButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		circularButton.setIcon(VaadinIcons.ENVELOPE_O);
+		circularButton.setEnabled(false);
+		circularButton.addClickListener(e -> {
+			TextField input = new TextField("Do you really want to send the following post as circular?<br/>" +
+					"If yes then please give the subject");
+			input.setCaptionAsHtml(true);
+
+			MessageBox.createQuestion()
+					.withCaption("Circular")
+					.withMessage(input)
+					.withOkButton(() -> sendCircular(input.getValue()))
+					.withCancelButton()
+					.open();
+		});
+	}
+
+	private void sendPost() {
+		addPost(textArea.getValue());
+		textArea.clear();
+	}
+
+	private void sendCircular(String subject) {
+		String postText = textArea.getValue();
+		addPost(postText);
+		presenter.sendCircular(postText, binder.getBean(), Strings.nullToEmpty(subject));
+		textArea.clear();
 	}
 
 	private void refreshMessages() {
@@ -80,7 +111,7 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 	private void buildContent() {
 		addComponentsAndExpand(messageHolder);
 		add(textArea);
-		add(new MHorizontalLayout().add(refreshButton, postButton)).alignAll(Alignment.MIDDLE_RIGHT);
+		add(new MHorizontalLayout().add(refreshButton, postButton, circularButton)).alignAll(Alignment.MIDDLE_RIGHT);
 	}
 
 	@PostConstruct
@@ -90,9 +121,11 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 
 	private void setEnableStateOfPostButton() {
 		if (textArea.getValue().length() > 0 && textArea.getValue().length() < 255) {
+			circularButton.setEnabled(true);
 			postButton.setEnabled(true);
 			postButton.setDescription(null);
 		} else {
+			circularButton.setEnabled(false);
 			postButton.setEnabled(false);
 			postButton.setDescription("The length of message size must(min:1, max:254) character");
 		}
@@ -106,8 +139,9 @@ public class MessageBoardForm extends MVerticalLayout implements INotifier {
 		messageHolder.addPost(message);
 	}
 
-	public void setMessageBoard(MessageBoard messageBoard) {
-		presenter.setCurrentMessageBoard(messageBoard);
+	public void setSportEvent(SportEvent sportEvent) {
+		binder.setBean(sportEvent);
+		presenter.setCurrentMessageBoard(sportEvent.getMessageBoard());
 	}
 
 	private class MessageHolder extends Panel {

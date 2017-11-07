@@ -178,7 +178,7 @@ public class SingleEventView extends AbstractView implements JumpToSelectedEvent
 		setCaptionLabelText(sportEvent.getName());
 		initReadOnlyDataForm(sportEvent);
 		initWrappedUploader(sportEvent);
-		messageBoardForm.setMessageBoard(sportEvent.getMessageBoard());
+		messageBoardForm.setSportEvent(sportEvent);
 		eventBus.unsubscribe(this);
 	}
 
