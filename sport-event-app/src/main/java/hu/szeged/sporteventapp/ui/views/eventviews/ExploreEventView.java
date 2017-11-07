@@ -168,7 +168,7 @@ public class ExploreEventView extends AbstractView {
 			participantWindow.setUsers(sportEvent.getParticipants());
 			getUI().addWindow(participantWindow);
 		});
-		String labelText = String.format("%3d/%3d", sportEvent.getParticipants().size(),
+		String labelText = String.format("%3d /%3d", sportEvent.getParticipants().size(),
 				sportEvent.getMaxParticipant());
 		layout.addComponents(new Label(labelText, ContentMode.PREFORMATTED), button);
 		return layout;

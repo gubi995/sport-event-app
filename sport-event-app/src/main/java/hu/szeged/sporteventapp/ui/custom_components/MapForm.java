@@ -26,7 +26,7 @@ public class MapForm extends VerticalLayout implements INotifier {
 
 	public static final String CAPTION = LOCATION + " / " + ROUTE;
 	private static final String MAP_FORM_STYLE = "map-form-v-layout";
-	private static final String POINT_FIELD_STYLE = "point-field-border";
+	private static final String DEFAULT_BORDER_STYLE = "default-border-style";
 
 	private Boolean readOnly;
 	private Button clearButton;
@@ -50,7 +50,7 @@ public class MapForm extends VerticalLayout implements INotifier {
 		clearButton.addClickListener(c -> clearMapMarker());
 		buttonHolder = new MHorizontalLayout().add(clearButton);
 		pointField = new PointField(LOCATION);
-		pointField.addStyleName(POINT_FIELD_STYLE);
+		pointField.addStyleName(DEFAULT_BORDER_STYLE);
 		banner = new NoLocationBanner();
 		binder = new Binder(SportEvent.class);
 	}

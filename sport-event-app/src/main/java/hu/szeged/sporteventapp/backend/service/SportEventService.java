@@ -1,5 +1,6 @@
 package hu.szeged.sporteventapp.backend.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,12 @@ public class SportEventService {
 		return eventRepository.findSportEventByOrganizer(user);
 	}
 
-	public List<SportEvent> findSportEventBySportType(String sportType){
+	public List<SportEvent> findSportEventBySportType(String sportType) {
 		return eventRepository.findSportEventBySportType(sportType);
+	}
+
+	public List<SportEvent> getSportEventsByDate(LocalDateTime startDate, LocalDateTime endDate) {
+		return eventRepository.findSportEventByStartDateGreaterThanEqualAndEndDateLessThanEqual(startDate, endDate);
 	}
 
 	@Transactional

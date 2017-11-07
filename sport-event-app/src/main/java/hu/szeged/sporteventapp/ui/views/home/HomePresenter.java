@@ -1,7 +1,9 @@
 package hu.szeged.sporteventapp.ui.views.home;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -50,9 +52,17 @@ public class HomePresenter extends AbstractPresenter<HomeView> {
 			map.put(user, user.getEventsImAttending().size());
 		}
 
-		return map.entrySet().stream().sorted(Map.Entry.<User, Integer> comparingByValue().reversed()).limit(5)
+		return map.entrySet().stream().sorted(Map.Entry.<User, Integer> comparingByValue().reversed()).limit(6)
 				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> oldValue,
 						LinkedHashMap::new));
+	}
+
+	public List<SportEvent> getSportEventsOfThisMonth() {
+		List<SportEvent> events = sportEventService.getSportEventsByDate(LocalDateTime.now(),
+				LocalDateTime.now().plusMonths(1));
+		return events.stream()
+				.filter(sportEvent -> sportEvent.getParticipants().size() < sportEvent.getMaxParticipant())
+				.collect(Collectors.toList());
 	}
 
 	private int countPopulationOfPage() {
@@ -62,9 +72,9 @@ public class HomePresenter extends AbstractPresenter<HomeView> {
 	@Override
 	public void enter() {
 		super.enter();
-		gatherSportByPopularity();
 		getView().getMemberCounter().setPopulationNumber(String.valueOf(countPopulationOfPage()));
 		getView().getMostSportyMembers().generateContent(gatherMostSportyMembers());
 		getView().getSinglePieChartView().generateChart(gatherSportByPopularity());
+		getView().getForthcomingSportEvents().initGrid(getSportEventsOfThisMonth());
 	}
 }
