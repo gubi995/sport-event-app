@@ -157,7 +157,7 @@ public class ExploreEventView extends AbstractView {
 				}
 			});
 			return button;
-		}).setStyleGenerator(e -> CENTER_ALIGN_STYLE).setCaption("????");
+		}).setStyleGenerator(e -> CENTER_ALIGN_STYLE).setCaption(JOINED);
 	}
 
 	private CssLayout generateParticipantColumnComponent(SportEvent sportEvent) {

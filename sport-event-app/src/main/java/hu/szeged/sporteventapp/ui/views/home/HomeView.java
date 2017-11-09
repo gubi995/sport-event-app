@@ -72,10 +72,10 @@ public class HomeView extends AbstractView {
 	@Override
 	public void initBody() {
 		memberCounter.setPopulationNumber("546");
+		MVerticalLayout leftLayout = new MVerticalLayout().withMargin(false).add(singlePieChartView, mostSportyMembers);
 		MHorizontalLayout topLayout = new MHorizontalLayout().add(introductionPanel, memberCounter);
-		MHorizontalLayout bottomLayout = new MHorizontalLayout().withFullSize().add(
-				new MVerticalLayout().withMargin(false).add(singlePieChartView, mostSportyMembers),
-				forthcomingSportEvents);
+		MHorizontalLayout bottomLayout = new MHorizontalLayout().withFullSize().add(leftLayout, forthcomingSportEvents)
+				.withExpandRatio(leftLayout, 0.3f).withExpandRatio(forthcomingSportEvents, 0.7f);
 		addComponentsAndExpand(new MVerticalLayout().withMargin(false).add(topLayout, bottomLayout)
 				.withExpandRatio(topLayout, 0.15f).withExpandRatio(bottomLayout, 0.85f));
 	}

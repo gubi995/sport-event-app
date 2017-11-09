@@ -44,8 +44,7 @@ public class ViewConstants {
 	public static final String REQUIRED_MSG = "Required field, please fill out";
 	public static final String VALIDATION_WARNING_MSG = "Something wrong with your data. Please review them";
 	public static final String WRONG_INPUT = "Wrong input";
-	public static final String JOIN = "Join";
-	public static final String LEAVE = "Leave";
+	public static final String JOINED = "Joined";
 	public static final String ORGANIZER = "Organizer";
 	public static final String MEDIA = "Media";
 	public static final String MESSAGE_BOARD = "Message boar";
