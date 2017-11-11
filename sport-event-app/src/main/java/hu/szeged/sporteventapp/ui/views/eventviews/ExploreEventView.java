@@ -59,8 +59,6 @@ public class ExploreEventView extends AbstractView {
 	private DateTimeField toDateField;
 	private CheckBox freeSpaceCheckBox;
 	private CheckBox participantCheckBox;
-	// private Button joinButton;
-	// private Button leaveButton;
 	private Button detailsButton;
 	private ParticipantWindow participantWindow;
 
@@ -87,8 +85,6 @@ public class ExploreEventView extends AbstractView {
 		toDateField.setWidth(185, Unit.PIXELS);
 		freeSpaceCheckBox = new CheckBox(FREE_SPACE);
 		participantCheckBox = new CheckBox(ALREADY_JOINED);
-		// joinButton = new Button(JOIN);
-		// leaveButton = new Button(LEAVE);
 		detailsButton = new Button("Jump for " + DETAILS);
 	}
 
@@ -101,7 +97,7 @@ public class ExploreEventView extends AbstractView {
 				.withAlign(fromDateField, Alignment.MIDDLE_RIGHT).withAlign(toDateField, Alignment.MIDDLE_RIGHT),
 				new MHorizontalLayout().withMargin(false).withFullWidth()
 						.add(new MHorizontalLayout().add(freeSpaceCheckBox, participantCheckBox), Alignment.MIDDLE_LEFT)
-						.add(new MHorizontalLayout().add(detailsButton/* , joinButton, leaveButton */),
+						.add(new MHorizontalLayout().add(detailsButton),
 								Alignment.MIDDLE_RIGHT));
 		addComponentsAndExpand(grid);
 	}
@@ -184,15 +180,6 @@ public class ExploreEventView extends AbstractView {
 		detailsButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		detailsButton.setIcon(VaadinIcons.EYE);
 		detailsButton.addClickListener(clickEvent -> jumpToSelectEvent());
-		// joinButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
-		// joinButton.setIcon(VaadinIcons.FLAG_CHECKERED);
-		// joinButton.addClickListener(clickEvent -> {
-		// MessageBox.createQuestion().asModal(true).withCaption("Question Dialog")
-		// .withMessage("Do you really want to join?").withYesButton(() -> join()).withNoButton().open();
-		// });
-		// leaveButton.setStyleName(ValoTheme.BUTTON_DANGER);
-		// leaveButton.setIcon(VaadinIcons.EXIT_O);
-		// leaveButton.addClickListener(clickEvent -> leave());
 	}
 
 	private void updateFilters(final ListDataProvider<SportEvent> dataProvider) {
